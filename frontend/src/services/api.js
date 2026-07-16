@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:5095/api"
+    baseURL: "https://job-link-api.onrender.com/api"
 });
 
 // Automatically attach JWT to every request
