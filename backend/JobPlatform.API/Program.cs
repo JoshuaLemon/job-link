@@ -12,10 +12,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("ReactPolicy",
-        builder =>
+        policy =>
         {
-            builder
-                .WithOrigins("http://localhost:5173")
+            policy
+                .WithOrigins(
+                    "http://localhost:5173",
+                    "https://job-link-rust.vercel.app"
+                )
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         });
@@ -92,11 +95,10 @@ QuestPDF.Settings.License = LicenseType.Community;
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.UseHttpsRedirection();
 
