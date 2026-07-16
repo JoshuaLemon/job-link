@@ -1,0 +1,19 @@
+bin/
+obj/
+
+.vs/
+
+*.user
+
+# Local development secrets
+appsettings.Development.json
+
+# SQLite database
+JobPlatform.db
+JobPlatform.db-shm
+JobPlatform.db-wal
+
+# (Optional) Ignore all SQLite databases
+*.db
+*.db-shm
+*.db-wal
