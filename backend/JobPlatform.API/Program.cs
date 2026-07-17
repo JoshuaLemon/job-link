@@ -17,7 +17,8 @@ builder.Services.AddCors(options =>
             policy
                 .WithOrigins(
                     "http://localhost:5173",
-                    "https://job-link-rust.vercel.app"
+                    "https://job-link-rust.vercel.app",
+                    "https://job-link-k3xj81m14-lemon-house.vercel.app"
                 )
                 .AllowAnyHeader()
                 .AllowAnyMethod();
