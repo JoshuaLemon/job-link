@@ -29,8 +29,7 @@ public class AuthController : ControllerBase
     {
         return Ok("Auth Controller Working!");
     }
-[AllowAnonymous]
-
+    [AllowAnonymous]
     [HttpPost("register")]
     public IActionResult Register(RegisterRequest request)
     {
