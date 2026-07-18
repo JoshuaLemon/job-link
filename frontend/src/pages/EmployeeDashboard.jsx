@@ -199,11 +199,10 @@ function EmployeeDashboard() {
                 );
 
                 setProfileExists(true);
-
+                setEmployeeProfileId(response.data.employeeProfileId);
+                
             }
-
             alert("Profile saved successfully.");
-
         }
         catch (error) {
 
@@ -251,12 +250,9 @@ function EmployeeDashboard() {
 
                 );
 
-                setEducations([
-
-                    ...educations,
-
+                setEducations(prev => [
+                    ...prev,
                     response.data.education
-
                 ]);
 
                 setEducationForm({
