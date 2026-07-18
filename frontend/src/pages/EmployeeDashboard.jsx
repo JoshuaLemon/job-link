@@ -203,6 +203,15 @@ function EmployeeDashboard() {
                 
             }
             alert("Profile saved successfully.");
+
+            const response = await api.post("/Profile", request);
+
+            console.log("Create Profile Response:", response.data);
+
+            setProfileExists(true);
+            setEmployeeProfileId(response.data.employeeProfileId);
+
+            console.log("Employee Profile ID after save:", response.data.employeeProfileId);
         }
         catch (error) {
 
@@ -216,6 +225,12 @@ function EmployeeDashboard() {
 
     const handleAddEducation = async () => {
 
+            console.log("Current employeeProfileId:", employeeProfileId);
+
+            if (!employeeProfileId) {
+                alert("Please save your profile first.");
+                return;
+            }
             if (!employeeProfileId) {
 
                 alert("Please save your profile first.");
