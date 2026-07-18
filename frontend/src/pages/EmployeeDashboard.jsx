@@ -180,44 +180,34 @@ function EmployeeDashboard() {
             if (profileExists) {
 
                 await api.put(
-
                     `/Profile/${user.userId}`,
-
                     request
-
                 );
 
             }
             else {
 
-                await api.post(
-
+                const response = await api.post(
                     "/Profile",
-
                     request
-
                 );
+
+                console.log("Create Profile Response:", response.data);
 
                 setProfileExists(true);
                 setEmployeeProfileId(response.data.employeeProfileId);
-                
+
+                console.log("Employee Profile ID:", response.data.employeeProfileId);
             }
+
             alert("Profile saved successfully.");
 
-            const response = await api.post("/Profile", request);
-
-            console.log("Create Profile Response:", response.data);
-
-            setProfileExists(true);
-            setEmployeeProfileId(response.data.employeeProfileId);
-
-            console.log("Employee Profile ID after save:", response.data.employeeProfileId);
         }
         catch (error) {
 
             console.error(error);
 
-            alert("Unable to save profile.");
+            alert(error.response?.data || "Unable to save profile.");
 
         }
 
