@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../services/api";
 
 function EmployeeDashboard() {
@@ -1744,10 +1745,10 @@ function EmployeeDashboard() {
                         </p>
 
                         <Link
-                            to="/jobs"
+                            to="/"
                             className="btn btn-primary"
                         >
-                            Browse Jobs
+                            Browse Available Jobs
                         </Link>
 
                     </div>
