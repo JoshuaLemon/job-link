@@ -647,110 +647,105 @@ function EmployeeDashboard() {
         }
 
     };
-    const downloadResume = async () => {
+    const downloadResume = () => {
 
-        try {
+        const token = localStorage.getItem("token");
 
-            const response = await api.get(
+        const apiUrl = import.meta.env.VITE_API_URL;
 
-                `/Profile/resume-pdf/${user.userId}`,
+        fetch(`${apiUrl}/Profile/resume-pdf/${user.userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        .then(response => {
 
-                {
-                    responseType: "blob"
-                }
+            if (!response.ok) {
+                throw new Error("Failed to download.");
+            }
 
-            );
+            return response.blob();
 
-            const url = window.URL.createObjectURL(
-                new Blob([response.data])
-            );
+        })
+        .then(blob => {
+
+            const url = window.URL.createObjectURL(blob);
 
             const link = document.createElement("a");
 
             link.href = url;
 
-            link.download = "Resume.pdf";
+            link.download = `${user.firstName ?? "Resume"}_Resume.pdf`;
 
             document.body.appendChild(link);
 
             link.click();
 
-            link.remove();
+            document.body.removeChild(link);
 
             window.URL.revokeObjectURL(url);
 
-        }
-        catch (error) {
+        })
+        .catch(error => {
 
             console.error(error);
 
             alert("Unable to download resume.");
 
-        }
+        });
+
     };
-    const generateAIResume = async () => {
+    const downloadAIResume = () => {
 
-        try {
+        const token = localStorage.getItem("token");
 
-            setLoadingAI(true);
+        const apiUrl = import.meta.env.VITE_API_URL;
 
-            const response = await api.post(
-                "/AI/generate-resume"
-            );
+        fetch(`${apiUrl}/Resume/download-ai`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(aiResume)
+        })
+        .then(response => {
 
-            setAIResume(response.data);  
-            setHasGenerated(true);
+            if (!response.ok) {
+                throw new Error("Failed to download.");
+            }
 
-        }
-        catch (err) {
+            return response.blob();
 
-            console.error(err);
-            alert("Failed to generate AI resume.");
+        })
+        .then(blob => {
 
-        }
-        finally {
-
-            setLoadingAI(false);
-
-        }
-    };
-    async function downloadAIResume() {
-
-        try {
-
-            const response = await api.post(
-                "/resume/download-ai",
-                aiResume,
-                {
-                    responseType: "blob"
-                }
-            );
-
-            const url = window.URL.createObjectURL(
-                new Blob([response.data])
-            );
+            const url = window.URL.createObjectURL(blob);
 
             const link = document.createElement("a");
 
             link.href = url;
+
             link.download = "AI_Resume.pdf";
 
             document.body.appendChild(link);
 
             link.click();
 
-            link.remove();
+            document.body.removeChild(link);
 
-        }
-        catch (err) {
+            window.URL.revokeObjectURL(url);
 
-            console.error(err);
+        })
+        .catch(error => {
+
+            console.error(error);
 
             alert("Failed to download AI Resume.");
 
-        }
+        });
 
-    }
+    };
 
     return (
 
