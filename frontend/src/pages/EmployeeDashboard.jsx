@@ -695,6 +695,32 @@ function EmployeeDashboard() {
         });
 
     };
+    const generateAIResume = async () => {
+
+        try {
+
+            setLoadingAI(true);
+
+            const response = await api.post(
+                "/AI/generate-resume"
+            );
+
+            setAIResume(response.data);  
+            setHasGenerated(true);
+
+        }
+        catch (err) {
+
+            console.error(err);
+            alert("Failed to generate AI resume.");
+
+        }
+        finally {
+
+            setLoadingAI(false);
+
+        }
+    };
     const downloadAIResume = () => {
 
         const token = localStorage.getItem("token");
