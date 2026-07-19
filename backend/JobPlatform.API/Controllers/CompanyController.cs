@@ -37,7 +37,7 @@ public class CompanyController : ControllerBase
 
         var company = new Company
         {
-            UserId = request.UserId,
+            UserId = request.UserId, 
             CompanyName = request.CompanyName,
             Industry = request.Industry,
             Description = request.Description,
