@@ -4,6 +4,7 @@ import api from "../services/api";
 
 function EmployerDashboard() {
 
+    const user = JSON.parse(localStorage.getItem("user"));
     const [jobs, setJobs] = useState([]);
 
     const [editingJobId, setEditingJobId] = useState(null);
@@ -22,6 +23,24 @@ function EmployerDashboard() {
         pending: 0,
         interviews: 0,
         hired: 0
+    });
+
+    const [companyExists, setCompanyExists] = useState(false);
+
+    const [companyId, setCompanyId] = useState(null);
+
+    const [company, setCompany] = useState({
+
+        companyName: "",
+
+        industry: "",
+
+        description: "",
+
+        website: "",
+
+        location: ""
+
     });
 
     useEffect(() => {
@@ -54,6 +73,38 @@ function EmployerDashboard() {
                 console.error(error);
 
             });
+
+            api.get(`/Company/${user.userId}`)
+
+    .then((response) => {
+
+        console.log(response.data);
+
+        setCompanyExists(true);
+
+        setCompanyId(response.data.companyId);
+
+        setCompany({
+
+            companyName: response.data.companyName,
+
+            industry: response.data.industry,
+
+            description: response.data.description,
+
+            website: response.data.website,
+
+            location: response.data.location
+
+        });
+
+    })
+
+    .catch(() => {
+
+        console.log("No company found.");
+
+    });
     }, []);
 
     const handleEdit = (job) => {
@@ -147,11 +198,187 @@ function EmployerDashboard() {
 
     };
 
-    
+    const handleSaveCompany = async () => {
+
+        try {
+
+        const request = {
+
+            userId: user.userId,
+
+            companyName: company.companyName,
+
+            industry: company.industry,
+
+            description: company.description,
+
+            website: company.website,
+
+            location: company.location
+
+        };
+
+            if (companyExists) {
+
+                await api.put(
+
+                    `/Company/${user.userId}`,
+
+                    request
+
+                );
+
+            }
+            else {
+
+                const response = await api.post(
+
+                    "/Company",
+
+                    request
+
+                );
+
+                setCompanyExists(true);
+
+                setCompanyId(response.data.company.companyId);
+
+            }
+
+            alert("Company saved successfully.");
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            alert("Unable to save company.");
+
+        }
+
+    };
     return (
 
         <div className="container mt-5">
 
+            <div className="card shadow mb-4">
+
+                <div className="card-body">
+
+                    <h3 className="mb-4">
+                        Company Profile
+                    </h3>
+
+                    <div className="row">
+
+                        <div className="col-md-6 mb-3">
+
+                            <label className="form-label">
+                                Company Name
+                            </label>
+
+                            <input
+                                className="form-control"
+                                value={company.companyName}
+                                onChange={(e) =>
+                                    setCompany({
+                                        ...company,
+                                        companyName: e.target.value
+                                    })
+                                }
+                            />
+
+                        </div>
+
+                        <div className="col-md-6 mb-3">
+
+                            <label className="form-label">
+                                Industry
+                            </label>
+
+                            <input
+                                className="form-control"
+                                value={company.industry}
+                                onChange={(e) =>
+                                    setCompany({
+                                        ...company,
+                                        industry: e.target.value
+                                    })
+                                }
+                            />
+
+                        </div>
+
+                    </div>
+
+                    <div className="mb-3">
+
+                        <label className="form-label">
+                            Website
+                        </label>
+
+                        <input
+                            className="form-control"
+                            value={company.website}
+                            onChange={(e) =>
+                                setCompany({
+                                    ...company,
+                                    website: e.target.value
+                                })
+                            }
+                        />
+
+                    </div>
+
+                    <div className="mb-3">
+
+                        <label className="form-label">
+                            Location
+                        </label>
+
+                        <input
+                            className="form-control"
+                            value={company.location}
+                            onChange={(e) =>
+                                setCompany({
+                                    ...company,
+                                    location: e.target.value
+                                })
+                            }
+                        />
+
+                    </div>
+
+                    <div className="mb-4">
+
+                        <label className="form-label">
+                            Description
+                        </label>
+
+                        <textarea
+                            rows="4"
+                            className="form-control"
+                            value={company.description}
+                            onChange={(e) =>
+                                setCompany({
+                                    ...company,
+                                    description: e.target.value
+                                })
+                            }
+                        />
+
+                    </div>
+
+                    <button
+                        className="btn btn-primary"
+                        onClick={handleSaveCompany}
+                    >
+                        {companyExists ? "Update Company" : "Save Company"}
+                    </button>
+
+                </div>
+
+            </div>
             <div className="d-flex justify-content-between align-items-center mb-4">
             <div className="row mb-4">
 
@@ -205,6 +432,8 @@ function EmployerDashboard() {
                     Employer Dashboard
                 </h2>
 
+                {companyExists ? (
+
                 <Link
                     to="/create-job"
                     className="btn btn-primary"
@@ -212,7 +441,27 @@ function EmployerDashboard() {
                     + Create Job
                 </Link>
 
+            ) : (
+
+                <button
+                    className="btn btn-secondary"
+                    disabled
+                >
+                    Create your company first
+                </button>
+
+            )}
+          
             </div>
+            {!companyExists && (
+
+                    <div className="alert alert-warning">
+
+                    Complete your company profile before posting your first job.
+
+                    </div>
+
+                )}
 
             {jobs.length === 0 ? (
 
