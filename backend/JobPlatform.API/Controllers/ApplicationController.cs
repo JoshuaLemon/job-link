@@ -276,9 +276,15 @@ public class ApplicationController : ControllerBase
 
         if (company == null)
         {
-            return BadRequest("Company not found.");
+            return Ok(new EmployerDashboardResponse
+            {
+                JobsPosted = 0,
+                TotalApplicants = 0,
+                Pending = 0,
+                Interviews = 0,
+                Hired = 0
+            });
         }
-
         var companyJobIds = _context.JobPosts
             .Where(j => j.CompanyId == company.CompanyId)
             .Select(j => j.JobPostId)

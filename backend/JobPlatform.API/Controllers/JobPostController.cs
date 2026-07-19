@@ -165,7 +165,7 @@ public class JobPostController : ControllerBase
 
         if (company == null)
         {
-            return BadRequest("Company not found.");
+            return Ok(new List<JobPostResponse>());
         }
 
         var jobs = _context.JobPosts
