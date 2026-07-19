@@ -1723,7 +1723,7 @@ function EmployeeDashboard() {
         ))
 
     )}
-            <h2 className="mb-4">
+            <h2 className="mb-4 fw-bold">
 
                 My Applications
 
@@ -1731,11 +1731,28 @@ function EmployeeDashboard() {
 
             {applications.length === 0 ? (
 
-                <p>
+                <div className="card shadow-sm">
 
-                    You haven't applied for any jobs yet.
+                    <div className="card-body text-center py-5">
 
-                </p>
+                        <h4>No Applications Yet</h4>
+
+                        <p className="text-muted mb-3">
+
+                            Start applying to jobs and track your application progress here.
+
+                        </p>
+
+                        <Link
+                            to="/jobs"
+                            className="btn btn-primary"
+                        >
+                            Browse Jobs
+                        </Link>
+
+                    </div>
+
+                </div>
 
             ) : (
 
@@ -1743,50 +1760,90 @@ function EmployeeDashboard() {
 
                     <div
                         key={application.applicationId}
-                        className="card mb-3"
+                        className="card shadow-sm mb-4 border-0"
                     >
 
                         <div className="card-body">
 
-                            <h4>
+                            <div className="d-flex justify-content-between align-items-start">
 
-                                {application.job.title}
+                                <div>
 
-                            </h4>
+                                    <h3 className="mb-1">
 
-                            <p>
+                                        {application.job.title}
 
-                                <strong>Location:</strong>{" "}
+                                    </h3>
 
-                                {application.job.location}
+                                    <p className="text-muted mb-3">
 
-                            </p>
+                                        {application.job.location}
 
-                            <p>
+                                    </p>
 
-                                <strong>Employment:</strong>{" "}
+                                </div>
 
-                                {application.job.employmentType}
+                                <span
+                                    className={`badge fs-6 px-3 py-2 ${
+                                        application.status === "Hired"
+                                            ? "bg-success"
+                                            : application.status === "Interview"
+                                            ? "bg-primary"
+                                            : application.status === "Rejected"
+                                            ? "bg-danger"
+                                            : application.status === "Pending"
+                                            ? "bg-warning text-dark"
+                                            : application.status === "Screening"
+                                            ? "bg-info text-dark"
+                                            : application.status === "Technical Exam"
+                                            ? "bg-dark"
+                                            : application.status === "Offer"
+                                            ? "bg-secondary"
+                                            : "bg-light text-dark"
+                                    }`}
+                                >
+                                    {application.status}
+                                </span>
 
-                            </p>
+                            </div>
 
-                            <p>
+                            <hr />
 
-                                <strong>Salary:</strong>{" "}
+                            <div className="row">
 
-                                ₱{application.job.salary}
+                                <div className="col-md-4 mb-2">
 
-                            </p>
+                                    <strong>Employment</strong>
 
-                            <p>
+                                    <br />
 
-                                <strong>Applied:</strong>{" "}
+                                    {application.job.employmentType}
 
-                                {new Date(
-                                    application.appliedAt
-                                ).toLocaleDateString()}
+                                </div>
 
-                            </p>
+                                <div className="col-md-4 mb-2">
+
+                                    <strong>Salary</strong>
+
+                                    <br />
+
+                                    ₱{application.job.salary.toLocaleString()}
+
+                                </div>
+
+                                <div className="col-md-4 mb-2">
+
+                                    <strong>Applied</strong>
+
+                                    <br />
+
+                                    {new Date(
+                                        application.appliedAt
+                                    ).toLocaleDateString()}
+
+                                </div>
+
+                            </div>
 
                         </div>
 
