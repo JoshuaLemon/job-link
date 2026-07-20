@@ -660,26 +660,29 @@ function EmployeeDashboard() {
                         // Edit mode - show form fields
                         <>
                             <div className="mb-3">
-                                <label className="form-label">Headline</label>
+                                <label className="form-label">Headline <span className="text-muted">(e.g., Senior Software Engineer)</span></label>
                                 <input
                                     className="form-control"
+                                    placeholder="e.g., Senior Software Engineer at Google"
                                     value={profile.headline}
                                     onChange={(e) => setProfile({ ...profile, headline: e.target.value })}
                                 />
                             </div>
                             <div className="mb-3">
-                                <label className="form-label">Bio</label>
+                                <label className="form-label">Bio <span className="text-muted">(Tell employers about yourself)</span></label>
                                 <textarea
                                     className="form-control"
                                     rows="4"
+                                    placeholder="e.g., Passionate software engineer with 5+ years of experience in full-stack development..."
                                     value={profile.bio}
                                     onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                                 />
                             </div>
                             <div className="mb-3">
-                                <label className="form-label">Location</label>
+                                <label className="form-label">Location <span className="text-muted">(City, Country)</span></label>
                                 <input
                                     className="form-control"
+                                    placeholder="e.g., Manila, Philippines"
                                     value={profile.location}
                                     onChange={(e) => setProfile({ ...profile, location: e.target.value })}
                                 />
@@ -688,6 +691,7 @@ function EmployeeDashboard() {
                                 <label className="form-label">Phone Number</label>
                                 <input
                                     className="form-control"
+                                    placeholder="e.g., +63 912 345 6789"
                                     value={profile.phoneNumber}
                                     onChange={(e) => setProfile({ ...profile, phoneNumber: e.target.value })}
                                 />
@@ -717,7 +721,13 @@ function EmployeeDashboard() {
                                 <p><strong>Phone:</strong> {profile.phoneNumber}</p>
                             )}
                             {!profile.headline && !profile.bio && !profile.location && !profile.phoneNumber && (
-                                <p className="text-muted">No profile information added yet. Click "Edit Profile" to add your details.</p>
+                                <div className="text-center py-3">
+                                    <p className="text-muted mb-2">No profile information added yet.</p>
+                                    <p className="text-muted small">Add your headline, bio, location, and phone number to help employers find you.</p>
+                                    <button className="btn btn-primary btn-sm mt-2" onClick={handleEditProfileClick}>
+                                        ✏️ Add Profile Information
+                                    </button>
+                                </div>
                             )}
                         </>
                     )}
@@ -792,6 +802,7 @@ function EmployeeDashboard() {
                             <label className="form-label">School Name</label>
                             <input
                                 className="form-control"
+                                placeholder="e.g., University of the Philippines"
                                 value={educationForm.schoolName}
                                 onChange={(e) => setEducationForm({ ...educationForm, schoolName: e.target.value })}
                             />
@@ -800,6 +811,7 @@ function EmployeeDashboard() {
                             <label className="form-label">Degree</label>
                             <input
                                 className="form-control"
+                                placeholder="e.g., Bachelor of Science in Computer Science"
                                 value={educationForm.degree}
                                 onChange={(e) => setEducationForm({ ...educationForm, degree: e.target.value })}
                             />
@@ -808,6 +820,7 @@ function EmployeeDashboard() {
                             <label className="form-label">Field Of Study</label>
                             <input
                                 className="form-control"
+                                placeholder="e.g., Software Engineering"
                                 value={educationForm.fieldOfStudy}
                                 onChange={(e) => setEducationForm({ ...educationForm, fieldOfStudy: e.target.value })}
                             />
@@ -818,6 +831,7 @@ function EmployeeDashboard() {
                                 <input
                                     className="form-control"
                                     type="number"
+                                    placeholder="e.g., 2020"
                                     value={educationForm.startYear}
                                     onChange={(e) => setEducationForm({ ...educationForm, startYear: e.target.value })}
                                 />
@@ -827,6 +841,7 @@ function EmployeeDashboard() {
                                 <input
                                     className="form-control"
                                     type="number"
+                                    placeholder="e.g., 2024"
                                     value={educationForm.endYear}
                                     onChange={(e) => setEducationForm({ ...educationForm, endYear: e.target.value })}
                                 />
@@ -848,7 +863,11 @@ function EmployeeDashboard() {
             {educations.length === 0 && !isAddingEducation ? (
                 <div className="card mb-3">
                     <div className="card-body text-center py-4">
-                        <p className="text-muted mb-0">No education added yet.</p>
+                        <p className="text-muted mb-2">No education added yet.</p>
+                        <p className="text-muted small">Add your educational background to showcase your qualifications.</p>
+                        <button className="btn btn-primary btn-sm mt-2" onClick={handleAddEducationClick}>
+                            + Add Education
+                        </button>
                     </div>
                 </div>
             ) : (
@@ -963,6 +982,7 @@ function EmployeeDashboard() {
                             <label className="form-label">Company Name</label>
                             <input
                                 className="form-control"
+                                placeholder="e.g., Google"
                                 value={experienceForm.companyName}
                                 onChange={(e) => setExperienceForm({ ...experienceForm, companyName: e.target.value })}
                             />
@@ -971,6 +991,7 @@ function EmployeeDashboard() {
                             <label className="form-label">Job Title</label>
                             <input
                                 className="form-control"
+                                placeholder="e.g., Senior Software Engineer"
                                 value={experienceForm.jobTitle}
                                 onChange={(e) => setExperienceForm({ ...experienceForm, jobTitle: e.target.value })}
                             />
@@ -980,6 +1001,7 @@ function EmployeeDashboard() {
                             <textarea
                                 className="form-control"
                                 rows="4"
+                                placeholder="Describe your responsibilities and achievements..."
                                 value={experienceForm.description}
                                 onChange={(e) => setExperienceForm({ ...experienceForm, description: e.target.value })}
                             />
@@ -1020,7 +1042,11 @@ function EmployeeDashboard() {
             {experiences.length === 0 ? (
                 <div className="card mb-3">
                     <div className="card-body text-center py-4">
-                        <p className="text-muted mb-0">No experience added yet.</p>
+                        <p className="text-muted mb-2">No experience added yet.</p>
+                        <p className="text-muted small">Add your work experience to demonstrate your skills and expertise.</p>
+                        <button className="btn btn-primary btn-sm mt-2" onClick={handleAddExperienceClick}>
+                            + Add Experience
+                        </button>
                     </div>
                 </div>
             ) : (
@@ -1139,9 +1165,11 @@ function EmployeeDashboard() {
                             <label className="form-label">Skill Name</label>
                             <input
                                 className="form-control"
+                                placeholder="e.g., JavaScript, Python, Project Management"
                                 value={skillForm.skillName}
                                 onChange={(e) => setSkillForm({ ...skillForm, skillName: e.target.value })}
                             />
+                            <small className="text-muted">Add one skill at a time (e.g., React, Python, Leadership)</small>
                         </div>
                         <div className="mt-3">
                             <button className="btn btn-success me-2" onClick={handleSaveSkill}>
@@ -1159,7 +1187,11 @@ function EmployeeDashboard() {
             {skills.length === 0 ? (
                 <div className="card mb-3">
                     <div className="card-body text-center py-4">
-                        <p className="text-muted mb-0">No skills added yet.</p>
+                        <p className="text-muted mb-2">No skills added yet.</p>
+                        <p className="text-muted small">Add your skills to help employers find you.</p>
+                        <button className="btn btn-primary btn-sm mt-2" onClick={handleAddSkillClick}>
+                            + Add Skill
+                        </button>
                     </div>
                 </div>
             ) : (
