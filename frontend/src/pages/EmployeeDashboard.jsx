@@ -660,10 +660,10 @@ function EmployeeDashboard() {
                         // Edit mode - show form fields
                         <>
                             <div className="mb-3">
-                                <label className="form-label">Headline <span className="text-muted">(e.g., Senior Software Engineer)</span></label>
+                                <label className="form-label">Headline <span className="text-muted">(e.g., Senior Software Engineer, Marketing Specialist, Graphic Designer)</span></label>
                                 <input
                                     className="form-control"
-                                    placeholder="e.g., Senior Software Engineer at Google"
+                                    placeholder="e.g., Senior Software Engineer, Marketing Specialist, Graphic Designer"
                                     value={profile.headline}
                                     onChange={(e) => setProfile({ ...profile, headline: e.target.value })}
                                 />
@@ -673,7 +673,7 @@ function EmployeeDashboard() {
                                 <textarea
                                     className="form-control"
                                     rows="4"
-                                    placeholder="e.g., Passionate software engineer with 5+ years of experience in full-stack development..."
+                                    placeholder="e.g., Passionate professional with experience in [your field], skilled in [your skills], and dedicated to [your goals]."
                                     value={profile.bio}
                                     onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                                 />
@@ -784,11 +784,7 @@ function EmployeeDashboard() {
             {/* Education Section */}
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2 className="mb-0">Education</h2>
-                {!isAddingEducation && !editingEducationId && (
-                    <button className="btn btn-primary" onClick={handleAddEducationClick}>
-                        + Add Education
-                    </button>
-                )}
+                {/* Removed Add button from header */}
             </div>
 
             <FeedbackMessage section="education" />
@@ -802,7 +798,7 @@ function EmployeeDashboard() {
                             <label className="form-label">School Name</label>
                             <input
                                 className="form-control"
-                                placeholder="e.g., University of the Philippines"
+                                placeholder="e.g., University Name"
                                 value={educationForm.schoolName}
                                 onChange={(e) => setEducationForm({ ...educationForm, schoolName: e.target.value })}
                             />
@@ -811,7 +807,7 @@ function EmployeeDashboard() {
                             <label className="form-label">Degree</label>
                             <input
                                 className="form-control"
-                                placeholder="e.g., Bachelor of Science in Computer Science"
+                                placeholder="e.g., Bachelor of Science, Master of Arts"
                                 value={educationForm.degree}
                                 onChange={(e) => setEducationForm({ ...educationForm, degree: e.target.value })}
                             />
@@ -820,7 +816,7 @@ function EmployeeDashboard() {
                             <label className="form-label">Field Of Study</label>
                             <input
                                 className="form-control"
-                                placeholder="e.g., Software Engineering"
+                                placeholder="e.g., Computer Science, Business Administration"
                                 value={educationForm.fieldOfStudy}
                                 onChange={(e) => setEducationForm({ ...educationForm, fieldOfStudy: e.target.value })}
                             />
@@ -931,28 +927,32 @@ function EmployeeDashboard() {
                                     </div>
                                 </>
                             ) : (
-                                <>
-                                    <h5>{education.degree}</h5>
-                                    <p>{education.schoolName}</p>
-                                    <p>{education.fieldOfStudy}</p>
-                                    <p>
-                                        {new Date(education.startDate).getFullYear()}
-                                        {" - "}
-                                        {new Date(education.endDate).getFullYear()}
-                                    </p>
-                                    <button
-                                        className="btn btn-warning me-2"
-                                        onClick={() => handleEditEducation(education)}
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        className="btn btn-danger"
-                                        onClick={() => handleDeleteEducation(education.educationId)}
-                                    >
-                                        Delete
-                                    </button>
-                                </>
+                                <div className="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5>{education.degree}</h5>
+                                        <p>{education.schoolName}</p>
+                                        <p>{education.fieldOfStudy}</p>
+                                        <p>
+                                            {new Date(education.startDate).getFullYear()}
+                                            {" - "}
+                                            {new Date(education.endDate).getFullYear()}
+                                        </p>
+                                    </div>
+                                    <div className="d-flex gap-2">
+                                        <button
+                                            className="btn btn-warning btn-sm"
+                                            onClick={() => handleEditEducation(education)}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="btn btn-danger btn-sm"
+                                            onClick={() => handleDeleteEducation(education.educationId)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
                             )}
                         </div>
                     </div>
@@ -964,11 +964,7 @@ function EmployeeDashboard() {
             {/* Experience Section */}
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2 className="mb-0">My Experience</h2>
-                {!isAddingExperience && !editingExperienceId && (
-                    <button className="btn btn-primary" onClick={handleAddExperienceClick}>
-                        + Add Experience
-                    </button>
-                )}
+                {/* Removed Add button from header */}
             </div>
 
             <FeedbackMessage section="experience" />
@@ -982,7 +978,7 @@ function EmployeeDashboard() {
                             <label className="form-label">Company Name</label>
                             <input
                                 className="form-control"
-                                placeholder="e.g., Google"
+                                placeholder="e.g., Company Name"
                                 value={experienceForm.companyName}
                                 onChange={(e) => setExperienceForm({ ...experienceForm, companyName: e.target.value })}
                             />
@@ -991,7 +987,7 @@ function EmployeeDashboard() {
                             <label className="form-label">Job Title</label>
                             <input
                                 className="form-control"
-                                placeholder="e.g., Senior Software Engineer"
+                                placeholder="e.g., Job Title"
                                 value={experienceForm.jobTitle}
                                 onChange={(e) => setExperienceForm({ ...experienceForm, jobTitle: e.target.value })}
                             />
@@ -1111,31 +1107,35 @@ function EmployeeDashboard() {
                                     </div>
                                 </>
                             ) : (
-                                <>
-                                    <h5>{experience.jobTitle}</h5>
-                                    <h6 className="text-muted">{experience.companyName}</h6>
-                                    <p>{experience.description}</p>
-                                    <p>
-                                        <strong>Start:</strong>{" "}
-                                        {new Date(experience.startDate).toLocaleDateString()}
-                                    </p>
-                                    <p>
-                                        <strong>End:</strong>{" "}
-                                        {new Date(experience.endDate).toLocaleDateString()}
-                                    </p>
-                                    <button
-                                        className="btn btn-warning me-2"
-                                        onClick={() => handleEditExperience(experience)}
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        className="btn btn-danger"
-                                        onClick={() => handleDeleteExperience(experience.experienceId)}
-                                    >
-                                        Delete
-                                    </button>
-                                </>
+                                <div className="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5>{experience.jobTitle}</h5>
+                                        <h6 className="text-muted">{experience.companyName}</h6>
+                                        <p>{experience.description}</p>
+                                        <p>
+                                            <strong>Start:</strong>{" "}
+                                            {new Date(experience.startDate).toLocaleDateString()}
+                                        </p>
+                                        <p>
+                                            <strong>End:</strong>{" "}
+                                            {new Date(experience.endDate).toLocaleDateString()}
+                                        </p>
+                                    </div>
+                                    <div className="d-flex gap-2">
+                                        <button
+                                            className="btn btn-warning btn-sm"
+                                            onClick={() => handleEditExperience(experience)}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="btn btn-danger btn-sm"
+                                            onClick={() => handleDeleteExperience(experience.experienceId)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
                             )}
                         </div>
                     </div>
@@ -1147,11 +1147,7 @@ function EmployeeDashboard() {
             {/* Skills Section */}
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2 className="mb-0">My Skills</h2>
-                {!isAddingSkill && !editingSkillId && (
-                    <button className="btn btn-primary" onClick={handleAddSkillClick}>
-                        + Add Skill
-                    </button>
-                )}
+                {/* Removed Add button from header */}
             </div>
 
             <FeedbackMessage section="skill" />
@@ -1197,42 +1193,42 @@ function EmployeeDashboard() {
             ) : (
                 skills.map(skill => (
                     <div key={skill.skillId} className="card mb-3">
-                        <div className="card-body d-flex justify-content-between align-items-center">
+                        <div className="card-body">
                             {editingSkillId === skill.skillId ? (
-                                <>
+                                <div className="d-flex gap-3 align-items-center">
                                     <input
-                                        className="form-control me-3"
+                                        className="form-control"
                                         value={skillForm.skillName}
                                         onChange={(e) => setSkillForm({ ...skillForm, skillName: e.target.value })}
                                         style={{ maxWidth: '300px' }}
                                     />
-                                    <div>
-                                        <button className="btn btn-success me-2" onClick={handleSaveSkill}>
+                                    <div className="d-flex gap-2">
+                                        <button className="btn btn-success btn-sm" onClick={handleSaveSkill}>
                                             Save
                                         </button>
-                                        <button className="btn btn-secondary" onClick={handleCancelSkill}>
+                                        <button className="btn btn-secondary btn-sm" onClick={handleCancelSkill}>
                                             Cancel
                                         </button>
                                     </div>
-                                </>
+                                </div>
                             ) : (
-                                <>
+                                <div className="d-flex justify-content-between align-items-center">
                                     <h5 className="mb-0">{skill.skillName}</h5>
-                                    <div>
+                                    <div className="d-flex gap-2">
                                         <button
-                                            className="btn btn-warning me-2"
+                                            className="btn btn-warning btn-sm"
                                             onClick={() => handleEditSkill(skill)}
                                         >
                                             Edit
                                         </button>
                                         <button
-                                            className="btn btn-danger"
+                                            className="btn btn-danger btn-sm"
                                             onClick={() => handleDeleteSkill(skill.skillId)}
                                         >
                                             Delete
                                         </button>
                                     </div>
-                                </>
+                                </div>
                             )}
                         </div>
                     </div>

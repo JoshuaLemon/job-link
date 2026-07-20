@@ -401,11 +401,7 @@ function EmployerDashboard() {
 
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2 className="mb-0">My Jobs</h2>
-                {companyExists && (
-                    <Link to="/create-job" className="btn btn-primary">
-                        + Post a Job
-                    </Link>
-                )}
+                {/* Removed Add button from header */}
             </div>
 
             {jobs.length === 0 ? (
@@ -511,9 +507,12 @@ function EmployerDashboard() {
                                 <>
                                     <div className="d-flex justify-content-between align-items-start">
                                         <div>
-                                            <h4>{job.title}</h4>
+                                            <h4 className="mb-1">{job.title}</h4>
                                             <p className="text-muted mb-1">
                                                 <strong>📍</strong> {job.location}
+                                            </p>
+                                            <p className="mb-0">
+                                                <strong>💰 Salary:</strong> ₱{job.salary.toLocaleString()}
                                             </p>
                                         </div>
                                         <span className={`badge fs-6 px-3 py-2 bg-${job.employmentType === 'Full-time' ? 'primary' : job.employmentType === 'Part-time' ? 'info' : job.employmentType === 'Contract' ? 'warning' : 'secondary'}`}>
@@ -521,26 +520,30 @@ function EmployerDashboard() {
                                         </span>
                                     </div>
                                     <p className="mt-2">{job.description}</p>
-                                    <p><strong>💰 Salary:</strong> ₱{job.salary.toLocaleString()}</p>
-                                    <div className="mt-3">
-                                        <button
-                                            className="btn btn-warning me-2"
-                                            onClick={() => handleEdit(job)}
-                                        >
-                                            ✏️ Edit
-                                        </button>
-                                        <button
-                                            className="btn btn-danger me-2"
-                                            onClick={() => handleDelete(job.jobPostId)}
-                                        >
-                                            🗑️ Delete
-                                        </button>
-                                        <Link
-                                            to={`/applicants/${job.jobPostId}`}
-                                            className="btn btn-info"
-                                        >
-                                            👥 View Applicants
-                                        </Link>
+                                    <div className="d-flex justify-content-between align-items-center mt-3">
+                                        <div>
+                                            {/* No buttons here - they're on the right */}
+                                        </div>
+                                        <div className="d-flex gap-2">
+                                            <button
+                                                className="btn btn-warning btn-sm"
+                                                onClick={() => handleEdit(job)}
+                                            >
+                                                ✏️ Edit
+                                            </button>
+                                            <button
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() => handleDelete(job.jobPostId)}
+                                            >
+                                                🗑️ Delete
+                                            </button>
+                                            <Link
+                                                to={`/applicants/${job.jobPostId}`}
+                                                className="btn btn-info btn-sm"
+                                            >
+                                                👥 Applicants
+                                            </Link>
+                                        </div>
                                     </div>
                                 </>
                             )}
