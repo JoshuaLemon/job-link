@@ -9,6 +9,12 @@ function ProtectedRoute({ children, role }) {
     }
 
     if (role && user.role !== role) {
+        // Redirect to the correct dashboard based on user's role
+        if (user.role === "Employee") {
+            return <Navigate to="/employee" replace />;
+        } else if (user.role === "Employer") {
+            return <Navigate to="/employer" replace />;
+        }
         return <Navigate to="/" replace />;
     }
 
