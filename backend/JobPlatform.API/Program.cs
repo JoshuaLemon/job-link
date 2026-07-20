@@ -6,9 +6,11 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using QuestPDF.Infrastructure;
+using Microsoft.AspNetCore.Cors; // Add this
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Enhanced CORS configuration
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("ReactPolicy",
@@ -17,11 +19,13 @@ builder.Services.AddCors(options =>
             policy
                 .WithOrigins(
                     "http://localhost:5173",
-                    "https://job-link-rust.vercel.app",
-                    "https://job-link-k3xj81m14-lemon-house.vercel.app"
+                    "https://job-link-rust.vercel.app"
                 )
                 .AllowAnyHeader()
-                .AllowAnyMethod();
+                .AllowAnyMethod()
+                .AllowCredentials()
+                .WithExposedHeaders("Content-Disposition") // For file downloads
+                .SetPreflightMaxAge(TimeSpan.FromSeconds(3600)); // Cache preflight requests
         });
 });
 
@@ -95,25 +99,29 @@ builder.Services.AddSwaggerGen(options =>
 QuestPDF.Settings.License = LicenseType.Community;
 
 var app = builder.Build();
+
+// Migrate database
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
     db.Database.Migrate();
 }
 
+// Enable Swagger
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
 app.UseHttpsRedirection();
 
-app.UseCors("ReactPolicy");
+// IMPORTANT: CORS middleware order
+app.UseCors("ReactPolicy"); // Must be before UseAuthentication and UseAuthorization
 
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Add a simple health check endpoint for testing
+app.MapGet("/api/health", () => Results.Ok(new { status = "healthy" }));
 
 app.Run();
