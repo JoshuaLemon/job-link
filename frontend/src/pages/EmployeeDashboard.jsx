@@ -784,7 +784,6 @@ function EmployeeDashboard() {
             {/* Education Section */}
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2 className="mb-0">Education</h2>
-                {/* Removed Add button from header */}
             </div>
 
             <FeedbackMessage section="education" />
@@ -855,18 +854,8 @@ function EmployeeDashboard() {
                 </div>
             )}
 
-            {/* Education List or No Education Message */}
-            {educations.length === 0 && !isAddingEducation ? (
-                <div className="card mb-3">
-                    <div className="card-body text-center py-4">
-                        <p className="text-muted mb-2">No education added yet.</p>
-                        <p className="text-muted small">Add your educational background to showcase your qualifications.</p>
-                        <button className="btn btn-primary btn-sm mt-2" onClick={handleAddEducationClick}>
-                            + Add Education
-                        </button>
-                    </div>
-                </div>
-            ) : (
+            {/* Education List */}
+            {educations.length > 0 && (
                 educations.map((education) => (
                     <div key={education.educationId} className="card mb-3">
                         <div className="card-body">
@@ -959,12 +948,36 @@ function EmployeeDashboard() {
                 ))
             )}
 
+            {/* Add Education Button - Below the list or in empty state */}
+            {!isAddingEducation && (
+                <div className="text-center mt-3">
+                    {educations.length === 0 ? (
+                        <div className="card mb-3">
+                            <div className="card-body text-center py-4">
+                                <p className="text-muted mb-2">No education added yet.</p>
+                                <p className="text-muted small">Add your educational background to showcase your qualifications.</p>
+                                <button className="btn btn-primary btn-sm mt-2" onClick={handleAddEducationClick}>
+                                    + Add Education
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <button 
+                            className="btn btn-outline-primary" 
+                            onClick={handleAddEducationClick}
+                            style={{ borderStyle: 'dashed', padding: '10px 30px' }}
+                        >
+                            + Add Education
+                        </button>
+                    )}
+                </div>
+            )}
+
             <hr className="my-5" />
 
             {/* Experience Section */}
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2 className="mb-0">My Experience</h2>
-                {/* Removed Add button from header */}
             </div>
 
             <FeedbackMessage section="experience" />
@@ -1035,17 +1048,7 @@ function EmployeeDashboard() {
             )}
 
             {/* Experience List */}
-            {experiences.length === 0 ? (
-                <div className="card mb-3">
-                    <div className="card-body text-center py-4">
-                        <p className="text-muted mb-2">No experience added yet.</p>
-                        <p className="text-muted small">Add your work experience to demonstrate your skills and expertise.</p>
-                        <button className="btn btn-primary btn-sm mt-2" onClick={handleAddExperienceClick}>
-                            + Add Experience
-                        </button>
-                    </div>
-                </div>
-            ) : (
+            {experiences.length > 0 && (
                 experiences.map(experience => (
                     <div key={experience.experienceId} className="card mb-3">
                         <div className="card-body">
@@ -1142,12 +1145,36 @@ function EmployeeDashboard() {
                 ))
             )}
 
+            {/* Add Experience Button - Below the list or in empty state */}
+            {!isAddingExperience && (
+                <div className="text-center mt-3">
+                    {experiences.length === 0 ? (
+                        <div className="card mb-3">
+                            <div className="card-body text-center py-4">
+                                <p className="text-muted mb-2">No experience added yet.</p>
+                                <p className="text-muted small">Add your work experience to demonstrate your skills and expertise.</p>
+                                <button className="btn btn-primary btn-sm mt-2" onClick={handleAddExperienceClick}>
+                                    + Add Experience
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <button 
+                            className="btn btn-outline-primary" 
+                            onClick={handleAddExperienceClick}
+                            style={{ borderStyle: 'dashed', padding: '10px 30px' }}
+                        >
+                            + Add Experience
+                        </button>
+                    )}
+                </div>
+            )}
+
             <hr className="my-5" />
 
             {/* Skills Section */}
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2 className="mb-0">My Skills</h2>
-                {/* Removed Add button from header */}
             </div>
 
             <FeedbackMessage section="skill" />
@@ -1180,17 +1207,7 @@ function EmployeeDashboard() {
             )}
 
             {/* Skills List */}
-            {skills.length === 0 ? (
-                <div className="card mb-3">
-                    <div className="card-body text-center py-4">
-                        <p className="text-muted mb-2">No skills added yet.</p>
-                        <p className="text-muted small">Add your skills to help employers find you.</p>
-                        <button className="btn btn-primary btn-sm mt-2" onClick={handleAddSkillClick}>
-                            + Add Skill
-                        </button>
-                    </div>
-                </div>
-            ) : (
+            {skills.length > 0 && (
                 skills.map(skill => (
                     <div key={skill.skillId} className="card mb-3">
                         <div className="card-body">
@@ -1233,6 +1250,31 @@ function EmployeeDashboard() {
                         </div>
                     </div>
                 ))
+            )}
+
+            {/* Add Skill Button - Below the list or in empty state */}
+            {!isAddingSkill && (
+                <div className="text-center mt-3">
+                    {skills.length === 0 ? (
+                        <div className="card mb-3">
+                            <div className="card-body text-center py-4">
+                                <p className="text-muted mb-2">No skills added yet.</p>
+                                <p className="text-muted small">Add your skills to help employers find you.</p>
+                                <button className="btn btn-primary btn-sm mt-2" onClick={handleAddSkillClick}>
+                                    + Add Skill
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <button 
+                            className="btn btn-outline-primary" 
+                            onClick={handleAddSkillClick}
+                            style={{ borderStyle: 'dashed', padding: '10px 30px' }}
+                        >
+                            + Add Skill
+                        </button>
+                    )}
+                </div>
             )}
 
             {/* Applications Section */}
