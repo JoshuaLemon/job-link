@@ -645,7 +645,7 @@ function EmployeeDashboard() {
             {/* Profile Section */}
             <div className="card mb-5">
                 <div className="card-body">
-                    <div className="d-flex justify-content-between align-items-center mb-3">
+                    <div className="d-flex justify-content-between align-items-center">
                         <h5 className="mb-0">Profile Information</h5>
                         {!isEditingProfile && (
                             <button className="btn btn-primary" onClick={handleEditProfileClick}>
@@ -1018,7 +1018,11 @@ function EmployeeDashboard() {
 
             {/* Experience List */}
             {experiences.length === 0 ? (
-                <p>No experience added yet.</p>
+                <div className="card mb-3">
+                    <div className="card-body text-center py-4">
+                        <p className="text-muted mb-0">No experience added yet.</p>
+                    </div>
+                </div>
             ) : (
                 experiences.map(experience => (
                     <div key={experience.experienceId} className="card mb-3">
@@ -1153,7 +1157,11 @@ function EmployeeDashboard() {
 
             {/* Skills List */}
             {skills.length === 0 ? (
-                <p>No skills added yet.</p>
+                <div className="card mb-3">
+                    <div className="card-body text-center py-4">
+                        <p className="text-muted mb-0">No skills added yet.</p>
+                    </div>
+                </div>
             ) : (
                 skills.map(skill => (
                     <div key={skill.skillId} className="card mb-3">
