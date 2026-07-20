@@ -62,6 +62,7 @@ function EmployeeDashboard() {
 
     const [editingSkillId, setEditingSkillId] = useState(null);
     const [editingExperienceId, setEditingExperienceId] = useState(null);
+    const [isEditingProfile, setIsEditingProfile] = useState(false);
     const USE_INLINE_FEEDBACK = true;
 
     const [feedback, setFeedback] = useState({
@@ -177,6 +178,28 @@ function EmployeeDashboard() {
         }
     };
 
+    // Profile handlers
+    const handleEditProfileClick = () => {
+        setIsEditingProfile(true);
+    };
+
+    const handleCancelProfile = () => {
+        setIsEditingProfile(false);
+        // Refetch profile to reset to original values
+        api.get(`/Profile/${user.userId}`)
+            .then((response) => {
+                setProfile({
+                    headline: response.data.headline,
+                    bio: response.data.bio,
+                    location: response.data.location,
+                    phoneNumber: response.data.phoneNumber
+                });
+            })
+            .catch(() => {
+                console.log("No profile found.");
+            });
+    };
+
     const handleSaveProfile = async () => {
         try {
             const request = {
@@ -197,6 +220,7 @@ function EmployeeDashboard() {
                 console.log("Employee Profile ID:", response.data.employeeProfileId);
             }
 
+            setIsEditingProfile(false);
             showFeedback("profile", "success", "Profile saved successfully.");
         } catch (error) {
             console.error(error);
@@ -621,43 +645,82 @@ function EmployeeDashboard() {
             {/* Profile Section */}
             <div className="card mb-5">
                 <div className="card-body">
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                        <h5 className="mb-0">Profile Information</h5>
+                        {!isEditingProfile && (
+                            <button className="btn btn-primary" onClick={handleEditProfileClick}>
+                                ✏️ Edit Profile
+                            </button>
+                        )}
+                    </div>
+
                     <FeedbackMessage section="profile" />
-                    <div className="mb-3">
-                        <label className="form-label">Headline</label>
-                        <input
-                            className="form-control"
-                            value={profile.headline}
-                            onChange={(e) => setProfile({ ...profile, headline: e.target.value })}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label className="form-label">Bio</label>
-                        <textarea
-                            className="form-control"
-                            rows="4"
-                            value={profile.bio}
-                            onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label className="form-label">Location</label>
-                        <input
-                            className="form-control"
-                            value={profile.location}
-                            onChange={(e) => setProfile({ ...profile, location: e.target.value })}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label className="form-label">Phone Number</label>
-                        <input
-                            className="form-control"
-                            value={profile.phoneNumber}
-                            onChange={(e) => setProfile({ ...profile, phoneNumber: e.target.value })}
-                        />
-                    </div>
-                    <button className="btn btn-primary" onClick={handleSaveProfile}>
-                        Save Profile
-                    </button>
+
+                    {isEditingProfile ? (
+                        // Edit mode - show form fields
+                        <>
+                            <div className="mb-3">
+                                <label className="form-label">Headline</label>
+                                <input
+                                    className="form-control"
+                                    value={profile.headline}
+                                    onChange={(e) => setProfile({ ...profile, headline: e.target.value })}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Bio</label>
+                                <textarea
+                                    className="form-control"
+                                    rows="4"
+                                    value={profile.bio}
+                                    onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Location</label>
+                                <input
+                                    className="form-control"
+                                    value={profile.location}
+                                    onChange={(e) => setProfile({ ...profile, location: e.target.value })}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Phone Number</label>
+                                <input
+                                    className="form-control"
+                                    value={profile.phoneNumber}
+                                    onChange={(e) => setProfile({ ...profile, phoneNumber: e.target.value })}
+                                />
+                            </div>
+                            <div>
+                                <button className="btn btn-success me-2" onClick={handleSaveProfile}>
+                                    Save Profile
+                                </button>
+                                <button className="btn btn-secondary" onClick={handleCancelProfile}>
+                                    Cancel
+                                </button>
+                            </div>
+                        </>
+                    ) : (
+                        // View mode - show profile data
+                        <>
+                            {profile.headline && (
+                                <p><strong>Headline:</strong> {profile.headline}</p>
+                            )}
+                            {profile.bio && (
+                                <p><strong>Bio:</strong> {profile.bio}</p>
+                            )}
+                            {profile.location && (
+                                <p><strong>Location:</strong> {profile.location}</p>
+                            )}
+                            {profile.phoneNumber && (
+                                <p><strong>Phone:</strong> {profile.phoneNumber}</p>
+                            )}
+                            {!profile.headline && !profile.bio && !profile.location && !profile.phoneNumber && (
+                                <p className="text-muted">No profile information added yet. Click "Edit Profile" to add your details.</p>
+                            )}
+                        </>
+                    )}
                 </div>
             </div>
 
@@ -781,93 +844,101 @@ function EmployeeDashboard() {
                 </div>
             )}
 
-            {/* Education List */}
-            {educations.map((education) => (
-                <div key={education.educationId} className="card mb-3">
-                    <div className="card-body">
-                        {editingEducationId === education.educationId ? (
-                            <>
-                                <h5 className="mb-3">Edit Education</h5>
-                                <div className="mb-3">
-                                    <label>School Name</label>
-                                    <input
-                                        className="form-control"
-                                        value={editEducationForm.schoolName}
-                                        onChange={(e) => setEditEducationForm({ ...editEducationForm, schoolName: e.target.value })}
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label>Degree</label>
-                                    <input
-                                        className="form-control"
-                                        value={editEducationForm.degree}
-                                        onChange={(e) => setEditEducationForm({ ...editEducationForm, degree: e.target.value })}
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label>Field Of Study</label>
-                                    <input
-                                        className="form-control"
-                                        value={editEducationForm.fieldOfStudy}
-                                        onChange={(e) => setEditEducationForm({ ...editEducationForm, fieldOfStudy: e.target.value })}
-                                    />
-                                </div>
-                                <div className="row">
-                                    <div className="col">
-                                        <label>Start Year</label>
-                                        <input
-                                            className="form-control"
-                                            type="number"
-                                            value={editEducationForm.startYear}
-                                            onChange={(e) => setEditEducationForm({ ...editEducationForm, startYear: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="col">
-                                        <label>End Year</label>
-                                        <input
-                                            className="form-control"
-                                            type="number"
-                                            value={editEducationForm.endYear}
-                                            onChange={(e) => setEditEducationForm({ ...editEducationForm, endYear: e.target.value })}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="mt-3">
-                                    <button className="btn btn-success me-2" onClick={handleSaveEducation}>
-                                        Save Changes
-                                    </button>
-                                    <button className="btn btn-secondary" onClick={handleCancelEducation}>
-                                        Cancel
-                                    </button>
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                <h5>{education.degree}</h5>
-                                <p>{education.schoolName}</p>
-                                <p>{education.fieldOfStudy}</p>
-                                <p>
-                                    {new Date(education.startDate).getFullYear()}
-                                    {" - "}
-                                    {new Date(education.endDate).getFullYear()}
-                                </p>
-                                <button
-                                    className="btn btn-warning me-2"
-                                    onClick={() => handleEditEducation(education)}
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    className="btn btn-danger"
-                                    onClick={() => handleDeleteEducation(education.educationId)}
-                                >
-                                    Delete
-                                </button>
-                            </>
-                        )}
+            {/* Education List or No Education Message */}
+            {educations.length === 0 && !isAddingEducation ? (
+                <div className="card mb-3">
+                    <div className="card-body text-center py-4">
+                        <p className="text-muted mb-0">No education added yet.</p>
                     </div>
                 </div>
-            ))}
+            ) : (
+                educations.map((education) => (
+                    <div key={education.educationId} className="card mb-3">
+                        <div className="card-body">
+                            {editingEducationId === education.educationId ? (
+                                <>
+                                    <h5 className="mb-3">Edit Education</h5>
+                                    <div className="mb-3">
+                                        <label>School Name</label>
+                                        <input
+                                            className="form-control"
+                                            value={editEducationForm.schoolName}
+                                            onChange={(e) => setEditEducationForm({ ...editEducationForm, schoolName: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label>Degree</label>
+                                        <input
+                                            className="form-control"
+                                            value={editEducationForm.degree}
+                                            onChange={(e) => setEditEducationForm({ ...editEducationForm, degree: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label>Field Of Study</label>
+                                        <input
+                                            className="form-control"
+                                            value={editEducationForm.fieldOfStudy}
+                                            onChange={(e) => setEditEducationForm({ ...editEducationForm, fieldOfStudy: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="row">
+                                        <div className="col">
+                                            <label>Start Year</label>
+                                            <input
+                                                className="form-control"
+                                                type="number"
+                                                value={editEducationForm.startYear}
+                                                onChange={(e) => setEditEducationForm({ ...editEducationForm, startYear: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col">
+                                            <label>End Year</label>
+                                            <input
+                                                className="form-control"
+                                                type="number"
+                                                value={editEducationForm.endYear}
+                                                onChange={(e) => setEditEducationForm({ ...editEducationForm, endYear: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="mt-3">
+                                        <button className="btn btn-success me-2" onClick={handleSaveEducation}>
+                                            Save Changes
+                                        </button>
+                                        <button className="btn btn-secondary" onClick={handleCancelEducation}>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <h5>{education.degree}</h5>
+                                    <p>{education.schoolName}</p>
+                                    <p>{education.fieldOfStudy}</p>
+                                    <p>
+                                        {new Date(education.startDate).getFullYear()}
+                                        {" - "}
+                                        {new Date(education.endDate).getFullYear()}
+                                    </p>
+                                    <button
+                                        className="btn btn-warning me-2"
+                                        onClick={() => handleEditEducation(education)}
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        className="btn btn-danger"
+                                        onClick={() => handleDeleteEducation(education.educationId)}
+                                    >
+                                        Delete
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                ))
+            )}
 
             <hr className="my-5" />
 
