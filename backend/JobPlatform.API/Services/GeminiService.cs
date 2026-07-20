@@ -7,12 +7,13 @@ public class GeminiService : IGeminiService
 {
     private readonly HttpClient _httpClient;
     private readonly IConfiguration _configuration;
+    
+    // Free tier models only
     private readonly string[] _models = new[]
     {
-        "gemini-3.5-flash",
-        "gemini-2.0-flash-exp",
-        "gemini-1.5-flash",
-        "gemini-1.5-pro"
+        "gemini-3.5-flash",        // Best balance - ~10 RPM, 250 RPD
+        "gemini-3.1-flash-lite",   // High-volume tasks - ~15 RPM, 1000 RPD
+        "gemini-2.5-pro"           // Complex prototyping - ~5 RPM, 100 RPD
     };
 
     public GeminiService(
@@ -32,7 +33,7 @@ public class GeminiService : IGeminiService
             throw new Exception("Gemini API key is not configured.");
         }
 
-        Exception lastException = null;
+        Exception lastException = new Exception("No models attempted");
         
         foreach (var model in _models)
         {
@@ -52,8 +53,15 @@ public class GeminiService : IGeminiService
                 Console.WriteLine($"Model {model} failed: {ex.Message}");
                 lastException = ex;
                 
-                // If it's a service unavailable error, try the next model
-                if (ex.Message.Contains("503") || ex.Message.Contains("ServiceUnavailable"))
+                // Continue to next model if:
+                // - Model not found (404)
+                // - Service unavailable (503)
+                // - Rate limited (429)
+                if (ex.Message.Contains("404") || 
+                    ex.Message.Contains("503") || 
+                    ex.Message.Contains("429") ||
+                    ex.Message.Contains("ServiceUnavailable") ||
+                    ex.Message.Contains("NOT_FOUND"))
                 {
                     continue;
                 }
