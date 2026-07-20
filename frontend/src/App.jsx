@@ -10,6 +10,8 @@ import EmployerViewProfile from "./pages/EmployerViewProfile";
 import CreateJob from "./pages/CreateJob";
 import JobDetails from "./pages/JobDetails";
 import Applicants from "./pages/Applicants";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 
 function App() {
     return (
@@ -91,7 +93,8 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
-              
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
 
             </Routes>
         </>

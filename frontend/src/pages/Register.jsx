@@ -10,7 +10,7 @@ function Register() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [role, setRole] = useState("Employee");
-
+    const [acceptedTerms, setAcceptedTerms] = useState(false);
     const navigate = useNavigate();
 
     const handleRegister = async (e) => {
@@ -22,9 +22,9 @@ function Register() {
             !lastName ||
             !email ||
             !password ||
-            !confirmPassword
+            !confirmPassword         
         ) {
-            alert("Please fill in all fields.");
+            alert("Please fill in all fields and accept the terms and conditions.");
             return;
         }
 
@@ -32,7 +32,10 @@ function Register() {
             alert("Passwords do not match.");
             return;
         }
-
+        if (!acceptedTerms) {
+            alert("You must accept the Privacy Policy and Terms of Service.");
+            return;
+        }
         try {
 
             await api.post("/Auth/register", {
@@ -217,6 +220,40 @@ function Register() {
                                         </label>
 
                                     </div>
+
+                                </div>
+
+                                <div className="form-check mb-4">
+
+                                    <input
+                                        className="form-check-input"
+                                        type="checkbox"
+                                        id="termsCheck"
+                                        checked={acceptedTerms}
+                                        onChange={(e) => setAcceptedTerms(e.target.checked)}
+                                    />
+
+                                    <label
+                                        className="form-check-label"
+                                        htmlFor="termsCheck"
+                                    >
+                                        I agree to the{" "}
+                                        <a
+                                            href="/privacy"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Privacy Policy
+                                        </a>{" "}
+                                        and{" "}
+                                        <a
+                                            href="/terms"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Terms of Service
+                                        </a>.
+                                    </label>
 
                                 </div>
 
