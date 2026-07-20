@@ -77,9 +77,9 @@ function Login() {
 
             setTimeout(() => {
                 if (role === "Employee") {
-                    navigate("/employee-dashboard");
+                    navigate("/employee");
                 } else if (role === "Employer") {
-                    navigate("/employer-dashboard");
+                    navigate("/employer");
                 } else {
                     navigate("/");
                 }
