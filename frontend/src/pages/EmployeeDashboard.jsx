@@ -268,7 +268,11 @@ function EmployeeDashboard() {
         const startDate = new Date(educationForm.startDate);
         const endDate = new Date(educationForm.endDate);
         const currentDate = new Date();
-        const today = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        
+        // Compare only month/year (set both to the 1st of the month)
+        const startYearMonth = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+        const endYearMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+        const currentYearMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
 
         if (!educationForm.schoolName.trim()) {
             showFeedback("education", "danger", "Please enter a school name.");
@@ -290,15 +294,15 @@ function EmployeeDashboard() {
             showFeedback("education", "danger", "Please select an end date.");
             return;
         }
-        if (startDate > today) {
-            showFeedback("education", "danger", "Start date cannot be in the future.");
+        if (startYearMonth > currentYearMonth) {
+            showFeedback("education", "danger", `Start date (${startDate.toLocaleString('default', { month: 'long', year: 'numeric' })}) cannot be in the future.`);
             return;
         }
-        if (endDate > today) {
-            showFeedback("education", "danger", "End date cannot be in the future.");
+        if (endYearMonth > currentYearMonth) {
+            showFeedback("education", "danger", `End date (${endDate.toLocaleString('default', { month: 'long', year: 'numeric' })}) cannot be in the future.`);
             return;
         }
-        if (endDate < startDate) {
+        if (endYearMonth < startYearMonth) {
             showFeedback("education", "danger", "End date cannot be before start date.");
             return;
         }
@@ -345,7 +349,10 @@ function EmployeeDashboard() {
         const startDate = new Date(editEducationForm.startDate);
         const endDate = new Date(editEducationForm.endDate);
         const currentDate = new Date();
-        const today = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        
+        const startYearMonth = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+        const endYearMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+        const currentYearMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
 
         if (!editEducationForm.schoolName.trim()) {
             showFeedback("education", "danger", "Please enter a school name.");
@@ -367,15 +374,15 @@ function EmployeeDashboard() {
             showFeedback("education", "danger", "Please select an end date.");
             return;
         }
-        if (startDate > today) {
-            showFeedback("education", "danger", "Start date cannot be in the future.");
+        if (startYearMonth > currentYearMonth) {
+            showFeedback("education", "danger", `Start date (${startDate.toLocaleString('default', { month: 'long', year: 'numeric' })}) cannot be in the future.`);
             return;
         }
-        if (endDate > today) {
-            showFeedback("education", "danger", "End date cannot be in the future.");
+        if (endYearMonth > currentYearMonth) {
+            showFeedback("education", "danger", `End date (${endDate.toLocaleString('default', { month: 'long', year: 'numeric' })}) cannot be in the future.`);
             return;
         }
-        if (endDate < startDate) {
+        if (endYearMonth < startYearMonth) {
             showFeedback("education", "danger", "End date cannot be before start date.");
             return;
         }
@@ -455,7 +462,10 @@ function EmployeeDashboard() {
         const startDate = new Date(experienceForm.startDate);
         const endDate = new Date(experienceForm.endDate);
         const currentDate = new Date();
-        const today = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        
+        const startYearMonth = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+        const endYearMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+        const currentYearMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
 
         if (!experienceForm.companyName.trim()) {
             showFeedback("experience", "danger", "Please enter a company name.");
@@ -473,15 +483,15 @@ function EmployeeDashboard() {
             showFeedback("experience", "danger", "Please select an end date.");
             return;
         }
-        if (startDate > today) {
-            showFeedback("experience", "danger", "Start date cannot be in the future.");
+        if (startYearMonth > currentYearMonth) {
+            showFeedback("experience", "danger", `Start date (${startDate.toLocaleString('default', { month: 'long', year: 'numeric' })}) cannot be in the future.`);
             return;
         }
-        if (endDate > today) {
-            showFeedback("experience", "danger", "End date cannot be in the future.");
+        if (endYearMonth > currentYearMonth) {
+            showFeedback("experience", "danger", `End date (${endDate.toLocaleString('default', { month: 'long', year: 'numeric' })}) cannot be in the future.`);
             return;
         }
-        if (endDate < startDate) {
+        if (endYearMonth < startYearMonth) {
             showFeedback("experience", "danger", "End date cannot be before start date.");
             return;
         }
