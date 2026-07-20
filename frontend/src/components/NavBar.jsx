@@ -25,7 +25,7 @@ function Navbar() {
                     className="navbar-brand"
                     to="/"
                 >
-                    Job Platform
+                    Job Link
                 </Link>
 
                 <div className="navbar-nav">

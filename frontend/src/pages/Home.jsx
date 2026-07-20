@@ -17,7 +17,7 @@ function Home() {
 
     return (
         <div className="container mt-5">
-            <h1 className="mb-4">Job Platform</h1>
+            <h1 className="mb-4">Job Link</h1>
 
             {jobs.length === 0 ? (
                 <p>No jobs found.</p>
