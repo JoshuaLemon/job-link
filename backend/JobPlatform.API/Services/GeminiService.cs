@@ -8,12 +8,11 @@ public class GeminiService : IGeminiService
     private readonly HttpClient _httpClient;
     private readonly IConfiguration _configuration;
     
-    // Free tier models only
     private readonly string[] _models = new[]
     {
-        "gemini-3.5-flash",        // Best balance - ~10 RPM, 250 RPD
-        "gemini-3.1-flash-lite",   // High-volume tasks - ~15 RPM, 1000 RPD
-        "gemini-2.5-pro"           // Complex prototyping - ~5 RPM, 100 RPD
+        "gemini-3.5-flash",
+        "gemini-3.1-flash-lite",
+        "gemini-2.5-pro"
     };
 
     public GeminiService(
@@ -26,12 +25,18 @@ public class GeminiService : IGeminiService
 
     public async Task<string> GenerateResumeAsync(string prompt)
     {
-        var apiKey = _configuration["Gemini:ApiKey"] ?? _configuration["Gemini_ApiKey"];
+        // Try multiple configuration keys
+        var apiKey = _configuration["Gemini:ApiKey"] ?? 
+                     _configuration["Gemini_ApiKey"] ?? 
+                     _configuration["GEMINI_API_KEY"];
         
         if (string.IsNullOrEmpty(apiKey))
         {
-            throw new Exception("Gemini API key is not configured.");
+            throw new Exception("Gemini API key is not configured. Check environment variables.");
         }
+
+        // Log API key status (first few chars only)
+        Console.WriteLine($"API Key found: {apiKey.Substring(0, Math.Min(8, apiKey.Length))}...");
 
         Exception lastException = new Exception("No models attempted");
         
@@ -39,7 +44,7 @@ public class GeminiService : IGeminiService
         {
             try
             {
-                Console.WriteLine($"Attempting to use model: {model}");
+                Console.WriteLine($"Attempting model: {model}");
                 
                 var result = await TryGenerateWithModel(model, apiKey, prompt);
                 if (!string.IsNullOrEmpty(result))
@@ -53,26 +58,22 @@ public class GeminiService : IGeminiService
                 Console.WriteLine($"Model {model} failed: {ex.Message}");
                 lastException = ex;
                 
-                // Continue to next model if:
-                // - Model not found (404)
-                // - Service unavailable (503)
-                // - Rate limited (429)
+                // Continue on recoverable errors
                 if (ex.Message.Contains("404") || 
                     ex.Message.Contains("503") || 
                     ex.Message.Contains("429") ||
                     ex.Message.Contains("ServiceUnavailable") ||
-                    ex.Message.Contains("NOT_FOUND"))
+                    ex.Message.Contains("NOT_FOUND") ||
+                    ex.Message.Contains("invalid start"))
                 {
                     continue;
                 }
                 
-                // For other errors, throw immediately
                 throw;
             }
         }
 
-        // If we get here, all models failed
-        throw new Exception($"All Gemini models are currently unavailable. Last error: {lastException?.Message}");
+        throw new Exception($"All Gemini models failed. Last error: {lastException.Message}");
     }
 
     private async Task<string> TryGenerateWithModel(string model, string apiKey, string prompt)
@@ -99,28 +100,40 @@ public class GeminiService : IGeminiService
         var json = JsonSerializer.Serialize(body);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await _httpClient.PostAsync(url, content);
-        var responseBody = await response.Content.ReadAsStringAsync();
-
-        Console.WriteLine($"Model: {model}, Status: {response.StatusCode}");
-        Console.WriteLine($"Response: {responseBody}");
-
-        if (!response.IsSuccessStatusCode)
+        try
         {
-            throw new Exception(
-                $"Status: {response.StatusCode}\n\n{responseBody}");
+            var response = await _httpClient.PostAsync(url, content);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine($"Model: {model}, Status: {response.StatusCode}");
+            Console.WriteLine($"Response length: {responseBody.Length}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Status: {response.StatusCode}\n\n{responseBody}");
+            }
+
+            // Handle empty or invalid JSON
+            if (string.IsNullOrWhiteSpace(responseBody) || responseBody.StartsWith("<"))
+            {
+                throw new Exception($"Invalid response: {responseBody.Substring(0, Math.Min(100, responseBody.Length))}...");
+            }
+
+            using var document = JsonDocument.Parse(responseBody);
+            var root = document.RootElement;
+
+            var text = root
+                .GetProperty("candidates")[0]
+                .GetProperty("content")
+                .GetProperty("parts")[0]
+                .GetProperty("text")
+                .GetString();
+
+            return text ?? "";
         }
-
-        using var document = JsonDocument.Parse(responseBody);
-        var root = document.RootElement;
-
-        var text = root
-            .GetProperty("candidates")[0]
-            .GetProperty("content")
-            .GetProperty("parts")[0]
-            .GetProperty("text")
-            .GetString();
-
-        return text ?? "";
+        catch (JsonException ex)
+        {
+            throw new Exception($"Invalid JSON response: {ex.Message}");
+        }
     }
 }
