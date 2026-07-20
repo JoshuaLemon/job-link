@@ -58,7 +58,13 @@ function EmployeeDashboard() {
     const [editingSkillId, setEditingSkillId] = useState(null);
 
     const [editingExperienceId, setEditingExperienceId] = useState(null);
+    const USE_INLINE_FEEDBACK = true;
+    // Change to false whenever you want to use alerts instead.
 
+    const [feedback, setFeedback] = useState({
+        type: "",
+        message: ""
+    });
     useEffect(() => {
 
         // Load employee applications
@@ -176,7 +182,10 @@ function EmployeeDashboard() {
             localStorage.removeItem("token");
             localStorage.removeItem("user");
 
-            alert("Your account has been deleted.");
+            showFeedback(
+                "success",
+                "Your account has been deleted."
+            );
 
             window.location.href = "/";
 
@@ -185,7 +194,10 @@ function EmployeeDashboard() {
 
             console.error(error);
 
-            alert("Unable to delete account.");
+            showFeedback(
+                "danger",
+                "Unable to delete account."
+            );
 
         }
 
@@ -232,14 +244,20 @@ function EmployeeDashboard() {
                 console.log("Employee Profile ID:", response.data.employeeProfileId);
             }
 
-            alert("Profile saved successfully.");
+            showFeedback(
+                "success",
+                "Profile saved successfully."
+            );
 
         }
         catch (error) {
 
             console.error(error);
 
-            alert(error.response?.data || "Unable to save profile.");
+            showFeedback(
+                "danger",
+                error.response?.data || "Unable to save profile."
+            );
 
         }
 
@@ -250,12 +268,18 @@ function EmployeeDashboard() {
             console.log("Current employeeProfileId:", employeeProfileId);
 
             if (!employeeProfileId) {
-                alert("Please save your profile first.");
+                showFeedback(
+                    "warning",
+                    "Please save your profile first."
+                );
                 return;
             }
             if (!employeeProfileId) {
 
-                alert("Please save your profile first.");
+                showFeedback(
+                    "warning",
+                    "Please save your profile first."
+                );
 
                 return;
 
@@ -306,14 +330,20 @@ function EmployeeDashboard() {
 
                 });
 
-                alert("Education added successfully.");
+                showFeedback(
+                    "success",
+                    "Education added successfully."
+                );
 
             }
             catch (error) {
 
                 console.error(error);
 
-                alert("Unable to add education.");
+                showFeedback(
+                    "danger",
+                    "Unable to add education."
+                );
 
             }
 
@@ -396,7 +426,10 @@ function EmployeeDashboard() {
 
                 setEditingEducationId(null);
 
-                alert("Education updated successfully.");
+                showFeedback(
+                    "success",
+                    "Education updated successfully."
+                );
 
             }
 
@@ -404,7 +437,10 @@ function EmployeeDashboard() {
 
                 console.error(error);
 
-                alert("Unable to update education.");
+                showFeedback(
+                    "danger",
+                    "Unable to update education."
+                );
 
             }
 
@@ -433,7 +469,10 @@ function EmployeeDashboard() {
 
             );
 
-            alert("Education deleted successfully.");
+            showFeedback(
+                "success",
+                "Education deleted successfully."
+            );
 
         }
 
@@ -441,7 +480,10 @@ function EmployeeDashboard() {
 
             console.error(error);
 
-            alert("Unable to delete education.");
+            showFeedback(
+                "danger",
+                "Unable to delete education."
+            );
 
         }
 
@@ -500,14 +542,20 @@ function EmployeeDashboard() {
 
             setEditingExperienceId(null);
 
-            alert("Experience saved successfully.");
+            showFeedback(
+                "success",
+                "Experience saved successfully."
+            );
 
         }
         catch (error) {
 
             console.error(error);
 
-            alert("Unable to save experience.");
+            showFeedback(
+                "danger",
+                "Unable to save experience."
+            );
 
         }
 
@@ -562,14 +610,20 @@ function EmployeeDashboard() {
                 )
             );
 
-            alert("Experience deleted.");
+            showFeedback(
+                "success",
+                "Experience deleted."
+            );
 
         }
         catch (error) {
 
             console.error(error);
 
-            alert("Unable to delete experience.");
+            showFeedback(
+                "danger",
+                "Unable to delete experience."
+            );
 
         }
 
@@ -615,14 +669,20 @@ function EmployeeDashboard() {
 
             setEditingSkillId(null);
 
-            alert("Skill saved successfully.");
+            showFeedback(
+                "success",
+                "Skill saved successfully."
+            );
 
         }
         catch (error) {
 
             console.error(error);
 
-            alert("Unable to save skill.");
+            showFeedback(
+                "danger",
+                "Unable to save skill."
+            );
 
         }
 
@@ -666,14 +726,20 @@ function EmployeeDashboard() {
                 )
             );
 
-            alert("Skill deleted.");
+            showFeedback(
+                "success",
+                "Skill deleted."
+            );
 
         }
         catch (error) {
 
             console.error(error);
 
-            alert("Unable to delete skill.");
+            showFeedback(
+                "danger",
+                "Unable to delete skill."
+            );
 
         }
 
@@ -721,7 +787,10 @@ function EmployeeDashboard() {
 
             console.error(error);
 
-            alert("Unable to download resume.");
+            showFeedback(
+                "danger",
+                "Unable to download resume."
+            );
 
         });
 
@@ -743,7 +812,10 @@ function EmployeeDashboard() {
         catch (err) {
 
             console.error(err);
-            alert("Failed to generate AI resume.");
+            showFeedback(
+                "danger",
+                "Failed to generate AI resume."
+            );
 
         }
         finally {
@@ -798,16 +870,66 @@ function EmployeeDashboard() {
 
             console.error(error);
 
-            alert("Failed to download AI Resume.");
+            showFeedback(
+                "danger",
+                "Failed to download AI Resume."
+            );
 
         });
 
     };
+    const showFeedback = (type, message) => {
 
+        if (USE_INLINE_FEEDBACK) {
+
+            setFeedback({
+                type,
+                message
+            });
+
+            setTimeout(() => {
+
+                setFeedback({
+                    type: "",
+                    message: ""
+                });
+
+            }, 3000);
+
+        }
+        else {
+
+            alert(message);
+
+        }
+
+    };
     return (
 
         <div className="container mt-5">
+            {USE_INLINE_FEEDBACK && feedback.message && (
 
+                <div
+                    className={`alert alert-${feedback.type} alert-dismissible fade show`}
+                    role="alert"
+                >
+
+                    {feedback.message}
+
+                    <button
+                        type="button"
+                        className="btn-close"
+                        onClick={() =>
+                            setFeedback({
+                                type: "",
+                                message: ""
+                            })
+                        }
+                    />
+
+                </div>
+
+            )}
            <div className="d-flex justify-content-between align-items-center mb-4">
 
                 <h2>My Profile</h2>
