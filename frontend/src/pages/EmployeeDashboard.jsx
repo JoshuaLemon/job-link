@@ -265,6 +265,43 @@ function EmployeeDashboard() {
             return;
         }
 
+        const startYear = parseInt(educationForm.startYear);
+        const endYear = parseInt(educationForm.endYear);
+        const currentYear = new Date().getFullYear();
+
+        if (!educationForm.schoolName.trim()) {
+            showFeedback("education", "danger", "Please enter a school name.");
+            return;
+        }
+        if (!educationForm.degree.trim()) {
+            showFeedback("education", "danger", "Please enter a degree.");
+            return;
+        }
+        if (!educationForm.fieldOfStudy.trim()) {
+            showFeedback("education", "danger", "Please enter a field of study.");
+            return;
+        }
+        if (!educationForm.startYear || isNaN(startYear)) {
+            showFeedback("education", "danger", "Please enter a valid start year.");
+            return;
+        }
+        if (!educationForm.endYear || isNaN(endYear)) {
+            showFeedback("education", "danger", "Please enter a valid end year.");
+            return;
+        }
+        if (startYear > currentYear) {
+            showFeedback("education", "danger", `Start year cannot be in the future. Current year is ${currentYear}.`);
+            return;
+        }
+        if (endYear > currentYear) {
+            showFeedback("education", "danger", `End year cannot be in the future. Current year is ${currentYear}.`);
+            return;
+        }
+        if (endYear < startYear) {
+            showFeedback("education", "danger", "End year cannot be before start year.");
+            return;
+        }
+
         try {
             const request = {
                 employeeProfileId,
@@ -304,6 +341,43 @@ function EmployeeDashboard() {
     };
 
     const handleSaveEducation = async () => {
+        const startYear = parseInt(editEducationForm.startYear);
+        const endYear = parseInt(editEducationForm.endYear);
+        const currentYear = new Date().getFullYear();
+
+        if (!editEducationForm.schoolName.trim()) {
+            showFeedback("education", "danger", "Please enter a school name.");
+            return;
+        }
+        if (!editEducationForm.degree.trim()) {
+            showFeedback("education", "danger", "Please enter a degree.");
+            return;
+        }
+        if (!editEducationForm.fieldOfStudy.trim()) {
+            showFeedback("education", "danger", "Please enter a field of study.");
+            return;
+        }
+        if (!editEducationForm.startYear || isNaN(startYear)) {
+            showFeedback("education", "danger", "Please enter a valid start year.");
+            return;
+        }
+        if (!editEducationForm.endYear || isNaN(endYear)) {
+            showFeedback("education", "danger", "Please enter a valid end year.");
+            return;
+        }
+        if (startYear > currentYear) {
+            showFeedback("education", "danger", `Start year cannot be in the future. Current year is ${currentYear}.`);
+            return;
+        }
+        if (endYear > currentYear) {
+            showFeedback("education", "danger", `End year cannot be in the future. Current year is ${currentYear}.`);
+            return;
+        }
+        if (endYear < startYear) {
+            showFeedback("education", "danger", "End year cannot be before start year.");
+            return;
+        }
+
         try {
             const request = {
                 employeeProfileId,
@@ -376,6 +450,40 @@ function EmployeeDashboard() {
     };
 
     const handleSaveExperience = async () => {
+        const startDate = new Date(experienceForm.startDate);
+        const endDate = new Date(experienceForm.endDate);
+        const currentDate = new Date();
+        const today = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+
+        if (!experienceForm.companyName.trim()) {
+            showFeedback("experience", "danger", "Please enter a company name.");
+            return;
+        }
+        if (!experienceForm.jobTitle.trim()) {
+            showFeedback("experience", "danger", "Please enter a job title.");
+            return;
+        }
+        if (!experienceForm.startDate) {
+            showFeedback("experience", "danger", "Please select a start date.");
+            return;
+        }
+        if (!experienceForm.endDate) {
+            showFeedback("experience", "danger", "Please select an end date.");
+            return;
+        }
+        if (startDate > today) {
+            showFeedback("experience", "danger", "Start date cannot be in the future.");
+            return;
+        }
+        if (endDate > today) {
+            showFeedback("experience", "danger", `End date cannot be in the future. Today is ${today.toLocaleDateString()}.`);
+            return;
+        }
+        if (endDate < startDate) {
+            showFeedback("experience", "danger", "End date cannot be before start date.");
+            return;
+        }
+
         try {
             const request = {
                 employeeProfileId: employeeProfileId,
@@ -1021,6 +1129,7 @@ function EmployeeDashboard() {
                                 <input
                                     type="date"
                                     className="form-control"
+                                    max={new Date().toISOString().split('T')[0]}
                                     value={experienceForm.startDate}
                                     onChange={(e) => setExperienceForm({ ...experienceForm, startDate: e.target.value })}
                                 />
@@ -1030,6 +1139,7 @@ function EmployeeDashboard() {
                                 <input
                                     type="date"
                                     className="form-control"
+                                    max={new Date().toISOString().split('T')[0]}
                                     value={experienceForm.endDate}
                                     onChange={(e) => setExperienceForm({ ...experienceForm, endDate: e.target.value })}
                                 />
@@ -1086,6 +1196,7 @@ function EmployeeDashboard() {
                                             <input
                                                 type="date"
                                                 className="form-control"
+                                                max={new Date().toISOString().split('T')[0]}
                                                 value={experienceForm.startDate}
                                                 onChange={(e) => setExperienceForm({ ...experienceForm, startDate: e.target.value })}
                                             />
@@ -1095,6 +1206,7 @@ function EmployeeDashboard() {
                                             <input
                                                 type="date"
                                                 className="form-control"
+                                                max={new Date().toISOString().split('T')[0]}
                                                 value={experienceForm.endDate}
                                                 onChange={(e) => setExperienceForm({ ...experienceForm, endDate: e.target.value })}
                                             />
