@@ -6,9 +6,9 @@ function EmployerDashboard() {
 
     const user = JSON.parse(localStorage.getItem("user"));
     const [jobs, setJobs] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const [editingJobId, setEditingJobId] = useState(null);
-
     const [editForm, setEditForm] = useState({
         title: "",
         description: "",
@@ -26,91 +26,143 @@ function EmployerDashboard() {
     });
 
     const [companyExists, setCompanyExists] = useState(false);
-
     const [companyId, setCompanyId] = useState(null);
-
+    const [isEditingCompany, setIsEditingCompany] = useState(false);
     const [company, setCompany] = useState({
-
         companyName: "",
-
         industry: "",
-
         description: "",
-
         website: "",
-
         location: ""
-
     });
+
+    const [feedback, setFeedback] = useState({
+        section: "",
+        type: "",
+        message: ""
+    });
+
+    const USE_INLINE_FEEDBACK = true;
+
+    const showFeedback = (section, type, message) => {
+        if (USE_INLINE_FEEDBACK) {
+            setFeedback({
+                section,
+                type,
+                message
+            });
+            setTimeout(() => {
+                setFeedback({
+                    section: "",
+                    type: "",
+                    message: ""
+                });
+            }, 3000);
+        } else {
+            alert(message);
+        }
+    };
+
+    const FeedbackMessage = ({ section }) => {
+        if (feedback.section !== section || !feedback.message) {
+            return null;
+        }
+        return (
+            <div className={`alert alert-${feedback.type} mt-3`} role="alert">
+                {feedback.message}
+            </div>
+        );
+    };
 
     useEffect(() => {
-
-        api.get("/JobPost/my-jobs")
-            .then((response) => {
-
-                console.log(response.data);
-
-                setJobs(response.data);
-
-            })
-            .catch((error) => {
-
-                console.error(error);
-
-            });
-        api.get("/Application/dashboard")
-
-            .then((response) => {
-
-                console.log(response.data);
-
-                setStats(response.data);
-
-            })
-
-            .catch((error) => {
-
-                console.error(error);
-
-            });
-
-            api.get(`/Company/${user.userId}`)
-
-    .then((response) => {
-
-        console.log(response.data);
-
-        setCompanyExists(true);
-
-        setCompanyId(response.data.companyId);
-
-        setCompany({
-
-            companyName: response.data.companyName,
-
-            industry: response.data.industry,
-
-            description: response.data.description,
-
-            website: response.data.website,
-
-            location: response.data.location
-
-        });
-
-    })
-
-    .catch(() => {
-
-        console.log("No company found.");
-
-    });
+        loadData();
     }, []);
 
+    const loadData = async () => {
+        setLoading(true);
+        try {
+            // Load jobs
+            const jobsResponse = await api.get("/JobPost/my-jobs");
+            setJobs(jobsResponse.data);
+
+            // Load stats
+            const statsResponse = await api.get("/Application/dashboard");
+            setStats(statsResponse.data);
+
+            // Load company
+            try {
+                const companyResponse = await api.get(`/Company/${user.userId}`);
+                setCompanyExists(true);
+                setCompanyId(companyResponse.data.companyId);
+                setCompany({
+                    companyName: companyResponse.data.companyName,
+                    industry: companyResponse.data.industry,
+                    description: companyResponse.data.description,
+                    website: companyResponse.data.website,
+                    location: companyResponse.data.location
+                });
+            } catch {
+                console.log("No company found.");
+            }
+        } catch (error) {
+            console.error(error);
+            showFeedback("general", "danger", "Failed to load data.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEditCompany = () => {
+        setIsEditingCompany(true);
+    };
+
+    const handleCancelCompany = () => {
+        setIsEditingCompany(false);
+        // Refetch company data to reset
+        api.get(`/Company/${user.userId}`)
+            .then((response) => {
+                setCompany({
+                    companyName: response.data.companyName,
+                    industry: response.data.industry,
+                    description: response.data.description,
+                    website: response.data.website,
+                    location: response.data.location
+                });
+            })
+            .catch(() => {
+                console.log("No company found.");
+            });
+    };
+
+    const handleSaveCompany = async () => {
+        try {
+            const request = {
+                userId: user.userId,
+                companyName: company.companyName,
+                industry: company.industry,
+                description: company.description,
+                website: company.website,
+                location: company.location
+            };
+
+            if (companyExists) {
+                await api.put(`/Company/${user.userId}`, request);
+            } else {
+                const response = await api.post("/Company", request);
+                setCompanyExists(true);
+                setCompanyId(response.data.company.companyId);
+            }
+
+            setIsEditingCompany(false);
+            showFeedback("company", "success", "Company saved successfully.");
+        } catch (error) {
+            console.error(error);
+            showFeedback("company", "danger", "Unable to save company.");
+        }
+    };
+
     const handleEdit = (job) => {
-
         setEditingJobId(job.jobPostId);
-
         setEditForm({
             title: job.title,
             description: job.description,
@@ -118,524 +170,331 @@ function EmployerDashboard() {
             salary: job.salary,
             employmentType: job.employmentType
         });
+    };
 
+    const handleCancelEdit = () => {
+        setEditingJobId(null);
+        setEditForm({
+            title: "",
+            description: "",
+            location: "",
+            salary: 0,
+            employmentType: ""
+        });
     };
 
     const handleSave = async () => {
-
         try {
-
-            await api.put(
-
-                `/JobPost/${editingJobId}`,
-
-                editForm
-
-            );
-
+            await api.put(`/JobPost/${editingJobId}`, editForm);
             setJobs(previousJobs =>
-
                 previousJobs.map(job =>
-
                     job.jobPostId === editingJobId
-
-                        ? {
-                            ...job,
-                            ...editForm
-                        }
-
+                        ? { ...job, ...editForm }
                         : job
-
                 )
-
             );
-
             setEditingJobId(null);
-
-            alert("Job updated successfully.");
-
-        }
-        catch (error) {
-
+            showFeedback("job", "success", "Job updated successfully.");
+        } catch (error) {
             console.error(error);
-
-            alert("Unable to update job.");
-
+            showFeedback("job", "danger", "Unable to update job.");
         }
-
     };
 
     const handleDelete = async (jobId) => {
-
-        const confirmed = window.confirm(
-            "Are you sure you want to delete this job?"
-        );
-
-        if (!confirmed) {
-            return;
-        }
+        const confirmed = window.confirm("Are you sure you want to delete this job?");
+        if (!confirmed) return;
 
         try {
-
             await api.delete(`/JobPost/${jobId}`);
-
-            setJobs(previousJobs =>
-                previousJobs.filter(job =>
-                    job.jobPostId !== jobId
-                )
-            );
-
-            alert("Job deleted successfully.");
-
-        }
-        catch (error) {
-
+            setJobs(previousJobs => previousJobs.filter(job => job.jobPostId !== jobId));
+            showFeedback("job", "success", "Job deleted successfully.");
+        } catch (error) {
             console.error(error);
-
-            alert("Unable to delete job.");
-
+            showFeedback("job", "danger", "Unable to delete job.");
         }
-
     };
 
-    const handleSaveCompany = async () => {
-
-        try {
-
-        const request = {
-
-            userId: user.userId,
-
-            companyName: company.companyName,
-
-            industry: company.industry,
-
-            description: company.description,
-
-            website: company.website,
-
-            location: company.location
-
-        };
-
-            if (companyExists) {
-
-                await api.put(
-
-                    `/Company/${user.userId}`,
-
-                    request
-
-                );
-
-            }
-            else {
-
-                const response = await api.post(
-
-                    "/Company",
-
-                    request
-
-                );
-
-                setCompanyExists(true);
-
-                setCompanyId(response.data.company.companyId);
-
-            }
-
-            alert("Company saved successfully.");
-
-        }
-        catch (error) {
-
-            console.error(error);
-
-            alert("Unable to save company.");
-
-        }
-
-    };
     return (
-
         <div className="container mt-5">
-
-            <div className="card shadow mb-4">
-
-                <div className="card-body">
-
-                    <h3 className="mb-4">
-                        Company Profile
-                    </h3>
-
-                    <div className="row">
-
-                        <div className="col-md-6 mb-3">
-
-                            <label className="form-label">
-                                Company Name
-                            </label>
-
-                            <input
-                                className="form-control"
-                                value={company.companyName}
-                                onChange={(e) =>
-                                    setCompany({
-                                        ...company,
-                                        companyName: e.target.value
-                                    })
-                                }
-                            />
-
-                        </div>
-
-                        <div className="col-md-6 mb-3">
-
-                            <label className="form-label">
-                                Industry
-                            </label>
-
-                            <input
-                                className="form-control"
-                                value={company.industry}
-                                onChange={(e) =>
-                                    setCompany({
-                                        ...company,
-                                        industry: e.target.value
-                                    })
-                                }
-                            />
-
-                        </div>
-
-                    </div>
-
-                    <div className="mb-3">
-
-                        <label className="form-label">
-                            Website
-                        </label>
-
-                        <input
-                            className="form-control"
-                            value={company.website}
-                            onChange={(e) =>
-                                setCompany({
-                                    ...company,
-                                    website: e.target.value
-                                })
-                            }
-                        />
-
-                    </div>
-
-                    <div className="mb-3">
-
-                        <label className="form-label">
-                            Location
-                        </label>
-
-                        <input
-                            className="form-control"
-                            value={company.location}
-                            onChange={(e) =>
-                                setCompany({
-                                    ...company,
-                                    location: e.target.value
-                                })
-                            }
-                        />
-
-                    </div>
-
-                    <div className="mb-4">
-
-                        <label className="form-label">
-                            Description
-                        </label>
-
-                        <textarea
-                            rows="4"
-                            className="form-control"
-                            value={company.description}
-                            onChange={(e) =>
-                                setCompany({
-                                    ...company,
-                                    description: e.target.value
-                                })
-                            }
-                        />
-
-                    </div>
-
-                    <button
-                        className="btn btn-primary"
-                        onClick={handleSaveCompany}
-                    >
-                        {companyExists ? "Update Company" : "Save Company"}
-                    </button>
-
-                </div>
-
-            </div>
+            {/* Header */}
             <div className="d-flex justify-content-between align-items-center mb-4">
-            <div className="row mb-4">
-
-                <div className="col-md">
-                    <div className="card h-100 text-center shadow-sm">
-                        <div className="card-body">
-                            <h6>Jobs Posted</h6>
-                            <h2>{stats.jobsPosted}</h2>
-                        </div>
-                    </div>
+                <h2>Employer Dashboard</h2>
+                <div>
+                    {companyExists ? (
+                        <Link to="/create-job" className="btn btn-primary">
+                            + Create Job
+                        </Link>
+                    ) : (
+                        <button className="btn btn-secondary" disabled>
+                            Create your company first
+                        </button>
+                    )}
                 </div>
-
-                <div className="col-md">
-                    <div className="card h-100 text-center shadow-sm">
-                        <div className="card-body">
-                            <h6>Total Applicants</h6>
-                            <h2>{stats.totalApplicants}</h2>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="col-md">
-                    <div className="card h-100 text-center shadow-sm">
-                        <div className="card-body">
-                            <h6>Pending</h6>
-                            <h2>{stats.pending}</h2>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="col-md">
-                    <div className="card h-100 text-center shadow-sm">
-                        <div className="card-body">
-                            <h6>Interviews</h6>
-                            <h2>{stats.interviews}</h2>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="col-md">
-                    <div className="card h-100 text-center shadow-sm">
-                        <div className="card-body">
-                            <h6>Hired</h6>
-                            <h2>{stats.hired}</h2>
-                        </div>
-                    </div>
-                </div>
-
             </div>
-                <h2>
-                    Employer Dashboard
-                </h2>
 
-                {companyExists ? (
-
-                <Link
-                    to="/create-job"
-                    className="btn btn-primary"
-                >
-                    + Create Job
-                </Link>
-
-            ) : (
-
-                <button
-                    className="btn btn-secondary"
-                    disabled
-                >
-                    Create your company first
-                </button>
-
-            )}
-          
-            </div>
+            {/* Company Warning */}
             {!companyExists && (
-
-                    <div className="alert alert-warning">
-
+                <div className="alert alert-warning">
                     Complete your company profile before posting your first job.
+                </div>
+            )}
 
+            {/* Stats Cards */}
+            <div className="row mb-4">
+                <div className="col-md">
+                    <div className="card h-100 text-center shadow-sm">
+                        <div className="card-body">
+                            <h6 className="text-muted">Jobs Posted</h6>
+                            <h2 className="mb-0">{stats.jobsPosted}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md">
+                    <div className="card h-100 text-center shadow-sm">
+                        <div className="card-body">
+                            <h6 className="text-muted">Total Applicants</h6>
+                            <h2 className="mb-0">{stats.totalApplicants}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md">
+                    <div className="card h-100 text-center shadow-sm">
+                        <div className="card-body">
+                            <h6 className="text-muted">Pending</h6>
+                            <h2 className="mb-0">{stats.pending}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md">
+                    <div className="card h-100 text-center shadow-sm">
+                        <div className="card-body">
+                            <h6 className="text-muted">Interviews</h6>
+                            <h2 className="mb-0">{stats.interviews}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md">
+                    <div className="card h-100 text-center shadow-sm">
+                        <div className="card-body">
+                            <h6 className="text-muted">Hired</h6>
+                            <h2 className="mb-0">{stats.hired}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Company Profile Section */}
+            <div className="card mb-5">
+                <div className="card-body">
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                        <h5 className="mb-0">Company Profile</h5>
+                        {!isEditingCompany && (
+                            <button className="btn btn-primary" onClick={handleEditCompany}>
+                                ✏️ Edit Company
+                            </button>
+                        )}
                     </div>
 
+                    <FeedbackMessage section="company" />
+
+                    {isEditingCompany ? (
+                        // Edit mode
+                        <>
+                            <div className="row">
+                                <div className="col-md-6 mb-3">
+                                    <label className="form-label">Company Name</label>
+                                    <input
+                                        className="form-control"
+                                        value={company.companyName}
+                                        onChange={(e) => setCompany({ ...company, companyName: e.target.value })}
+                                    />
+                                </div>
+                                <div className="col-md-6 mb-3">
+                                    <label className="form-label">Industry</label>
+                                    <input
+                                        className="form-control"
+                                        value={company.industry}
+                                        onChange={(e) => setCompany({ ...company, industry: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Website</label>
+                                <input
+                                    className="form-control"
+                                    value={company.website}
+                                    onChange={(e) => setCompany({ ...company, website: e.target.value })}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Location</label>
+                                <input
+                                    className="form-control"
+                                    value={company.location}
+                                    onChange={(e) => setCompany({ ...company, location: e.target.value })}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Description</label>
+                                <textarea
+                                    rows="4"
+                                    className="form-control"
+                                    value={company.description}
+                                    onChange={(e) => setCompany({ ...company, description: e.target.value })}
+                                />
+                            </div>
+                            <div>
+                                <button className="btn btn-success me-2" onClick={handleSaveCompany}>
+                                    Save Company
+                                </button>
+                                <button className="btn btn-secondary" onClick={handleCancelCompany}>
+                                    Cancel
+                                </button>
+                            </div>
+                        </>
+                    ) : (
+                        // View mode
+                        <>
+                            {company.companyName && (
+                                <p><strong>Company Name:</strong> {company.companyName}</p>
+                            )}
+                            {company.industry && (
+                                <p><strong>Industry:</strong> {company.industry}</p>
+                            )}
+                            {company.website && (
+                                <p><strong>Website:</strong> {company.website}</p>
+                            )}
+                            {company.location && (
+                                <p><strong>Location:</strong> {company.location}</p>
+                            )}
+                            {company.description && (
+                                <p><strong>Description:</strong> {company.description}</p>
+                            )}
+                            {!company.companyName && !company.industry && !company.description && (
+                                <p className="text-muted">No company information added yet. Click "Edit Company" to add your details.</p>
+                            )}
+                        </>
+                    )}
+                </div>
+            </div>
+
+            {/* Jobs Section */}
+            <FeedbackMessage section="job" />
+
+            <div className="d-flex justify-content-between align-items-center mb-3">
+                <h2 className="mb-0">My Jobs</h2>
+                {companyExists && (
+                    <Link to="/create-job" className="btn btn-primary">
+                        + Create Job
+                    </Link>
                 )}
+            </div>
 
             {jobs.length === 0 ? (
-
-                <p>You haven't posted any jobs yet.</p>
-
+                <div className="card mb-3">
+                    <div className="card-body text-center py-4">
+                        <p className="text-muted mb-0">You haven't posted any jobs yet.</p>
+                    </div>
+                </div>
             ) : (
-
                 jobs.map(job => (
-
-                    <div
-                        key={job.jobPostId}
-                        className="card mb-3"
-                    >
-
+                    <div key={job.jobPostId} className="card mb-3">
                         <div className="card-body">
-
                             {editingJobId === job.jobPostId ? (
-
+                                // Edit mode
                                 <>
-
+                                    <h5 className="mb-3">Edit Job</h5>
                                     <div className="mb-3">
-
-                                        <label>Title</label>
-
+                                        <label className="form-label">Title</label>
                                         <input
                                             className="form-control"
                                             value={editForm.title}
-                                            onChange={(e) =>
-                                                setEditForm({
-                                                    ...editForm,
-                                                    title: e.target.value
-                                                })
-                                            }
+                                            onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
                                         />
-
                                     </div>
-
                                     <div className="mb-3">
-
-                                        <label>Description</label>
-
+                                        <label className="form-label">Description</label>
                                         <textarea
                                             className="form-control"
                                             rows="3"
                                             value={editForm.description}
-                                            onChange={(e) =>
-                                                setEditForm({
-                                                    ...editForm,
-                                                    description: e.target.value
-                                                })
-                                            }
+                                            onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
                                         />
-
                                     </div>
-
-                                    <div className="mb-3">
-
-                                        <label>Location</label>
-
-                                        <input
-                                            className="form-control"
-                                            value={editForm.location}
-                                            onChange={(e) =>
-                                                setEditForm({
-                                                    ...editForm,
-                                                    location: e.target.value
-                                                })
-                                            }
-                                        />
-
+                                    <div className="row">
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">Location</label>
+                                            <input
+                                                className="form-control"
+                                                value={editForm.location}
+                                                onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">Salary</label>
+                                            <input
+                                                className="form-control"
+                                                type="number"
+                                                value={editForm.salary}
+                                                onChange={(e) => setEditForm({ ...editForm, salary: Number(e.target.value) })}
+                                            />
+                                        </div>
                                     </div>
-
                                     <div className="mb-3">
-
-                                        <label>Salary</label>
-
-                                        <input
-                                            className="form-control"
-                                            type="number"
-                                            value={editForm.salary}
-                                            onChange={(e) =>
-                                                setEditForm({
-                                                    ...editForm,
-                                                    salary: Number(e.target.value)
-                                                })
-                                            }
-                                        />
-
-                                    </div>
-
-                                    <div className="mb-3">
-
-                                        <label>Employment Type</label>
-
-                                        <input
-                                            className="form-control"
+                                        <label className="form-label">Employment Type</label>
+                                        <select
+                                            className="form-select"
                                             value={editForm.employmentType}
-                                            onChange={(e) =>
-                                                setEditForm({
-                                                    ...editForm,
-                                                    employmentType: e.target.value
-                                                })
-                                            }
-                                        />
-
+                                            onChange={(e) => setEditForm({ ...editForm, employmentType: e.target.value })}
+                                        >
+                                            <option value="">Select Type</option>
+                                            <option value="Full-time">Full-time</option>
+                                            <option value="Part-time">Part-time</option>
+                                            <option value="Contract">Contract</option>
+                                            <option value="Freelance">Freelance</option>
+                                            <option value="Internship">Internship</option>
+                                        </select>
                                     </div>
-
-                                    <button
-                                        className="btn btn-success me-2"
-                                        onClick={handleSave}
-                                    >
-                                        Save
-                                    </button>
-
-                                    <button
-                                        className="btn btn-secondary"
-                                        onClick={() => setEditingJobId(null)}
-                                    >
-                                        Cancel
-                                    </button>
-
+                                    <div>
+                                        <button className="btn btn-success me-2" onClick={handleSave}>
+                                            Save Changes
+                                        </button>
+                                        <button className="btn btn-secondary" onClick={handleCancelEdit}>
+                                            Cancel
+                                        </button>
+                                    </div>
                                 </>
-
                             ) : (
-
+                                // View mode
                                 <>
-
-                                    <h4>{job.title}</h4>
-
+                                    <div className="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h4>{job.title}</h4>
+                                            <p className="text-muted mb-2">{job.location}</p>
+                                        </div>
+                                        <span className={`badge fs-6 px-3 py-2 bg-${job.employmentType === 'Full-time' ? 'primary' : job.employmentType === 'Part-time' ? 'info' : job.employmentType === 'Contract' ? 'warning' : 'secondary'}`}>
+                                            {job.employmentType}
+                                        </span>
+                                    </div>
                                     <p>{job.description}</p>
-
-                                    <p>
-
-                                        <strong>Location:</strong>{" "}
-
-                                        {job.location}
-
-                                    </p>
-
-                                    <p>
-
-                                        <strong>Employment:</strong>{" "}
-
-                                        {job.employmentType}
-
-                                    </p>
-
-                                    <p>
-
-                                        <strong>Salary:</strong>{" "}
-
-                                        ₱{job.salary}
-
-                                    </p>
-
+                                    <p><strong>Salary:</strong> ₱{job.salary.toLocaleString()}</p>
                                     <div className="mt-3">
-
                                         <button
                                             className="btn btn-warning me-2"
                                             onClick={() => handleEdit(job)}
                                         >
                                             Edit
                                         </button>
-
                                         <button
-                                            className="btn btn-danger"
+                                            className="btn btn-danger me-2"
                                             onClick={() => handleDelete(job.jobPostId)}
                                         >
                                             Delete
                                         </button>
-
                                         <Link
                                             to={`/applicants/${job.jobPostId}`}
-                                            className="btn btn-info ms-2"
+                                            className="btn btn-info"
                                         >
                                             View Applicants
                                         </Link>
