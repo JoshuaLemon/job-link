@@ -4,9 +4,10 @@ using JobPlatform.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Cors;
 
 namespace JobPlatform.API.Controllers;
-
+[EnableCors("ReactPolicy")]
 [ApiController]
 [Route("api/[controller]")]
 [Authorize(Roles = "Employee")]

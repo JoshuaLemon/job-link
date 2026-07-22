@@ -3,6 +3,7 @@ using JobPlatform.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
 
 namespace JobPlatform.API.Controllers;
 

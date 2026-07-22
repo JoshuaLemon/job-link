@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using JobPlatform.API.Mappers;
 namespace JobPlatform.API.Controllers;
+using Microsoft.AspNetCore.Cors;
 
-
+[EnableCors("ReactPolicy")]
 [ApiController]
 [Route("api/[controller]")]
 public class JobPostController : ControllerBase

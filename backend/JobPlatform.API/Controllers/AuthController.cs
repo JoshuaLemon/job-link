@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BCrypt.Net;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 
 using JobPlatform.API.Services;
 
 namespace JobPlatform.API.Controllers;
-
+[EnableCors("ReactPolicy")]
 [ApiController]
 [Route("api/[controller]")]
 public class AuthController : ControllerBase

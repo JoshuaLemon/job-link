@@ -3,10 +3,12 @@ using JobPlatform.API.DTOs;
 using JobPlatform.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 
 namespace JobPlatform.API.Controllers;
 [Authorize(Roles = "Employer")]
 [ApiController]
+[EnableCors("ReactPolicy")]
 [Route("api/[controller]")]
 public class CompanyController : ControllerBase
 {

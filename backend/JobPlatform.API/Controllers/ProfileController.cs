@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using QuestPDF.Fluent;
 using JobPlatform.API.Documents;
-namespace JobPlatform.API.Controllers;
+using Microsoft.AspNetCore.Cors;
 
+namespace JobPlatform.API.Controllers;
+[EnableCors("ReactPolicy")]
 [ApiController]
 [Route("api/[controller]")]
 public class ProfileController : ControllerBase

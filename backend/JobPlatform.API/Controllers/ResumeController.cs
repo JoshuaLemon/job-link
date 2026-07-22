@@ -2,9 +2,10 @@ using JobPlatform.API.DTOs;
 using JobPlatform.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
 
 namespace JobPlatform.API.Controllers;
-
+[EnableCors("ReactPolicy")]
 [ApiController]
 [Route("api/[controller]")]
 public class ResumeController : ControllerBase

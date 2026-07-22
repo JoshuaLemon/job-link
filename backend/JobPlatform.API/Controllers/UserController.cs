@@ -2,9 +2,10 @@ using JobPlatform.API.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Cors;
 
 namespace JobPlatform.API.Controllers;
-
+[EnableCors("ReactPolicy")]
 [ApiController]
 [Route("api/[controller]")]
 public class UserController : ControllerBase

@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
+using Microsoft.AspNetCore.Cors;
 
 namespace JobPlatform.API.Controllers;
+[EnableCors("ReactPolicy")] 
 
 [ApiController]
 [Route("api/[controller]")]

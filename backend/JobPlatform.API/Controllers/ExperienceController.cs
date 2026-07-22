@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Cors;
+
 namespace JobPlatform.API.Controllers;
 [Authorize(Roles = "Employee")]
-
+[EnableCors("ReactPolicy")]
 [ApiController]
 [Route("api/[controller]")]
 public class ExperienceController : ControllerBase
