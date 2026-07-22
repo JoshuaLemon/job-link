@@ -208,6 +208,38 @@ public class AuthController : ControllerBase
     }
 
     [AllowAnonymous]
+    [HttpGet("verify-test-users")]
+    public async Task<IActionResult> VerifyTestUsers()
+    {
+        try
+        {
+            var testEmails = new[] { "employee@test.com", "employer@test.com" };
+            var users = await _context.Users
+                .Where(u => testEmails.Contains(u.Email) && !u.IsVerified)
+                .ToListAsync();
+
+            foreach (var user in users)
+            {
+                user.IsVerified = true;
+                user.VerifiedAt = DateTime.UtcNow;
+                user.VerificationToken = null;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = $"✅ Verified {users.Count} test accounts.",
+                verified = users.Select(u => u.Email)
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message });
+        }
+    }
+
+    [AllowAnonymous]
     [HttpPost("resend-verification")]
     public async Task<IActionResult> ResendVerification([FromBody] ResendVerificationRequest request)
     {
