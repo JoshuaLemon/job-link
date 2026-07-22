@@ -12,29 +12,23 @@ import JobDetails from "./pages/JobDetails";
 import Applicants from "./pages/Applicants";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
     return (
         <>
             <NavBar />
-
             <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/verify-email" element={<VerifyEmail />} />
+                <Route path="/jobs/:id" element={<JobDetails />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
 
-                <Route
-                    path="/"
-                    element={<Home />}
-                />
-
-                <Route
-                    path="/login"
-                    element={<Login />}
-                />
-
-                <Route
-                    path="/register"
-                    element={<Register />}
-                />
-
+                {/* Protected Employee Routes */}
                 <Route
                     path="/employee"
                     element={
@@ -44,6 +38,7 @@ function App() {
                     }
                 />
 
+                {/* Protected Employer Routes */}
                 <Route
                     path="/employer"
                     element={
@@ -72,11 +67,6 @@ function App() {
                 />
 
                 <Route
-                    path="/jobs/:id"
-                    element={<JobDetails />}
-                />
-
-                 <Route
                     path="/employee-profile/:id"
                     element={
                         <ProtectedRoute role="Employer">
@@ -84,18 +74,6 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
-
-                <Route
-                    path="/employee-profile/:id"
-                    element={
-                        <ProtectedRoute role="Employer">
-                            <EmployerViewProfile />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route path="/privacy" element={<Privacy />} />
-                <Route path="/terms" element={<Terms />} />
-
             </Routes>
         </>
     );
