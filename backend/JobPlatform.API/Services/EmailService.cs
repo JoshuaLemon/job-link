@@ -1,26 +1,43 @@
 using MailKit.Net.Smtp;
 using MimeKit;
+using Microsoft.Extensions.Configuration;
 
 namespace JobPlatform.API.Services;
 
 public class EmailService : IEmailService
 {
     private readonly IConfiguration _configuration;
+    private readonly ILogger<EmailService> _logger;
 
-    public EmailService(IConfiguration configuration)
+    public EmailService(IConfiguration configuration, ILogger<EmailService> logger)
     {
         _configuration = configuration;
+        _logger = logger;
     }
 
     public async Task SendVerificationEmailAsync(string email, string firstName, string verificationToken)
     {
         try
         {
+            // Get configuration with proper fallbacks
+            var fromEmail = _configuration["Email:From"] ?? "noreply@joblink.com";
+            var host = _configuration["Email:Host"] ?? "smtp.gmail.com";
+            var port = int.Parse(_configuration["Email:Port"] ?? "587");
+            var username = _configuration["Email:Username"];
+            var password = _configuration["Email:Password"];
             var baseUrl = _configuration["App:BaseUrl"] ?? "http://localhost:5000";
+
+            // Validate required config
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                _logger.LogError("Email configuration missing: Username or Password");
+                throw new Exception("Email service is not properly configured.");
+            }
+
             var verificationLink = $"{baseUrl}/verify-email?token={verificationToken}";
 
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("JobLink", _configuration["Email:From"] ?? "noreply@joblink.com"));
+            message.From.Add(new MailboxAddress("JobLink", fromEmail));
             message.To.Add(new MailboxAddress(firstName, email));
             message.Subject = "Verify Your JobLink Account";
 
@@ -64,23 +81,24 @@ public class EmailService : IEmailService
             message.Body = new TextPart("html") { Text = body };
 
             using var client = new SmtpClient();
-            await client.ConnectAsync(
-                _configuration["Email:Host"] ?? "smtp.gmail.com",
-                int.Parse(_configuration["Email:Port"] ?? "587"),
-                MailKit.Security.SecureSocketOptions.StartTls);
             
-            await client.AuthenticateAsync(
-                _configuration["Email:Username"],
-                _configuration["Email:Password"]);
+            // Connect with timeout
+            await client.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.StartTls);
             
+            // Authenticate
+            await client.AuthenticateAsync(username, password);
+            
+            // Send email
             await client.SendAsync(message);
+            
+            // Disconnect
             await client.DisconnectAsync(true);
             
-            Console.WriteLine($"Verification email sent to {email}");
+            _logger.LogInformation($"Verification email sent to {email}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to send verification email: {ex.Message}");
+            _logger.LogError(ex, $"Failed to send verification email to {email}");
             throw;
         }
     }
@@ -89,8 +107,21 @@ public class EmailService : IEmailService
     {
         try
         {
+            var fromEmail = _configuration["Email:From"] ?? "noreply@joblink.com";
+            var host = _configuration["Email:Host"] ?? "smtp.gmail.com";
+            var port = int.Parse(_configuration["Email:Port"] ?? "587");
+            var username = _configuration["Email:Username"];
+            var password = _configuration["Email:Password"];
+            var baseUrl = _configuration["App:BaseUrl"] ?? "http://localhost:5000";
+
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                _logger.LogError("Email configuration missing: Username or Password");
+                return;
+            }
+
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("JobLink", _configuration["Email:From"] ?? "noreply@joblink.com"));
+            message.From.Add(new MailboxAddress("JobLink", fromEmail));
             message.To.Add(new MailboxAddress(firstName, email));
             message.Subject = "Welcome to JobLink!";
 
@@ -115,7 +146,7 @@ public class EmailService : IEmailService
                             <p>Your account has been successfully verified!</p>
                             <p>You can now log in and start your job search journey.</p>
                             <p style='text-align: center;'>
-                                <a href='{_configuration["App:BaseUrl"] ?? "http://localhost:5000"}/login' class='button'>Login Now</a>
+                                <a href='{baseUrl}/login' class='button'>Login Now</a>
                             </p>
                             <p>Here's what you can do with JobLink:</p>
                             <ul>
@@ -136,23 +167,17 @@ public class EmailService : IEmailService
             message.Body = new TextPart("html") { Text = body };
 
             using var client = new SmtpClient();
-            await client.ConnectAsync(
-                _configuration["Email:Host"] ?? "smtp.gmail.com",
-                int.Parse(_configuration["Email:Port"] ?? "587"),
-                MailKit.Security.SecureSocketOptions.StartTls);
             
-            await client.AuthenticateAsync(
-                _configuration["Email:Username"],
-                _configuration["Email:Password"]);
-            
+            await client.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.StartTls);
+            await client.AuthenticateAsync(username, password);
             await client.SendAsync(message);
             await client.DisconnectAsync(true);
             
-            Console.WriteLine($"Welcome email sent to {email}");
+            _logger.LogInformation($"Welcome email sent to {email}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to send welcome email: {ex.Message}");
+            _logger.LogError(ex, $"Failed to send welcome email to {email}");
         }
     }
 }
