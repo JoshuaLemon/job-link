@@ -213,7 +213,7 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var testEmails = new[] { "employee@test.com", "employer@test.com" };
+            var testEmails = new[] { "employee@test.com", "employer@test.com", "joshualemon249@gmail.com" };
             var users = await _context.Users
                 .Where(u => testEmails.Contains(u.Email) && !u.IsVerified)
                 .ToListAsync();
