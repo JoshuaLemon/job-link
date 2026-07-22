@@ -10,8 +10,9 @@ using Microsoft.AspNetCore.Cors;
 namespace JobPlatform.API.Controllers;
 
 [Authorize(Roles = "Employee")]
-[ApiController]
 [EnableCors("ReactPolicy")]
+
+[ApiController]
 [Route("api/[controller]")]
 public class EducationController : ControllerBase
 {
@@ -25,44 +26,53 @@ public class EducationController : ControllerBase
     [HttpPost]
     public IActionResult Create(CreateEducationRequest request)
     {
-        // Check if the employee profile exists
-        var profile = _context.EmployeeProfiles.Find(request.EmployeeProfileId);
-
-        if (profile == null)
+        try
         {
-            return BadRequest("Employee profile not found.");
-        }
+            // Check if the employee profile exists
+            var profile = _context.EmployeeProfiles.Find(request.EmployeeProfileId);
 
-        // Create the education record
-        var education = new Education
-        {
-            EmployeeProfileId = request.EmployeeProfileId,
-            SchoolName = request.SchoolName,
-            Degree = request.Degree,
-            FieldOfStudy = request.FieldOfStudy,
-            StartDate = request.StartDate,
-            EndDate = request.EndDate
-        };
-
-        // Save to database
-        _context.Educations.Add(education);
-        _context.SaveChanges();
-
-        // Return only the data we want (avoid JSON circular reference)
-        return Ok(new
-        {
-            Message = "Education added successfully.",
-            Education = new
+            if (profile == null)
             {
-                education.EducationId,
-                education.EmployeeProfileId,
-                education.SchoolName,
-                education.Degree,
-                education.FieldOfStudy,
-                education.StartDate,
-                education.EndDate
+                return BadRequest(new { message = "Employee profile not found." });
             }
-        });
+
+            // Convert dates to UTC
+            var startDate = DateTime.SpecifyKind(request.StartDate, DateTimeKind.Utc);
+            var endDate = DateTime.SpecifyKind(request.EndDate, DateTimeKind.Utc);
+
+            // Create the education record
+            var education = new Education
+            {
+                EmployeeProfileId = request.EmployeeProfileId,
+                SchoolName = request.SchoolName,
+                Degree = request.Degree,
+                FieldOfStudy = request.FieldOfStudy,
+                StartDate = startDate,
+                EndDate = endDate
+            };
+
+            _context.Educations.Add(education);
+            _context.SaveChanges();
+
+            return Ok(new
+            {
+                Message = "Education added successfully.",
+                Education = new
+                {
+                    education.EducationId,
+                    education.EmployeeProfileId,
+                    education.SchoolName,
+                    education.Degree,
+                    education.FieldOfStudy,
+                    education.StartDate,
+                    education.EndDate
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Server error", error = ex.Message });
+        }
     }
 
     [HttpGet("profile/{profileId}")]
@@ -89,54 +99,72 @@ public class EducationController : ControllerBase
     [HttpPut("{educationId}")]
     public IActionResult Update(int educationId, CreateEducationRequest request)
     {
-        var education = _context.Educations.Find(educationId);
-
-        if (education == null)
+        try
         {
-            return NotFound("Education not found.");
-        }
+            var education = _context.Educations.Find(educationId);
 
-        education.SchoolName = request.SchoolName;
-        education.Degree = request.Degree;
-        education.FieldOfStudy = request.FieldOfStudy;
-        education.StartDate = request.StartDate;
-        education.EndDate = request.EndDate;
-
-        _context.SaveChanges();
-
-        return Ok(new
-        {
-            Message = "Education updated successfully.",
-            Education = new
+            if (education == null)
             {
-                education.EducationId,
-                education.EmployeeProfileId,
-                education.SchoolName,
-                education.Degree,
-                education.FieldOfStudy,
-                education.StartDate,
-                education.EndDate
+                return NotFound("Education not found.");
             }
-        });
+
+            // Convert dates to UTC
+            var startDate = DateTime.SpecifyKind(request.StartDate, DateTimeKind.Utc);
+            var endDate = DateTime.SpecifyKind(request.EndDate, DateTimeKind.Utc);
+
+            education.SchoolName = request.SchoolName;
+            education.Degree = request.Degree;
+            education.FieldOfStudy = request.FieldOfStudy;
+            education.StartDate = startDate;
+            education.EndDate = endDate;
+
+            _context.SaveChanges();
+
+            return Ok(new
+            {
+                Message = "Education updated successfully.",
+                Education = new
+                {
+                    education.EducationId,
+                    education.EmployeeProfileId,
+                    education.SchoolName,
+                    education.Degree,
+                    education.FieldOfStudy,
+                    education.StartDate,
+                    education.EndDate
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Server error", error = ex.Message });
+        }
     }
 
     [HttpDelete("{educationId}")]
     public IActionResult Delete(int educationId)
     {
-        var education = _context.Educations.Find(educationId);
-
-        if (education == null)
+        try
         {
-            return NotFound("Education not found.");
+            var education = _context.Educations.Find(educationId);
+
+            if (education == null)
+            {
+                return NotFound("Education not found.");
+            }
+
+            _context.Educations.Remove(education);
+            _context.SaveChanges();
+
+            return Ok(new
+            {
+                Message = "Education deleted successfully."
+            });
         }
-
-        _context.Educations.Remove(education);
-        _context.SaveChanges();
-
-        return Ok(new
+        catch (Exception ex)
         {
-            Message = "Education deleted successfully."
-        });
+            return StatusCode(500, new { message = "Server error", error = ex.Message });
+        }
     }
 
     [HttpGet("my-education")]
