@@ -8,8 +8,9 @@ using System.Text;
 using QuestPDF.Infrastructure;
 using Microsoft.AspNetCore.Cors; 
 using Npgsql;
-var builder = WebApplication.CreateBuilder(args);
 
+var builder = WebApplication.CreateBuilder(args);
+//Test redeploy comment
 // Enhanced CORS configuration
 builder.Services.AddCors(options =>
 {

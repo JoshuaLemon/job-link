@@ -204,7 +204,9 @@ function EmployeeDashboard() {
             showFeedback("profile", "danger", error.response?.data || "Unable to save profile.");
         }
     };
-
+    const handleEditProfileClick = () => {
+        setIsEditingProfile(true);
+    };
     // Education handlers
     const handleAddEducationClick = () => {
         setIsAddingEducation(true);
