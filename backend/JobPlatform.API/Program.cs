@@ -6,12 +6,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using QuestPDF.Infrastructure;
-using Microsoft.AspNetCore.Cors; 
-using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
-//Test redeploy comment
-// Enhanced CORS configuration
+
+// CORS Configuration - Allow all origins for testing (temporary)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("ReactPolicy",
@@ -20,13 +18,13 @@ builder.Services.AddCors(options =>
             policy
                 .WithOrigins(
                     "http://localhost:5173",
-                    "https://job-link-rust.vercel.app"
+                    "http://localhost:5174",
+                    "https://job-link-rust.vercel.app",
+                    "https://job-link-rust.vercel.app/"
                 )
                 .AllowAnyHeader()
                 .AllowAnyMethod()
-                .AllowCredentials()
-                .WithExposedHeaders("Content-Disposition") // For file downloads
-                .SetPreflightMaxAge(TimeSpan.FromSeconds(3600)); // Cache preflight requests
+                .AllowCredentials();
         });
 });
 
@@ -44,10 +42,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
             )
@@ -62,15 +58,9 @@ builder.Services.AddScoped<IAIResumePdfService, AIResumePdfService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Job Platform API",
-        Version = "v1"
-    });
-
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Job Platform API", Version = "v1" });
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme.",
@@ -80,7 +70,6 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "bearer",
         BearerFormat = "JWT"
     });
-
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -101,11 +90,20 @@ QuestPDF.Settings.License = LicenseType.Community;
 
 var app = builder.Build();
 
-// Migrate database
+// Database migration with error handling
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();
+    try
+    {
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        db.Database.Migrate();
+        Console.WriteLine("Database migration successful!");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Database migration failed: {ex.Message}");
+        // Don't throw - let the app start even if migration fails
+    }
 }
 
 // Enable Swagger
@@ -114,15 +112,18 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-// IMPORTANT: CORS middleware order
-app.UseCors("ReactPolicy"); // Must be before UseAuthentication and UseAuthorization
+// CORS must be FIRST after HTTPS redirection
+app.UseCors("ReactPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-// Add a simple health check endpoint for testing
+// Health check endpoint
 app.MapGet("/api/health", () => Results.Ok(new { status = "healthy" }));
+
+// Add a test endpoint that doesn't require auth
+app.MapGet("/api/test", () => Results.Ok(new { message = "API is working!" }));
 
 app.Run();
