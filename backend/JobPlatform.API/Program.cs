@@ -6,8 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using QuestPDF.Infrastructure;
-using Microsoft.AspNetCore.Cors; // Add this
-
+using Microsoft.AspNetCore.Cors; 
+using Npgsql;
 var builder = WebApplication.CreateBuilder(args);
 
 // Enhanced CORS configuration
@@ -32,7 +32,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
