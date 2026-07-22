@@ -160,29 +160,6 @@ function EmployeeDashboard() {
         );
     };
 
-    const deleteAccount = async () => {
-        const confirmed = window.confirm(
-            "This will permanently delete your account.\n\nThis action cannot be undone."
-        );
-        if (!confirmed) return;
-
-        try {
-            await api.delete("/User/me");
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
-            showFeedback("account", "success", "Your account has been deleted.");
-            window.location.href = "/";
-        } catch (error) {
-            console.error(error);
-            showFeedback("account", "danger", "Unable to delete account.");
-        }
-    };
-
-    // Profile handlers
-    const handleEditProfileClick = () => {
-        setIsEditingProfile(true);
-    };
-
     const handleCancelProfile = () => {
         setIsEditingProfile(false);
         // Refetch profile to reset to original values
@@ -1462,11 +1439,6 @@ function EmployeeDashboard() {
                 ))
             )}
 
-            <hr />
-            <FeedbackMessage section="account" />
-            <button className="btn btn-outline-danger" onClick={deleteAccount}>
-                Delete My Account
-            </button>
         </div>
     );
 }

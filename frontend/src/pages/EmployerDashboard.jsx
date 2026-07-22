@@ -397,12 +397,13 @@ function EmployerDashboard() {
             </div>
 
             {/* Jobs Section */}
-            <FeedbackMessage section="job" />
-
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2 className="mb-0">My Jobs</h2>
             </div>
 
+            <FeedbackMessage section="job" />
+
+            {/* Jobs List or Empty State */}
             {jobs.length === 0 ? (
                 <div className="card mb-3">
                     <div className="card-body text-center py-5">
@@ -521,9 +522,7 @@ function EmployerDashboard() {
                                         </div>
                                         <p className="mt-2">{job.description}</p>
                                         <div className="d-flex justify-content-between align-items-center mt-3">
-                                            <div>
-                                                {/* No buttons here - they're on the right */}
-                                            </div>
+                                            <div></div>
                                             <div className="d-flex gap-2">
                                                 <button
                                                     className="btn btn-warning btn-sm"
@@ -554,7 +553,11 @@ function EmployerDashboard() {
                     {/* Add Job Button - Below the list */}
                     {companyExists && (
                         <div className="text-center mt-3">
-                            <Link to="/create-job" className="btn btn-outline-primary" style={{ borderStyle: 'dashed', padding: '10px 30px' }}>
+                            <Link 
+                                to="/create-job" 
+                                className="btn btn-outline-primary" 
+                                style={{ borderStyle: 'dashed', padding: '10px 30px' }}
+                            >
                                 + Post a Job
                             </Link>
                         </div>

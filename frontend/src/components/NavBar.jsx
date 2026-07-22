@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import api from "../services/api";
 
 function Navbar() {
 
@@ -14,6 +15,24 @@ function Navbar() {
         navigate("/login");
 
         window.location.reload();
+    };
+
+    const handleDeleteAccount = async () => {
+        const confirmed = window.confirm(
+            "This will permanently delete your account.\n\nThis action cannot be undone."
+        );
+        if (!confirmed) return;
+
+        try {
+            await api.delete("/User/me");
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            alert("Your account has been deleted.");
+            window.location.href = "/";
+        } catch (error) {
+            console.error(error);
+            alert("Unable to delete account.");
+        }
     };
 
     return (
@@ -74,14 +93,22 @@ function Navbar() {
                     )}
 
                     {user && (
+                        <>
+                            <button
+                                className="btn btn-danger ms-3"
+                                onClick={handleLogout}
+                            >
+                                Logout
+                            </button>
 
-                        <button
-                            className="btn btn-danger ms-3"
-                            onClick={handleLogout}
-                        >
-                            Logout
-                        </button>
-
+                            <button
+                                className="btn btn-outline-danger ms-2"
+                                onClick={handleDeleteAccount}
+                                style={{ borderColor: '#dc3545', color: '#dc3545' }}
+                            >
+                                🗑️ Delete Account
+                            </button>
+                        </>
                     )}
 
                 </div>
