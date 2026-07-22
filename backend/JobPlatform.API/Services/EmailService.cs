@@ -1,5 +1,5 @@
-using MailKit.Net.Smtp;
-using MimeKit;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using Microsoft.Extensions.Configuration;
 
 namespace JobPlatform.API.Services;
@@ -19,29 +19,25 @@ public class EmailService : IEmailService
     {
         try
         {
-            // Get configuration with proper fallbacks
-            var fromEmail = _configuration["Email:From"] ?? "noreply@joblink.com";
-            var host = _configuration["Email:Host"] ?? "smtp.gmail.com";
-            var port = int.Parse(_configuration["Email:Port"] ?? "587");
-            var username = _configuration["Email:Username"];
-            var password = _configuration["Email:Password"];
+            // Get SendGrid configuration
+            var apiKey = _configuration["SendGrid:ApiKey"];
+            var fromEmail = _configuration["SendGrid:FromEmail"] ?? "noreply@joblink.com";
             var baseUrl = _configuration["App:BaseUrl"] ?? "http://localhost:5000";
 
-            // Validate required config
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(apiKey))
             {
-                _logger.LogError("Email configuration missing: Username or Password");
-                throw new Exception("Email service is not properly configured.");
+                _logger.LogError("SendGrid API key is missing");
+                throw new Exception("SendGrid is not properly configured.");
             }
 
             var verificationLink = $"{baseUrl}/verify-email?token={verificationToken}";
 
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("JobLink", fromEmail));
-            message.To.Add(new MailboxAddress(firstName, email));
-            message.Subject = "Verify Your JobLink Account";
+            var client = new SendGridClient(apiKey);
+            var from = new EmailAddress(fromEmail, "JobLink");
+            var to = new EmailAddress(email, firstName);
+            var subject = "Verify Your JobLink Account";
 
-            var body = $@"
+            var htmlContent = $@"
                 <html>
                 <head>
                     <style>
@@ -78,23 +74,19 @@ public class EmailService : IEmailService
                 </html>
             ";
 
-            message.Body = new TextPart("html") { Text = body };
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, null, htmlContent);
+            var response = await client.SendEmailAsync(msg);
 
-            using var client = new SmtpClient();
-            
-            // Connect with timeout
-            await client.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.StartTls);
-            
-            // Authenticate
-            await client.AuthenticateAsync(username, password);
-            
-            // Send email
-            await client.SendAsync(message);
-            
-            // Disconnect
-            await client.DisconnectAsync(true);
-            
-            _logger.LogInformation($"Verification email sent to {email}");
+            if (response.StatusCode == System.Net.HttpStatusCode.Accepted)
+            {
+                _logger.LogInformation($"Verification email sent to {email}");
+            }
+            else
+            {
+                var responseBody = await response.Body.ReadAsStringAsync();
+                _logger.LogWarning($"Email not sent. Status: {response.StatusCode}. Response: {responseBody}");
+                throw new Exception($"SendGrid error: {response.StatusCode}");
+            }
         }
         catch (Exception ex)
         {
@@ -107,25 +99,22 @@ public class EmailService : IEmailService
     {
         try
         {
-            var fromEmail = _configuration["Email:From"] ?? "noreply@joblink.com";
-            var host = _configuration["Email:Host"] ?? "smtp.gmail.com";
-            var port = int.Parse(_configuration["Email:Port"] ?? "587");
-            var username = _configuration["Email:Username"];
-            var password = _configuration["Email:Password"];
+            var apiKey = _configuration["SendGrid:ApiKey"];
+            var fromEmail = _configuration["SendGrid:FromEmail"] ?? "noreply@joblink.com";
             var baseUrl = _configuration["App:BaseUrl"] ?? "http://localhost:5000";
 
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(apiKey))
             {
-                _logger.LogError("Email configuration missing: Username or Password");
+                _logger.LogError("SendGrid API key is missing");
                 return;
             }
 
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("JobLink", fromEmail));
-            message.To.Add(new MailboxAddress(firstName, email));
-            message.Subject = "Welcome to JobLink!";
+            var client = new SendGridClient(apiKey);
+            var from = new EmailAddress(fromEmail, "JobLink");
+            var to = new EmailAddress(email, firstName);
+            var subject = "Welcome to JobLink!";
 
-            var body = $@"
+            var htmlContent = $@"
                 <html>
                 <head>
                     <style>
@@ -133,6 +122,8 @@ public class EmailService : IEmailService
                         .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
                         .header {{ background-color: #4a6cf7; padding: 20px; text-align: center; color: white; }}
                         .content {{ padding: 20px; background-color: #f9f9f9; }}
+                        .button {{ display: inline-block; padding: 12px 24px; background-color: #4a6cf7; color: white; 
+                                 text-decoration: none; border-radius: 4px; }}
                         .footer {{ text-align: center; padding: 20px; font-size: 12px; color: #888; }}
                     </style>
                 </head>
@@ -164,14 +155,8 @@ public class EmailService : IEmailService
                 </html>
             ";
 
-            message.Body = new TextPart("html") { Text = body };
-
-            using var client = new SmtpClient();
-            
-            await client.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.StartTls);
-            await client.AuthenticateAsync(username, password);
-            await client.SendAsync(message);
-            await client.DisconnectAsync(true);
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, null, htmlContent);
+            await client.SendEmailAsync(msg);
             
             _logger.LogInformation($"Welcome email sent to {email}");
         }
