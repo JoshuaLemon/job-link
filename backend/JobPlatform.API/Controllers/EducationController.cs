@@ -68,7 +68,7 @@ public class EducationController : ControllerBase
                     education.EndDate
                 }
             });
-        }
+        }   
         catch (Exception ex)
         {
             return StatusCode(500, new { message = "Server error", error = ex.Message });
