@@ -5,7 +5,9 @@ import JobCard from "../components/JobCard";
 
 function Home() {
     const [jobs, setJobs] = useState([]);
+    const [recommendedJobs, setRecommendedJobs] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingRecommended, setLoadingRecommended] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredJobs, setFilteredJobs] = useState([]);
 
@@ -47,19 +49,26 @@ function Home() {
         );
     };
 
+    const user = JSON.parse(localStorage.getItem("user"));
+    const isEmployer = user?.role === "Employer";
+    const isEmployee = user?.role === "Employee";
+
     useEffect(() => {
         loadJobs();
+        if (isEmployee) {
+            loadRecommendedJobs();
+        }
     }, []);
 
     useEffect(() => {
-        // Filter jobs based on search term
         if (searchTerm.trim() === "") {
             setFilteredJobs(jobs);
         } else {
             const filtered = jobs.filter(job =>
                 job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 job.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                job.employmentType.toLowerCase().includes(searchTerm.toLowerCase())
+                job.employmentType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (job.tags && job.tags.toLowerCase().includes(searchTerm.toLowerCase()))
             );
             setFilteredJobs(filtered);
         }
@@ -79,6 +88,19 @@ function Home() {
         }
     };
 
+    const loadRecommendedJobs = async () => {
+        setLoadingRecommended(true);
+        try {
+            const response = await api.get("/JobPost/recommended?limit=5");
+            setRecommendedJobs(response.data.data || []);
+        } catch (error) {
+            console.error(error);
+            // Silently fail - recommendations are optional
+        } finally {
+            setLoadingRecommended(false);
+        }
+    };
+
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
     };
@@ -87,14 +109,8 @@ function Home() {
         setSearchTerm("");
     };
 
-    // Get user role for conditional rendering
-    const user = JSON.parse(localStorage.getItem("user"));
-    const isEmployer = user?.role === "Employer";
-    const isEmployee = user?.role === "Employee";
-
     return (
         <div className="container mt-5">
-            {/* Header */}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h1 className="mb-0">Job Link</h1>
@@ -117,12 +133,48 @@ function Home() {
                         </div>
                     )}
                     {isEmployee && (
-                        <Link to="/employee-dashboard" className="btn btn-outline-primary">
+                        <Link to="/employee" className="btn btn-outline-primary">
                             My Dashboard
                         </Link>
                     )}
                 </div>
             </div>
+
+            <FeedbackMessage section="jobs" />
+
+            {/* Recommended Jobs Section - Only for Employees */}
+            {isEmployee && (
+                <div className="mb-4">
+                    <h3 className="mb-3">🎯 Recommended For You</h3>
+                    {loadingRecommended ? (
+                        <div className="text-center py-3">
+                            <div className="spinner-border spinner-border-sm text-primary" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </div>
+                            <span className="ms-2 text-muted">Finding jobs for you...</span>
+                        </div>
+                    ) : recommendedJobs.length > 0 ? (
+                        <div>
+                            {recommendedJobs.map((job) => (
+                                <div key={job.jobPostId} className="mb-3">
+                                    <JobCard job={job} isRecommended={true} />
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="card bg-light">
+                            <div className="card-body text-center py-3">
+                                <p className="text-muted mb-0">
+                                    Complete your profile to get personalized job recommendations!
+                                </p>
+                                <Link to="/employee" className="btn btn-sm btn-primary mt-2">
+                                    Update Profile
+                                </Link>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
 
             {/* Search Bar */}
             <div className="card mb-4">
@@ -132,7 +184,7 @@ function Home() {
                             <input
                                 type="text"
                                 className="form-control form-control-lg"
-                                placeholder="Search jobs by title, location, or type..."
+                                placeholder="Search jobs by title, location, type, or tags..."
                                 value={searchTerm}
                                 onChange={handleSearch}
                             />
@@ -159,8 +211,6 @@ function Home() {
                     )}
                 </div>
             </div>
-
-            <FeedbackMessage section="jobs" />
 
             {/* Stats Bar */}
             {!loading && jobs.length > 0 && (

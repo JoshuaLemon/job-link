@@ -1,10 +1,15 @@
 import { Link } from "react-router-dom";
 
-function JobCard({ job }) {
+function JobCard({ job, isRecommended = false }) {
     const tags = job.tags ? job.tags.split(',').map(t => t.trim()).filter(t => t) : [];
 
     return (
-        <div className="card mb-3">
+        <div className={`card mb-3 ${isRecommended ? 'border-primary' : ''}`}>
+            {isRecommended && (
+                <div className="card-header bg-primary text-white py-1">
+                    <small>🎯 Recommended for you</small>
+                </div>
+            )}
             <div className="card-body">
                 <div className="d-flex justify-content-between align-items-start">
                     <div>

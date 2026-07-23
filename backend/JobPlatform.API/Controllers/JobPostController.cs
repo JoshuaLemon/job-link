@@ -1,6 +1,7 @@
 using JobPlatform.API.Data;
 using JobPlatform.API.DTOs;
 using JobPlatform.API.Models;
+using JobPlatform.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
@@ -14,10 +15,14 @@ using Microsoft.AspNetCore.Cors;
 public class JobPostController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
+    private readonly IJobRecommendationService _jobRecommendationService;
 
-    public JobPostController(ApplicationDbContext context)
+    public JobPostController(
+        ApplicationDbContext context,
+        IJobRecommendationService jobRecommendationService)
     {
         _context = context;
+        _jobRecommendationService = jobRecommendationService;
     }
 
     [Authorize(Roles = "Employer")]
@@ -178,6 +183,35 @@ public class JobPostController : ControllerBase
             .ToList();
 
         return Ok(jobs);
+    }
+
+    [Authorize(Roles = "Employee")]
+    [HttpGet("recommended")]
+    public async Task<IActionResult> GetRecommendedJobs([FromQuery] int limit = 10)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized(new { message = "User not authenticated." });
+            }
+
+            int userId = int.Parse(userIdClaim.Value);
+
+            var recommendedJobs = await _jobRecommendationService.GetRecommendedJobsAsync(userId, limit);
+
+            return Ok(new
+            {
+                Success = true,
+                Data = recommendedJobs,
+                Count = recommendedJobs.Count
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Server error", error = ex.Message });
+        }
     }
 
     [HttpGet("{id}")]
