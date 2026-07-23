@@ -330,7 +330,27 @@ public class AuthController : ControllerBase
             return StatusCode(500, new { message = "Server error" });
         }
     }
-
+    [AllowAnonymous]
+    [HttpGet("migrate-reset-fields")]
+    public async Task<IActionResult> MigrateResetFields()
+    {
+        try
+        {
+            // Add columns if they don't exist
+            await _context.Database.ExecuteSqlRawAsync(
+                "ALTER TABLE \"Users\" ADD COLUMN IF NOT EXISTS \"ResetPasswordToken\" TEXT;"
+            );
+            await _context.Database.ExecuteSqlRawAsync(
+                "ALTER TABLE \"Users\" ADD COLUMN IF NOT EXISTS \"ResetPasswordTokenExpiry\" TIMESTAMP;"
+            );
+            
+            return Ok(new { message = "Reset password fields added successfully!" });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message });
+        }
+    }
     [AllowAnonymous]
     [HttpPost("resend-verification")]
     public async Task<IActionResult> ResendVerification([FromBody] ResendVerificationRequest request)
