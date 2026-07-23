@@ -13,7 +13,8 @@ import Applicants from "./pages/Applicants";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import VerifyEmail from "./pages/VerifyEmail";
-
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 function App() {
     return (
         <>
@@ -38,6 +39,11 @@ function App() {
                     }
                 />
 
+                {/*Protected Forget/Request Password Routes */}
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+
+                <Route path="/reset-password" element={<ResetPassword />} />
+
                 {/* Protected Employer Routes */}
                 <Route
                     path="/employer"
@@ -47,6 +53,8 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+
+   
 
                 <Route
                     path="/create-job"

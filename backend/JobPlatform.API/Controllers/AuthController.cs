@@ -18,16 +18,19 @@ public class AuthController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly ITokenService _tokenService;
-    private readonly IEmailService _emailService;  // Add this
+    private readonly IEmailService _emailService;
+    private readonly ILogger<AuthController> _logger;
 
     public AuthController(
         ApplicationDbContext context,
         ITokenService tokenService,
-        IEmailService emailService)  // Add this parameter
+        IEmailService emailService,
+        ILogger<AuthController> logger)
     {
         _context = context;
         _tokenService = tokenService;
-        _emailService = emailService;  // Add this
+        _emailService = emailService;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -38,17 +41,15 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterRequest request)  // Make async
+    public async Task<IActionResult> Register(RegisterRequest request)
     {
         try
         {
-            // Check if email already exists
             if (await _context.Users.AnyAsync(u => u.Email == request.Email))
             {
                 return BadRequest(new { message = "Email already exists." });
             }
 
-            // Generate verification token
             var verificationToken = GenerateVerificationToken();
 
             var user = new User
@@ -59,14 +60,13 @@ public class AuthController : ControllerBase
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 Role = request.Role,
                 CreatedAt = DateTime.UtcNow,
-                IsVerified = false,  // Add this
-                VerificationToken = verificationToken  // Add this
+                IsVerified = false,
+                VerificationToken = verificationToken
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            // Send verification email
             try
             {
                 await _emailService.SendVerificationEmailAsync(
@@ -76,8 +76,7 @@ public class AuthController : ControllerBase
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to send verification email: {ex.Message}");
-                // Don't throw - user can resend verification later
+                _logger.LogError(ex, $"Failed to send verification email to {user.Email}");
             }
 
             return Ok(new
@@ -97,6 +96,7 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error in Register");
             return StatusCode(500, new { message = "Server error", error = ex.Message });
         }
     }
@@ -130,31 +130,30 @@ public class AuthController : ControllerBase
 
             await _context.SaveChangesAsync();
 
-            // Send welcome email
             try
             {
                 await _emailService.SendWelcomeEmailAsync(user.Email, user.FirstName);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to send welcome email: {ex.Message}");
+                _logger.LogError(ex, $"Failed to send welcome email to {user.Email}");
             }
 
             return Ok(new { message = "Email verified successfully! You can now login." });
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error in VerifyEmail");
             return StatusCode(500, new { message = "Server error", error = ex.Message });
         }
     }
 
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginRequest request)  // Make async
+    public async Task<IActionResult> Login(LoginRequest request)
     {
         try
         {
-            // Find user by email
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
 
             if (user == null)
@@ -162,7 +161,6 @@ public class AuthController : ControllerBase
                 return BadRequest(new { message = "Invalid email or password." });
             }
 
-            // Check if email is verified
             if (!user.IsVerified)
             {
                 return BadRequest(new 
@@ -173,7 +171,6 @@ public class AuthController : ControllerBase
                 });
             }
 
-            // Check password
             bool validPassword = BCrypt.Net.BCrypt.Verify(
                 request.Password,
                 user.PasswordHash);
@@ -203,6 +200,7 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error in Login");
             return StatusCode(500, new { message = "Server error", error = ex.Message });
         }
     }
@@ -235,7 +233,101 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error in VerifyTestUsers");
             return StatusCode(500, new { error = ex.Message });
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+    {
+        try
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            
+            if (user == null)
+            {
+                return Ok(new { message = "If your email is registered, you will receive a password reset link." });
+            }
+
+            var resetToken = GenerateVerificationToken();
+            user.ResetPasswordToken = resetToken;
+            user.ResetPasswordTokenExpiry = DateTime.UtcNow.AddHours(24);
+            
+            await _context.SaveChangesAsync();
+
+            try
+            {
+                await _emailService.SendPasswordResetEmailAsync(
+                    user.Email,
+                    user.FirstName,
+                    resetToken
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to send password reset email to {user.Email}");
+            }
+
+            return Ok(new { message = "If your email is registered, you will receive a password reset link." });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in ForgotPassword");
+            return StatusCode(500, new { message = "Server error" });
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(request.Token) || string.IsNullOrEmpty(request.NewPassword))
+            {
+                return BadRequest(new { message = "Token and new password are required." });
+            }
+
+            if (request.NewPassword.Length < 6)
+            {
+                return BadRequest(new { message = "Password must be at least 6 characters." });
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.ResetPasswordToken == request.Token);
+            
+            if (user == null)
+            {
+                return BadRequest(new { message = "Invalid or expired reset token." });
+            }
+
+            if (user.ResetPasswordTokenExpiry < DateTime.UtcNow)
+            {
+                return BadRequest(new { message = "Reset token has expired. Please request a new one." });
+            }
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+            user.ResetPasswordToken = null;
+            user.ResetPasswordTokenExpiry = null;
+            
+            await _context.SaveChangesAsync();
+
+            try
+            {
+                await _emailService.SendPasswordResetConfirmationAsync(user.Email, user.FirstName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to send password reset confirmation to {user.Email}");
+            }
+
+            return Ok(new { message = "Password reset successfully! You can now login." });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in ResetPassword");
+            return StatusCode(500, new { message = "Server error" });
         }
     }
 
@@ -257,11 +349,9 @@ public class AuthController : ControllerBase
                 return BadRequest(new { message = "Email already verified." });
             }
 
-            // Generate new token
             user.VerificationToken = GenerateVerificationToken();
             await _context.SaveChangesAsync();
 
-            // Resend email
             await _emailService.SendVerificationEmailAsync(
                 user.Email,
                 user.FirstName,
@@ -271,10 +361,14 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error in ResendVerification");
             return StatusCode(500, new { message = "Server error", error = ex.Message });
         }
     }
 
+    /// <summary>
+    /// Generates a random 64-character hex string for verification or reset tokens
+    /// </summary>
     private string GenerateVerificationToken()
     {
         return Convert.ToHexString(RandomNumberGenerator.GetBytes(32));

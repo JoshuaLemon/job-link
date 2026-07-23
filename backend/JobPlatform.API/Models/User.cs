@@ -16,10 +16,12 @@ public class User
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    // Add these new properties for email verification
     public bool IsVerified { get; set; } = false;
 
     public string? VerificationToken { get; set; }
 
     public DateTime? VerifiedAt { get; set; }
+
+    public string? ResetPasswordToken { get; set; }
+    public DateTime? ResetPasswordTokenExpiry { get; set; }
 }

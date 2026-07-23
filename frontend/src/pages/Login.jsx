@@ -176,6 +176,12 @@ function Login() {
                                     </Link>
                                 </p>
                             </div>
+                            {/*Forget Password Link*/}
+                            <div className="text-end mt-1">
+                                <Link to="/forgot-password" className="text-decoration-none small">
+                                    Forgot Password?
+                                </Link>
+                            </div>
 
                             {/* Demo Credentials */}
                             <div className="mt-4 p-3 bg-light rounded">
