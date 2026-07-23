@@ -14,6 +14,8 @@ function CreateJob() {
         employmentType: "",
         tags: ""
     });
+    const [tagInput, setTagInput] = useState("");
+    const [tagList, setTagList] = useState([]);
 
     const [feedback, setFeedback] = useState({
         section: "",
@@ -53,6 +55,45 @@ function CreateJob() {
         );
     };
 
+    const handleTagInputChange = (e) => {
+        const value = e.target.value;
+        
+        // Check if space was pressed (last character is space)
+        if (value.endsWith(' ')) {
+            const newTag = value.trim();
+            if (newTag && !tagList.includes(newTag)) {
+                setTagList([...tagList, newTag]);
+                setTagInput('');
+            } else {
+                setTagInput('');
+            }
+        } else {
+            setTagInput(value);
+        }
+    };
+
+    const handleTagKeyDown = (e) => {
+        // Add tag on Enter key
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const newTag = tagInput.trim();
+            if (newTag && !tagList.includes(newTag)) {
+                setTagList([...tagList, newTag]);
+                setTagInput('');
+            }
+        }
+        // Remove last tag on Backspace when input is empty
+        if (e.key === 'Backspace' && tagInput === '' && tagList.length > 0) {
+            const newTagList = [...tagList];
+            newTagList.pop();
+            setTagList(newTagList);
+        }
+    };
+
+    const removeTag = (tagToRemove) => {
+        setTagList(tagList.filter(tag => tag !== tagToRemove));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -77,12 +118,21 @@ function CreateJob() {
             return;
         }
 
+        // Add any remaining tag input as a tag
+        if (tagInput.trim() && !tagList.includes(tagInput.trim())) {
+            tagList.push(tagInput.trim());
+        }
+
+        // Join tags with commas for the API
+        const tagsString = tagList.join(', ');
+        const requestData = {
+            ...form,
+            salary: Number(form.salary),
+            tags: tagsString
+        };
+
         setSubmitting(true);
         try {
-            const requestData = {
-                ...form,
-                salary: Number(form.salary)
-            };
             await api.post("/JobPost", requestData);
             showFeedback("job", "success", "Job created successfully!");
             setTimeout(() => {
@@ -165,25 +215,69 @@ function CreateJob() {
                             />
                         </div>
 
+                        {/* Tags Input with Visual Chips */}
                         <div className="mb-3">
                             <label className="form-label fw-semibold">
-                                Tags <span className="text-muted">(comma-separated)</span>
+                                Tags <span className="text-muted">(press space or enter to add)</span>
                             </label>
-                            <input
-                                className="form-control"
-                                placeholder="e.g., Remote, UX/UI, Full-stack, Senior"
-                                value={form.tags}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        tags: e.target.value
-                                    })
-                                }
-                                disabled={submitting}
-                            />
+                            <div 
+                                className="form-control d-flex flex-wrap align-items-center gap-1"
+                                style={{ minHeight: '38px', padding: '4px 8px' }}
+                                onClick={() => document.getElementById('tagInput').focus()}
+                            >
+                                {tagList.map((tag, index) => (
+                                    <span 
+                                        key={index} 
+                                        className="badge bg-primary d-inline-flex align-items-center gap-1"
+                                        style={{ fontSize: '0.9rem', padding: '6px 10px' }}
+                                    >
+                                        {tag}
+                                        <span 
+                                            className="badge bg-light text-dark rounded-circle"
+                                            style={{ 
+                                                cursor: 'pointer', 
+                                                width: '18px', 
+                                                height: '18px', 
+                                                display: 'flex', 
+                                                alignItems: 'center', 
+                                                justifyContent: 'center',
+                                                fontSize: '12px',
+                                                padding: 0
+                                            }}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                removeTag(tag);
+                                            }}
+                                        >
+                                            ×
+                                        </span>
+                                    </span>
+                                ))}
+                                <input
+                                    id="tagInput"
+                                    type="text"
+                                    className="border-0 flex-grow-1"
+                                    style={{ 
+                                        outline: 'none', 
+                                        minWidth: '80px',
+                                        background: 'transparent',
+                                        padding: '4px 0'
+                                    }}
+                                    placeholder={tagList.length === 0 ? "Type a tag and press space..." : ""}
+                                    value={tagInput}
+                                    onChange={handleTagInputChange}
+                                    onKeyDown={handleTagKeyDown}
+                                    disabled={submitting}
+                                />
+                            </div>
                             <small className="text-muted">
-                                Separate tags with commas (e.g., Remote, Full-stack, Design)
+                                Press <kbd>Space</kbd> or <kbd>Enter</kbd> to add a tag. Click × to remove.
                             </small>
+                            {tagList.length > 0 && (
+                                <small className="text-muted d-block mt-1">
+                                    {tagList.length} tag{tagList.length !== 1 ? 's' : ''} added
+                                </small>
+                            )}
                         </div>
 
                         <div className="row">
