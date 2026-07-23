@@ -204,9 +204,11 @@ function EmployeeDashboard() {
             showFeedback("profile", "danger", error.response?.data || "Unable to save profile.");
         }
     };
+
     const handleEditProfileClick = () => {
         setIsEditingProfile(true);
     };
+
     // Education handlers
     const handleAddEducationClick = () => {
         setIsAddingEducation(true);
@@ -244,6 +246,17 @@ function EmployeeDashboard() {
             return;
         }
 
+        // Validate date format (YYYY-MM)
+        const dateRegex = /^\d{4}-\d{2}$/;
+        if (!dateRegex.test(educationForm.startDate)) {
+            showFeedback("education", "danger", "Start date must be in YYYY-MM format (e.g., 2024-01).");
+            return;
+        }
+        if (!dateRegex.test(educationForm.endDate)) {
+            showFeedback("education", "danger", "End date must be in YYYY-MM format (e.g., 2024-12).");
+            return;
+        }
+
         const startDate = new Date(educationForm.startDate);
         const endDate = new Date(educationForm.endDate);
         const currentDate = new Date();
@@ -263,14 +276,6 @@ function EmployeeDashboard() {
         }
         if (!educationForm.fieldOfStudy.trim()) {
             showFeedback("education", "danger", "Please enter a field of study.");
-            return;
-        }
-        if (!educationForm.startDate) {
-            showFeedback("education", "danger", "Please select a start date.");
-            return;
-        }
-        if (!educationForm.endDate) {
-            showFeedback("education", "danger", "Please select an end date.");
             return;
         }
         if (startYearMonth > currentYearMonth) {
@@ -668,7 +673,36 @@ function EmployeeDashboard() {
             showFeedback("aiResume", "danger", "Failed to download AI Resume.");
         });
     };
-   
+
+    // Helper component for date input (works on all browsers)
+    const DateMonthInput = ({ value, onChange, label, maxDate, placeholder }) => {
+        const handleChange = (e) => {
+            let val = e.target.value.replace(/[^0-9-]/g, '');
+            if (val.length === 4 && !val.includes('-')) {
+                val = val + '-';
+            }
+            if (val.length > 7) val = val.substring(0, 7);
+            onChange(val);
+        };
+
+        return (
+            <div className="mb-3">
+                <label className="form-label">{label}</label>
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder={placeholder || "YYYY-MM"}
+                    maxLength="7"
+                    value={value}
+                    onChange={handleChange}
+                    inputMode="numeric"
+                    autoComplete="off"
+                />
+                <small className="text-muted">Format: YYYY-MM (e.g., 2024-01)</small>
+            </div>
+        );
+    };
+
     return (
         <div className="container mt-5">
             <div className="d-flex justify-content-between align-items-center mb-4">
@@ -923,22 +957,44 @@ function EmployeeDashboard() {
                             <div className="col">
                                 <label className="form-label">Start Date</label>
                                 <input
-                                    type="month"
+                                    type="text"
                                     className="form-control"
-                                    max={new Date().toISOString().substring(0, 7)}
+                                    placeholder="YYYY-MM"
+                                    maxLength="7"
                                     value={educationForm.startDate}
-                                    onChange={(e) => setEducationForm({ ...educationForm, startDate: e.target.value })}
+                                    onChange={(e) => {
+                                        let val = e.target.value.replace(/[^0-9-]/g, '');
+                                        if (val.length === 4 && !val.includes('-')) {
+                                            val = val + '-';
+                                        }
+                                        if (val.length > 7) val = val.substring(0, 7);
+                                        setEducationForm({ ...educationForm, startDate: val });
+                                    }}
+                                    inputMode="numeric"
+                                    autoComplete="off"
                                 />
+                                <small className="text-muted">Format: YYYY-MM (e.g., 2024-01)</small>
                             </div>
                             <div className="col">
                                 <label className="form-label">End Date</label>
                                 <input
-                                    type="month"
+                                    type="text"
                                     className="form-control"
-                                    max={new Date().toISOString().substring(0, 7)}
+                                    placeholder="YYYY-MM"
+                                    maxLength="7"
                                     value={educationForm.endDate}
-                                    onChange={(e) => setEducationForm({ ...educationForm, endDate: e.target.value })}
+                                    onChange={(e) => {
+                                        let val = e.target.value.replace(/[^0-9-]/g, '');
+                                        if (val.length === 4 && !val.includes('-')) {
+                                            val = val + '-';
+                                        }
+                                        if (val.length > 7) val = val.substring(0, 7);
+                                        setEducationForm({ ...educationForm, endDate: val });
+                                    }}
+                                    inputMode="numeric"
+                                    autoComplete="off"
                                 />
+                                <small className="text-muted">Format: YYYY-MM (e.g., 2024-12)</small>
                             </div>
                         </div>
                         <div className="mt-3">
@@ -989,22 +1045,44 @@ function EmployeeDashboard() {
                                         <div className="col">
                                             <label>Start Date</label>
                                             <input
-                                                type="month"
+                                                type="text"
                                                 className="form-control"
-                                                max={new Date().toISOString().substring(0, 7)}
+                                                placeholder="YYYY-MM"
+                                                maxLength="7"
                                                 value={editEducationForm.startDate}
-                                                onChange={(e) => setEditEducationForm({ ...editEducationForm, startDate: e.target.value })}
+                                                onChange={(e) => {
+                                                    let val = e.target.value.replace(/[^0-9-]/g, '');
+                                                    if (val.length === 4 && !val.includes('-')) {
+                                                        val = val + '-';
+                                                    }
+                                                    if (val.length > 7) val = val.substring(0, 7);
+                                                    setEditEducationForm({ ...editEducationForm, startDate: val });
+                                                }}
+                                                inputMode="numeric"
+                                                autoComplete="off"
                                             />
+                                            <small className="text-muted">Format: YYYY-MM</small>
                                         </div>
                                         <div className="col">
                                             <label>End Date</label>
                                             <input
-                                                type="month"
+                                                type="text"
                                                 className="form-control"
-                                                max={new Date().toISOString().substring(0, 7)}
+                                                placeholder="YYYY-MM"
+                                                maxLength="7"
                                                 value={editEducationForm.endDate}
-                                                onChange={(e) => setEditEducationForm({ ...editEducationForm, endDate: e.target.value })}
+                                                onChange={(e) => {
+                                                    let val = e.target.value.replace(/[^0-9-]/g, '');
+                                                    if (val.length === 4 && !val.includes('-')) {
+                                                        val = val + '-';
+                                                    }
+                                                    if (val.length > 7) val = val.substring(0, 7);
+                                                    setEditEducationForm({ ...editEducationForm, endDate: val });
+                                                }}
+                                                inputMode="numeric"
+                                                autoComplete="off"
                                             />
+                                            <small className="text-muted">Format: YYYY-MM</small>
                                         </div>
                                     </div>
                                     <div className="mt-3">
@@ -1120,22 +1198,44 @@ function EmployeeDashboard() {
                             <div className="col-md-6">
                                 <label className="form-label">Start Date</label>
                                 <input
-                                    type="month"
+                                    type="text"
                                     className="form-control"
-                                    max={new Date().toISOString().substring(0, 7)}
+                                    placeholder="YYYY-MM"
+                                    maxLength="7"
                                     value={experienceForm.startDate}
-                                    onChange={(e) => setExperienceForm({ ...experienceForm, startDate: e.target.value })}
+                                    onChange={(e) => {
+                                        let val = e.target.value.replace(/[^0-9-]/g, '');
+                                        if (val.length === 4 && !val.includes('-')) {
+                                            val = val + '-';
+                                        }
+                                        if (val.length > 7) val = val.substring(0, 7);
+                                        setExperienceForm({ ...experienceForm, startDate: val });
+                                    }}
+                                    inputMode="numeric"
+                                    autoComplete="off"
                                 />
+                                <small className="text-muted">Format: YYYY-MM (e.g., 2024-01)</small>
                             </div>
                             <div className="col-md-6">
                                 <label className="form-label">End Date</label>
                                 <input
-                                    type="month"
+                                    type="text"
                                     className="form-control"
-                                    max={new Date().toISOString().substring(0, 7)}
+                                    placeholder="YYYY-MM"
+                                    maxLength="7"
                                     value={experienceForm.endDate}
-                                    onChange={(e) => setExperienceForm({ ...experienceForm, endDate: e.target.value })}
+                                    onChange={(e) => {
+                                        let val = e.target.value.replace(/[^0-9-]/g, '');
+                                        if (val.length === 4 && !val.includes('-')) {
+                                            val = val + '-';
+                                        }
+                                        if (val.length > 7) val = val.substring(0, 7);
+                                        setExperienceForm({ ...experienceForm, endDate: val });
+                                    }}
+                                    inputMode="numeric"
+                                    autoComplete="off"
                                 />
+                                <small className="text-muted">Format: YYYY-MM (e.g., 2024-12)</small>
                             </div>
                         </div>
                         <div className="mt-3">
@@ -1187,22 +1287,44 @@ function EmployeeDashboard() {
                                         <div className="col-md-6">
                                             <label className="form-label">Start Date</label>
                                             <input
-                                                type="month"
+                                                type="text"
                                                 className="form-control"
-                                                max={new Date().toISOString().substring(0, 7)}
+                                                placeholder="YYYY-MM"
+                                                maxLength="7"
                                                 value={experienceForm.startDate}
-                                                onChange={(e) => setExperienceForm({ ...experienceForm, startDate: e.target.value })}
+                                                onChange={(e) => {
+                                                    let val = e.target.value.replace(/[^0-9-]/g, '');
+                                                    if (val.length === 4 && !val.includes('-')) {
+                                                        val = val + '-';
+                                                    }
+                                                    if (val.length > 7) val = val.substring(0, 7);
+                                                    setExperienceForm({ ...experienceForm, startDate: val });
+                                                }}
+                                                inputMode="numeric"
+                                                autoComplete="off"
                                             />
+                                            <small className="text-muted">Format: YYYY-MM</small>
                                         </div>
                                         <div className="col-md-6">
                                             <label className="form-label">End Date</label>
                                             <input
-                                                type="month"
+                                                type="text"
                                                 className="form-control"
-                                                max={new Date().toISOString().substring(0, 7)}
+                                                placeholder="YYYY-MM"
+                                                maxLength="7"
                                                 value={experienceForm.endDate}
-                                                onChange={(e) => setExperienceForm({ ...experienceForm, endDate: e.target.value })}
+                                                onChange={(e) => {
+                                                    let val = e.target.value.replace(/[^0-9-]/g, '');
+                                                    if (val.length === 4 && !val.includes('-')) {
+                                                        val = val + '-';
+                                                    }
+                                                    if (val.length > 7) val = val.substring(0, 7);
+                                                    setExperienceForm({ ...experienceForm, endDate: val });
+                                                }}
+                                                inputMode="numeric"
+                                                autoComplete="off"
                                             />
+                                            <small className="text-muted">Format: YYYY-MM</small>
                                         </div>
                                     </div>
                                     <div className="mt-3">
