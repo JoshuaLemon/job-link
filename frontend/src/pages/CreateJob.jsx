@@ -86,7 +86,7 @@ function CreateJob() {
             await api.post("/JobPost", requestData);
             showFeedback("job", "success", "Job created successfully!");
             setTimeout(() => {
-                navigate("/employer-dashboard");
+                navigate("/employer");
             }, 1500);
         } catch (error) {
             console.error(error);
@@ -101,7 +101,7 @@ function CreateJob() {
             {/* Header */}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2>Create New Job</h2>
-                <Link to="/employer-dashboard" className="btn btn-secondary">
+                <Link to="/employer" className="btn btn-secondary">
                     ← Back to Dashboard
                 </Link>
             </div>
@@ -233,7 +233,7 @@ function CreateJob() {
                                 )}
                             </button>
                             <Link
-                                to="/employer-dashboard"
+                                to="/employer"
                                 className="btn btn-secondary"
                             >
                                 Cancel
