@@ -10,13 +10,14 @@ public static class JobPostMapper
         return new JobPostResponse
         {
             JobPostId = job.JobPostId,
-            CompanyId = job.CompanyId,
             Title = job.Title,
             Description = job.Description,
             Location = job.Location,
             Salary = job.Salary,
             EmploymentType = job.EmploymentType,
-            PostedAt = job.PostedAt
+            PostedAt = job.PostedAt,
+            Tags = job.Tags,  // Add this
+            CompanyName = job.Company?.CompanyName ?? ""
         };
     }
 }

@@ -53,7 +53,8 @@ public class JobPostController : ControllerBase
             Location = request.Location,
             Salary = request.Salary,
             EmploymentType = request.EmploymentType,
-            PostedAt = DateTime.UtcNow
+            PostedAt = DateTime.UtcNow,
+            Tags = request.Tags
         };
 
         _context.JobPosts.Add(job);
@@ -71,6 +72,7 @@ public class JobPostController : ControllerBase
         string? title,
         string? location,
         string? employmentType,
+        string? tags,
         string? sortBy = "postedAt",
         string? sortOrder = "desc",
         int page = 1,
@@ -78,25 +80,27 @@ public class JobPostController : ControllerBase
     {
         var query = _context.JobPosts.AsQueryable();
 
-        // Search by title
         if (!string.IsNullOrWhiteSpace(title))
         {
             query = query.Where(j => j.Title.Contains(title));
         }
 
-        // Filter by location
         if (!string.IsNullOrWhiteSpace(location))
         {
             query = query.Where(j => j.Location.Contains(location));
         }
 
-        // Filter by employment type
         if (!string.IsNullOrWhiteSpace(employmentType))
         {
             query = query.Where(j => j.EmploymentType == employmentType);
         }
 
-        // Sorting
+        if (!string.IsNullOrWhiteSpace(tags))
+        {
+            var tagList = tags.Split(',').Select(t => t.Trim()).ToList();
+            query = query.Where(j => tagList.Any(t => j.Tags != null && j.Tags.Contains(t)));
+        }
+
         switch (sortBy?.ToLower())
         {
             case "salary":
@@ -124,11 +128,9 @@ public class JobPostController : ControllerBase
                 break;
         }
 
-        // Pagination metadata
         var totalItems = query.Count();
         var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
 
-        // Pagination
         query = query
             .Skip((page - 1) * pageSize)
             .Take(pageSize);
@@ -198,6 +200,7 @@ public class JobPostController : ControllerBase
 
         return Ok(job);
     }
+
     [Authorize(Roles = "Employer")]
     [HttpPut("{id}")]
     public IActionResult Update(int id, UpdateJobPostRequest request)
@@ -242,6 +245,7 @@ public class JobPostController : ControllerBase
         job.Location = request.Location;
         job.Salary = request.Salary;
         job.EmploymentType = request.EmploymentType;
+        job.Tags = request.Tags;
 
         _context.SaveChanges();
 
@@ -252,6 +256,7 @@ public class JobPostController : ControllerBase
             Data = job.ToResponse()
         });
     }
+
     [Authorize(Roles = "Employer")]
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)

@@ -72,7 +72,6 @@ function JobDetails() {
         if (!user) return;
         
         try {
-            // Check if user has already applied
             const response = await api.get("/Application/my-applications");
             const applications = response.data || [];
             const existing = applications.find(app => app.jobPostId === parseInt(id));
@@ -132,6 +131,11 @@ function JobDetails() {
         return typeMap[type] || "bg-light text-dark";
     };
 
+    const getTags = (tags) => {
+        if (!tags) return [];
+        return tags.split(',').map(t => t.trim()).filter(t => t);
+    };
+
     if (loading) {
         return (
             <div className="container mt-5">
@@ -161,9 +165,10 @@ function JobDetails() {
         );
     }
 
+    const tags = getTags(job.tags);
+
     return (
         <div className="container mt-5">
-            {/* Header */}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2>Job Details</h2>
                 <Link to="/" className="btn btn-secondary">
@@ -174,7 +179,6 @@ function JobDetails() {
             <FeedbackMessage section="job" />
             <FeedbackMessage section="apply" />
 
-            {/* Job Details Card */}
             <div className="card">
                 <div className="card-body">
                     <div className="d-flex justify-content-between align-items-start mb-3">
@@ -189,7 +193,16 @@ function JobDetails() {
                         </span>
                     </div>
 
-                    {/* Job Meta Info */}
+                    {tags.length > 0 && (
+                        <div className="mb-3">
+                            {tags.map((tag, index) => (
+                                <span key={index} className="badge bg-secondary me-1 px-3 py-2">
+                                    #{tag}
+                                </span>
+                            ))}
+                        </div>
+                    )}
+
                     <div className="row mb-4">
                         <div className="col-md-4 mb-2">
                             <strong>Location</strong>
@@ -205,13 +218,11 @@ function JobDetails() {
                         </div>
                     </div>
 
-                    {/* Description */}
                     <div className="mb-4">
                         <h5>Job Description</h5>
                         <p className="mb-0" style={{ whiteSpace: 'pre-wrap' }}>{job.description}</p>
                     </div>
 
-                    {/* Apply Button */}
                     <div className="d-flex gap-3 flex-wrap">
                         {!user ? (
                             <Link to="/login" className="btn btn-primary btn-lg">
@@ -247,7 +258,6 @@ function JobDetails() {
                         </Link>
                     </div>
 
-                    {/* Application Status Message */}
                     {hasApplied && (
                         <div className="mt-3">
                             <div className="alert alert-success">

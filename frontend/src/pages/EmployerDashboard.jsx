@@ -14,7 +14,8 @@ function EmployerDashboard() {
         description: "",
         location: "",
         salary: 0,
-        employmentType: ""
+        employmentType: "",
+        tags: ""
     });
 
     const [stats, setStats] = useState({
@@ -81,15 +82,12 @@ function EmployerDashboard() {
     const loadData = async () => {
         setLoading(true);
         try {
-            // Load jobs
             const jobsResponse = await api.get("/JobPost/my-jobs");
             setJobs(jobsResponse.data);
 
-            // Load stats
             const statsResponse = await api.get("/Application/dashboard");
             setStats(statsResponse.data);
 
-            // Load company
             try {
                 const companyResponse = await api.get(`/Company/${user.userId}`);
                 setCompanyExists(true);
@@ -118,7 +116,6 @@ function EmployerDashboard() {
 
     const handleCancelCompany = () => {
         setIsEditingCompany(false);
-        // Refetch company data to reset
         api.get(`/Company/${user.userId}`)
             .then((response) => {
                 setCompany({
@@ -168,7 +165,8 @@ function EmployerDashboard() {
             description: job.description,
             location: job.location,
             salary: job.salary,
-            employmentType: job.employmentType
+            employmentType: job.employmentType,
+            tags: job.tags || ""
         });
     };
 
@@ -179,7 +177,8 @@ function EmployerDashboard() {
             description: "",
             location: "",
             salary: 0,
-            employmentType: ""
+            employmentType: "",
+            tags: ""
         });
     };
 
@@ -215,9 +214,13 @@ function EmployerDashboard() {
         }
     };
 
+    const getTags = (tags) => {
+        if (!tags) return [];
+        return tags.split(',').map(t => t.trim()).filter(t => t);
+    };
+
     return (
         <div className="container mt-5">
-            {/* Header */}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2>Employer Dashboard</h2>
                 <div>
@@ -233,7 +236,6 @@ function EmployerDashboard() {
                 </div>
             </div>
 
-            {/* Company Warning */}
             {!companyExists && (
                 <div className="alert alert-warning">
                     <strong>⚠️ Complete your company profile</strong>
@@ -241,7 +243,6 @@ function EmployerDashboard() {
                 </div>
             )}
 
-            {/* Stats Cards */}
             <div className="row mb-4">
                 <div className="col-md">
                     <div className="card h-100 text-center shadow-sm">
@@ -290,7 +291,6 @@ function EmployerDashboard() {
                 </div>
             </div>
 
-            {/* Company Profile Section */}
             <div className="card mb-5">
                 <div className="card-body">
                     <div className="d-flex justify-content-between align-items-center mb-3">
@@ -305,7 +305,6 @@ function EmployerDashboard() {
                     <FeedbackMessage section="company" />
 
                     {isEditingCompany ? (
-                        // Edit mode
                         <>
                             <div className="row">
                                 <div className="col-md-6 mb-3">
@@ -365,7 +364,6 @@ function EmployerDashboard() {
                             </div>
                         </>
                     ) : (
-                        // View mode
                         <>
                             {company.companyName && (
                                 <p><strong>Company Name:</strong> {company.companyName}</p>
@@ -396,14 +394,12 @@ function EmployerDashboard() {
                 </div>
             </div>
 
-            {/* Jobs Section */}
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2 className="mb-0">My Jobs</h2>
             </div>
 
             <FeedbackMessage section="job" />
 
-            {/* Jobs List or Empty State */}
             {jobs.length === 0 ? (
                 <div className="card mb-3">
                     <div className="card-body text-center py-5">
@@ -436,7 +432,6 @@ function EmployerDashboard() {
                         <div key={job.jobPostId} className="card mb-3">
                             <div className="card-body">
                                 {editingJobId === job.jobPostId ? (
-                                    // Edit mode
                                     <>
                                         <h5 className="mb-3">Edit Job</h5>
                                         <div className="mb-3">
@@ -480,6 +475,16 @@ function EmployerDashboard() {
                                             </div>
                                         </div>
                                         <div className="mb-3">
+                                            <label className="form-label">Tags <span className="text-muted">(comma-separated)</span></label>
+                                            <input
+                                                className="form-control"
+                                                placeholder="e.g., Remote, Full-stack, Senior"
+                                                value={editForm.tags}
+                                                onChange={(e) => setEditForm({ ...editForm, tags: e.target.value })}
+                                            />
+                                            <small className="text-muted">Separate tags with commas</small>
+                                        </div>
+                                        <div className="mb-3">
                                             <label className="form-label">Employment Type <span className="text-danger">*</span></label>
                                             <select
                                                 className="form-select"
@@ -504,7 +509,6 @@ function EmployerDashboard() {
                                         </div>
                                     </>
                                 ) : (
-                                    // View mode
                                     <>
                                         <div className="d-flex justify-content-between align-items-start">
                                             <div>
@@ -520,6 +524,17 @@ function EmployerDashboard() {
                                                 {job.employmentType}
                                             </span>
                                         </div>
+
+                                        {job.tags && (
+                                            <div className="mt-2">
+                                                {getTags(job.tags).map((tag, index) => (
+                                                    <span key={index} className="badge bg-secondary me-1 px-2 py-1">
+                                                        #{tag}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
+
                                         <p className="mt-2">{job.description}</p>
                                         <div className="d-flex justify-content-between align-items-center mt-3">
                                             <div></div>
@@ -550,7 +565,6 @@ function EmployerDashboard() {
                         </div>
                     ))}
 
-                    {/* Add Job Button - Below the list */}
                     {companyExists && (
                         <div className="text-center mt-3">
                             <Link 

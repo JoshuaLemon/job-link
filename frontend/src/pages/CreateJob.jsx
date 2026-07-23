@@ -11,7 +11,8 @@ function CreateJob() {
         description: "",
         location: "",
         salary: "",
-        employmentType: ""
+        employmentType: "",
+        tags: ""
     });
 
     const [feedback, setFeedback] = useState({
@@ -55,7 +56,6 @@ function CreateJob() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validate form
         if (!form.title.trim()) {
             showFeedback("job", "danger", "Please enter a job title.");
             return;
@@ -98,7 +98,6 @@ function CreateJob() {
 
     return (
         <div className="container mt-5">
-            {/* Header */}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2>Create New Job</h2>
                 <Link to="/employer" className="btn btn-secondary">
@@ -111,7 +110,6 @@ function CreateJob() {
             <div className="card">
                 <div className="card-body">
                     <form onSubmit={handleSubmit}>
-                        {/* Title */}
                         <div className="mb-3">
                             <label className="form-label fw-semibold">
                                 Job Title <span className="text-danger">*</span>
@@ -130,7 +128,6 @@ function CreateJob() {
                             />
                         </div>
 
-                        {/* Description */}
                         <div className="mb-3">
                             <label className="form-label fw-semibold">
                                 Description <span className="text-danger">*</span>
@@ -150,7 +147,6 @@ function CreateJob() {
                             />
                         </div>
 
-                        {/* Location */}
                         <div className="mb-3">
                             <label className="form-label fw-semibold">
                                 Location <span className="text-danger">*</span>
@@ -169,8 +165,28 @@ function CreateJob() {
                             />
                         </div>
 
+                        <div className="mb-3">
+                            <label className="form-label fw-semibold">
+                                Tags <span className="text-muted">(comma-separated)</span>
+                            </label>
+                            <input
+                                className="form-control"
+                                placeholder="e.g., Remote, UX/UI, Full-stack, Senior"
+                                value={form.tags}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        tags: e.target.value
+                                    })
+                                }
+                                disabled={submitting}
+                            />
+                            <small className="text-muted">
+                                Separate tags with commas (e.g., Remote, Full-stack, Design)
+                            </small>
+                        </div>
+
                         <div className="row">
-                            {/* Salary */}
                             <div className="col-md-6 mb-3">
                                 <label className="form-label fw-semibold">
                                     Salary <span className="text-danger">*</span>
@@ -190,7 +206,6 @@ function CreateJob() {
                                 />
                             </div>
 
-                            {/* Employment Type */}
                             <div className="col-md-6 mb-3">
                                 <label className="form-label fw-semibold">
                                     Employment Type <span className="text-danger">*</span>
@@ -216,7 +231,6 @@ function CreateJob() {
                             </div>
                         </div>
 
-                        {/* Form Actions */}
                         <div className="d-flex gap-2 mt-4">
                             <button
                                 className="btn btn-success"
