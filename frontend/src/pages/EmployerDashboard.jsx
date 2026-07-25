@@ -552,10 +552,10 @@ function EmployerDashboard() {
                                                     🗑️ Delete
                                                 </button>
                                                 <Link
-                                                    to={`/applicants/${job.jobPostId}`}
+                                                    to={`/job/${job.jobPostId}`}
                                                     className="btn btn-info btn-sm"
                                                 >
-                                                    👥 Applicants
+                                                    👁️ View Job & Talents
                                                 </Link>
                                             </div>
                                         </div>

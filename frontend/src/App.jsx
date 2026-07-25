@@ -15,6 +15,9 @@ import Terms from "./pages/Terms";
 import VerifyEmail from "./pages/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import EmployerJobDetails from "./pages/EmployerJobDetails";
+
+
 function App() {
     return (
         <>
@@ -54,7 +57,7 @@ function App() {
                     }
                 />
 
-   
+                <Route path="/job/:id" element={<EmployerJobDetails />} />
 
                 <Route
                     path="/create-job"

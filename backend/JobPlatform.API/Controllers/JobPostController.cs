@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using JobPlatform.API.Mappers;
+using Microsoft.EntityFrameworkCore;
 namespace JobPlatform.API.Controllers;
 using Microsoft.AspNetCore.Cors;
 
@@ -16,13 +17,16 @@ public class JobPostController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly IJobRecommendationService _jobRecommendationService;
+    private readonly ITalentRecommendationService _talentRecommendationService;
 
     public JobPostController(
         ApplicationDbContext context,
-        IJobRecommendationService jobRecommendationService)
+        IJobRecommendationService jobRecommendationService,
+        ITalentRecommendationService talentRecommendationService)
     {
         _context = context;
         _jobRecommendationService = jobRecommendationService;
+        _talentRecommendationService = talentRecommendationService;
     }
 
     [Authorize(Roles = "Employer")]
@@ -339,5 +343,50 @@ public class JobPostController : ControllerBase
             Message = "Job deleted successfully.",
             Data = null
         });
+    }
+
+    [Authorize(Roles = "Employer")]
+    [HttpGet("{id}/talents")]
+    public async Task<IActionResult> GetRecommendedTalentsForJob(int id, [FromQuery] int limit = 10)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized(new { message = "User not authenticated." });
+            }
+
+            int userId = int.Parse(userIdClaim.Value);
+
+            var company = await _context.Companies
+                .FirstOrDefaultAsync(c => c.UserId == userId);
+
+            if (company == null)
+            {
+                return BadRequest(new { message = "Company not found." });
+            }
+
+            var job = await _context.JobPosts
+                .FirstOrDefaultAsync(j => j.JobPostId == id && j.CompanyId == company.CompanyId);
+
+            if (job == null)
+            {
+                return NotFound(new { message = "Job not found or you don't have access." });
+            }
+
+            var talents = await _talentRecommendationService.GetRecommendedTalentsForJobAsync(id, limit);
+
+            return Ok(new
+            {
+                Success = true,
+                Data = talents,
+                Count = talents.Count
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Server error", error = ex.Message });
+        }
     }
 }
