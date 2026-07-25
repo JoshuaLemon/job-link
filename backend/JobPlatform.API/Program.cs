@@ -58,6 +58,7 @@ builder.Services.AddScoped<IAIResumePdfService, AIResumePdfService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IJobRecommendationService, JobRecommendationService>();
+builder.Services.AddScoped<ITalentRecommendationService, TalentRecommendationService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {

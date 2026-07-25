@@ -1,11 +1,13 @@
 using JobPlatform.API.Data;
 using JobPlatform.API.DTOs;
 using JobPlatform.API.Models;
+using JobPlatform.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 
 namespace JobPlatform.API.Controllers;
+
 [Authorize(Roles = "Employer")]
 [ApiController]
 [EnableCors("ReactPolicy")]
@@ -13,10 +15,14 @@ namespace JobPlatform.API.Controllers;
 public class CompanyController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
+    private readonly ITalentRecommendationService _talentRecommendationService;
 
-    public CompanyController(ApplicationDbContext context)
+    public CompanyController(
+        ApplicationDbContext context,
+        ITalentRecommendationService talentRecommendationService)
     {
         _context = context;
+        _talentRecommendationService = talentRecommendationService;
     }
 
     [HttpPost]
@@ -65,13 +71,12 @@ public class CompanyController : ControllerBase
             }
         });
     }
+
     [HttpGet("{userId}")]
     public IActionResult GetCompany(int userId)
     {
         var company = _context.Companies
-
             .Where(c => c.UserId == userId)
-
             .Select(c => new
             {
                 c.CompanyId,
@@ -82,7 +87,6 @@ public class CompanyController : ControllerBase
                 c.Website,
                 c.Location
             })
-
             .FirstOrDefault();
 
         if (company == null)
@@ -129,10 +133,36 @@ public class CompanyController : ControllerBase
         }
 
         _context.Companies.Remove(company);
-
         _context.SaveChanges();
 
         return Ok("Company deleted.");
     }
 
+    [HttpGet("recommended-talents")]
+    public async Task<IActionResult> GetRecommendedTalents([FromQuery] int limit = 10)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized(new { message = "User not authenticated." });
+            }
+
+            int userId = int.Parse(userIdClaim.Value);
+
+            var talents = await _talentRecommendationService.GetRecommendedTalentsAsync(userId, limit);
+
+            return Ok(new
+            {
+                Success = true,
+                Data = talents,
+                Count = talents.Count
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Server error", error = ex.Message });
+        }
+    }
 }
