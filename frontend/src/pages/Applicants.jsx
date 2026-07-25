@@ -102,7 +102,7 @@ function Applicants() {
             {/* Header */}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2>Applicants</h2>
-                <Link to="/employer-dashboard" className="btn btn-secondary">
+                <Link to="/employer" className="btn btn-secondary">
                     ← Back to Dashboard
                 </Link>
             </div>
