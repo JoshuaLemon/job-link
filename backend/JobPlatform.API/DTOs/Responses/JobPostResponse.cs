@@ -11,4 +11,5 @@ public class JobPostResponse
     public DateTime PostedAt { get; set; }
     public string? Tags { get; set; } = string.Empty;
     public string CompanyName { get; set; } = string.Empty;
+    public int CompanyId { get; set; }
 }

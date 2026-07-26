@@ -16,8 +16,9 @@ public static class JobPostMapper
             Salary = job.Salary,
             EmploymentType = job.EmploymentType,
             PostedAt = job.PostedAt,
-            Tags = job.Tags,  // Add this
-            CompanyName = job.Company?.CompanyName ?? ""
+            Tags = job.Tags,
+            CompanyName = job.Company?.CompanyName ?? "",
+            CompanyId = job.CompanyId 
         };
     }
 }

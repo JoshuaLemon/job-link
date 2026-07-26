@@ -87,7 +87,9 @@ public class JobPostController : ControllerBase
         int page = 1,
         int pageSize = 10)
     {
-        var query = _context.JobPosts.AsQueryable();
+        var query = _context.JobPosts
+            .Include(j => j.Company)
+            .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(title))
         {
@@ -181,6 +183,7 @@ public class JobPostController : ControllerBase
         }
 
         var jobs = _context.JobPosts
+            .Include(j => j.Company)
             .Where(j => j.CompanyId == company.CompanyId)
             .OrderByDescending(j => j.PostedAt)
             .Select(j => j.ToResponse())
@@ -222,6 +225,7 @@ public class JobPostController : ControllerBase
     public IActionResult GetById(int id)
     {
         var job = _context.JobPosts
+            .Include(j => j.Company)
             .Where(j => j.JobPostId == id)
             .AsEnumerable()
             .Select(job => job.ToResponse())
