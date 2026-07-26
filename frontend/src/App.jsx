@@ -16,6 +16,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import EmployerJobDetails from "./pages/EmployerJobDetails";
+import CompanyProfile from "./pages/CompanyProfile";
 
 
 function App() {
@@ -56,7 +57,7 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
-
+                <Route path="/company/:id" element={<CompanyProfile />} />
                 <Route path="/job/:id" element={<EmployerJobDetails />} />
 
                 <Route
