@@ -7,6 +7,7 @@ function JobDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
     const [job, setJob] = useState(null);
+    const [company, setCompany] = useState(null);
     const [loading, setLoading] = useState(true);
     const [applying, setApplying] = useState(false);
     const [hasApplied, setHasApplied] = useState(false);
@@ -60,6 +61,16 @@ function JobDetails() {
         try {
             const response = await api.get(`/JobPost/${id}`);
             setJob(response.data);
+            
+            // Load company details if companyId exists
+            if (response.data.companyId) {
+                try {
+                    const companyResponse = await api.get(`/Company/${response.data.companyId}`);
+                    setCompany(companyResponse.data);
+                } catch (err) {
+                    console.error("Failed to load company details:", err);
+                }
+            }
         } catch (error) {
             console.error(error);
             showFeedback("job", "danger", "Failed to load job details.");
@@ -184,9 +195,21 @@ function JobDetails() {
                     <div className="d-flex justify-content-between align-items-start mb-3">
                         <div>
                             <h2 className="mb-2">{job.title}</h2>
-                            <h6 className="text-muted">
-                                {job.companyName || "Company"}
-                            </h6>
+                            {company ? (
+                                <Link 
+                                    to={`/company/${company.companyId}`} 
+                                    className="text-decoration-none"
+                                    style={{ color: '#4a6cf7' }}
+                                >
+                                    <h6 className="mb-0">
+                                        🏢 {company.companyName}
+                                    </h6>
+                                </Link>
+                            ) : (
+                                <h6 className="text-muted">
+                                    {job.companyName || "Company"}
+                                </h6>
+                            )}
                         </div>
                         <span className={`badge fs-6 px-3 py-2 ${getEmploymentBadgeClass(job.employmentType)}`}>
                             {job.employmentType}
