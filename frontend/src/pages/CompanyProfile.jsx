@@ -53,15 +53,14 @@ function CompanyProfile() {
     const loadCompany = async () => {
         setLoading(true);
         try {
-            const response = await api.get(`/Company/${id}`);
+            // ✅ FIXED: Use by-company-id endpoint
+            const response = await api.get(`/Company/by-company-id/${id}`);
             setCompany(response.data);
             
+            // Load jobs for this company
             try {
-                // You'll need to add an endpoint to get jobs by company/userId
-                const jobsResponse = await api.get(`/JobPost/my-jobs`);
-                // Filter jobs that belong to this company
-                const companyJobs = jobsResponse.data.filter(job => job.userId === parseInt(id));
-                setJobs(companyJobs);
+                const jobsResponse = await api.get(`/JobPost?companyId=${id}`);
+                setJobs(jobsResponse.data.data || []);
             } catch (err) {
                 console.error("Failed to load company jobs:", err);
             }
