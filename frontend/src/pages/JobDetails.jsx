@@ -60,12 +60,14 @@ function JobDetails() {
         setLoading(true);
         try {
             const response = await api.get(`/JobPost/${id}`);
+            console.log("Job data:", response.data); // Debug log
             setJob(response.data);
             
-            // Load company details using userId from the job
-            if (response.data.userId) {
+            // Use companyId from the job response
+            if (response.data.companyId) {
                 try {
-                    const companyResponse = await api.get(`/Company/${response.data.userId}`);
+                    const companyResponse = await api.get(`/Company/by-company-id/${response.data.companyId}`);
+                    console.log("Company data:", companyResponse.data); // Debug log
                     setCompany(companyResponse.data);
                 } catch (err) {
                     console.error("Failed to load company details:", err);
@@ -197,7 +199,7 @@ function JobDetails() {
                             <h2 className="mb-2">{job.title}</h2>
                             {company ? (
                                 <Link 
-                                    to={`/company/${job.userId}`} 
+                                    to={`/company/${company.companyId}`} 
                                     className="text-decoration-none"
                                     style={{ color: '#4a6cf7' }}
                                 >

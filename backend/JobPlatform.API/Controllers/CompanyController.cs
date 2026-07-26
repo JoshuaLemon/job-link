@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Cors;
 using System.Security.Claims;
 namespace JobPlatform.API.Controllers;
 
-[Authorize(Roles = "Employer")]
 [ApiController]
 [EnableCors("ReactPolicy")]
 [Route("api/[controller]")]
@@ -25,6 +24,60 @@ public class CompanyController : ControllerBase
         _talentRecommendationService = talentRecommendationService;
     }
 
+    // 🔓 Public - Anyone can view company
+    [HttpGet("{userId}")]
+    public IActionResult GetCompany(int userId)
+    {
+        var company = _context.Companies
+            .Where(c => c.UserId == userId)
+            .Select(c => new
+            {
+                c.CompanyId,
+                c.UserId,
+                c.CompanyName,
+                c.Industry,
+                c.Description,
+                c.Website,
+                c.Location
+            })
+            .FirstOrDefault();
+
+        if (company == null)
+        {
+            return NotFound("Company not found.");
+        }
+
+        return Ok(company);
+    }
+
+    // 🔓 Public - Anyone can view company by companyId
+    [HttpGet("by-company-id/{companyId}")]
+    public IActionResult GetCompanyByCompanyId(int companyId)
+    {
+        var company = _context.Companies
+            .Where(c => c.CompanyId == companyId)
+            .Select(c => new
+            {
+                c.CompanyId,
+                c.UserId,
+                c.CompanyName,
+                c.Industry,
+                c.Description,
+                c.Website,
+                c.Location
+            })
+            .FirstOrDefault();
+
+        if (company == null)
+        {
+            return NotFound("Company not found.");
+        }
+
+        return Ok(company);
+    }
+
+    // 🔒 Only Employers can create a company
+    [Authorize(Roles = "Employer")]
     [HttpPost]
     public IActionResult Create(CreateCompanyRequest request)
     {
@@ -72,31 +125,8 @@ public class CompanyController : ControllerBase
         });
     }
 
-    [HttpGet("{userId}")]
-    public IActionResult GetCompany(int userId)
-    {
-        var company = _context.Companies
-            .Where(c => c.UserId == userId)
-            .Select(c => new
-            {
-                c.CompanyId,
-                c.UserId,
-                c.CompanyName,
-                c.Industry,
-                c.Description,
-                c.Website,
-                c.Location
-            })
-            .FirstOrDefault();
-
-        if (company == null)
-        {
-            return NotFound("Company not found.");
-        }
-
-        return Ok(company);
-    }
-
+    // 🔒 Only Employers can update their company
+    [Authorize(Roles = "Employer")]
     [HttpPut("{userId}")]
     public IActionResult UpdateCompany(
         int userId,
@@ -121,6 +151,8 @@ public class CompanyController : ControllerBase
         return Ok(company);
     }
 
+    // 🔒 Only Employers can delete their company
+    [Authorize(Roles = "Employer")]
     [HttpDelete("{companyId}")]
     public IActionResult DeleteCompany(int companyId)
     {
@@ -138,6 +170,8 @@ public class CompanyController : ControllerBase
         return Ok("Company deleted.");
     }
 
+    // 🔒 Only Employers can get talent recommendations
+    [Authorize(Roles = "Employer")]
     [HttpGet("recommended-talents")]
     public async Task<IActionResult> GetRecommendedTalents([FromQuery] int limit = 10)
     {
