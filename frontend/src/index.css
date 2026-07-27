@@ -246,10 +246,10 @@ body {
 .search-wrapper {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 4px;
   background: #ffffff;
-  border-radius: 14px;
-  padding: 6px;
+  border-radius: 8px;
+  padding: 4px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   max-width: 650px;
 }
@@ -257,10 +257,10 @@ body {
 .search-input {
   flex: 1;
   min-width: 140px;
-  padding: 10px 14px;
+  padding: 8px 14px;
   border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
   outline: none;
   background: transparent;
   color: #1a1a2e;
@@ -271,10 +271,10 @@ body {
 }
 
 .search-select {
-  padding: 10px 14px;
+  padding: 8px 14px;
   border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
   background: #f8f9fa;
   color: #1a1a2e;
   outline: none;
@@ -283,12 +283,12 @@ body {
 }
 
 .search-btn {
-  padding: 10px 24px;
+  padding: 8px 20px;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   background: #4a6cf7;
   color: #ffffff;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
