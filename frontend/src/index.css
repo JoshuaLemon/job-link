@@ -2626,29 +2626,54 @@ body {
 @media (max-width: 768px) {
   .menu-toggle {
     display: block;
+    z-index: 1001;
+    position: relative;
+    font-size: 1.5rem;
+    padding: 0.3rem 0.5rem;
   }
 
   .nav-links {
     display: none;
+    position: fixed;
+    top: 0;
+    right: 0;  /* Changed from left: 0 */
+    width: 300px;  /* Fixed width instead of full screen */
+    height: 100vh;
+    background: rgba(26, 35, 50, 0.98);
     flex-direction: column;
-    width: 100%;
-    padding: 1rem 0;
-    gap: 0.3rem;
+    justify-content: flex-start;  /* Changed from center */
+    align-items: center;
+    padding: 4rem 1.5rem 2rem;
+    z-index: 1000;
+    gap: 0.5rem;
+    overflow-y: auto;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
   }
 
   .nav-links.active {
     display: flex;
+    transform: translateX(0);
   }
 
   .navbar-container {
     flex-wrap: wrap;
     padding: 0 1rem;
+    position: relative;
+    z-index: 1001;
   }
 
   .nav-link-modern {
     width: 100%;
     text-align: center;
-    padding: 0.8rem;
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .nav-link-modern:last-of-type {
+    border-bottom: none;
   }
 
   .nav-actions {
@@ -2670,6 +2695,25 @@ body {
   .btn-delete {
     width: 100%;
     text-align: center;
+    padding: 0.6rem 1rem;
+  }
+
+  .menu-close {
+    display: block;
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 1.5rem;
+    color: #ffffff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1001;
+    padding: 0.3rem 0.5rem;
+  }
+
+  .menu-close:hover {
+    color: rgba(255, 255, 255, 0.7);
   }
 }
 
