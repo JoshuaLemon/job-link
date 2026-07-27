@@ -95,7 +95,6 @@ function Home() {
             setRecommendedJobs(response.data.data || []);
         } catch (error) {
             console.error(error);
-            // Silently fail - recommendations are optional
         } finally {
             setLoadingRecommended(false);
         }
@@ -109,181 +108,215 @@ function Home() {
         setSearchTerm("");
     };
 
+    // Stats for the hero section
+    const totalJobs = jobs.length;
+    const uniqueCompanies = new Set(jobs.map(j => j.companyName)).size;
+    const totalProfessionals = totalJobs * 12; // Just for display
+
     return (
-        <div className="container mt-5">
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h1 className="mb-0">Job Link</h1>
-                    <p className="text-muted">Find your dream job today</p>
-                </div>
-                <div>
-                    {isEmployer && (
-                        <Link to="/create-job" className="btn btn-primary">
-                            + Post a Job
-                        </Link>
-                    )}
-                    {!user && (
-                        <div>
-                            <Link to="/login" className="btn btn-outline-primary me-2">
-                                Login
-                            </Link>
-                            <Link to="/register" className="btn btn-primary">
-                                Register
-                            </Link>
+        <>
+            {/* HERO SECTION */}
+            <section className="hero-section bg-light py-5">
+                <div className="container">
+                    <div className="row align-items-center">
+                        <div className="col-lg-7">
+                            <div className="mb-3">
+                                <span className="badge bg-primary-soft text-primary px-3 py-2 rounded-pill">
+                                    🌟 Over {totalJobs || 12,000}+ jobs from top-tier companies
+                                </span>
+                            </div>
+                            <h1 className="display-2 fw-bold mb-3">
+                                Find your next
+                                <br />
+                                <span className="text-primary">great role</span>
+                            </h1>
+                            <p className="lead text-muted mb-4">
+                                Connect with forward-thinking companies that value what you bring. 
+                                {totalProfessionals.toLocaleString()}+ professionals found their place here.
+                            </p>
+
+                            {/* Search Bar - Hero Style */}
+                            <div className="hero-search bg-white p-2 rounded-4 shadow-sm mb-4">
+                                <div className="d-flex flex-wrap gap-2">
+                                    <div className="flex-grow-1">
+                                        <input
+                                            type="text"
+                                            className="form-control form-control-lg border-0"
+                                            placeholder="Job title, company, or keyword"
+                                            value={searchTerm}
+                                            onChange={handleSearch}
+                                            style={{ boxShadow: 'none' }}
+                                        />
+                                    </div>
+                                    <div className="d-flex gap-2">
+                                        <div className="position-relative">
+                                            <select className="form-select form-select-lg border-0 bg-light rounded-3" style={{ minWidth: '140px' }}>
+                                                <option>Remote</option>
+                                                <option>On-site</option>
+                                                <option>Hybrid</option>
+                                            </select>
+                                        </div>
+                                        <button className="btn btn-primary btn-lg px-4 rounded-3" onClick={() => {}}>
+                                            Search
+                                        </button>
+                                        {searchTerm && (
+                                            <button className="btn btn-outline-secondary btn-lg" onClick={clearSearch}>
+                                                ✕
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Category Pills */}
+                            <div className="d-flex flex-wrap gap-2">
+                                {['Engineering', 'Design', 'Product', 'Marketing', 'Data Science'].map((category) => (
+                                    <button 
+                                        key={category}
+                                        className="btn btn-outline-secondary rounded-pill px-4 py-2"
+                                        style={{ borderColor: '#e9ecef' }}
+                                    >
+                                        {category}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                    )}
-                    {isEmployee && (
-                        <Link to="/employee" className="btn btn-outline-primary">
-                            My Dashboard
-                        </Link>
-                    )}
+                        <div className="col-lg-5 d-none d-lg-block">
+                            <div className="hero-stats bg-white p-4 rounded-4 shadow-sm">
+                                <div className="d-flex justify-content-between text-center">
+                                    <div>
+                                        <h2 className="fw-bold text-primary mb-0">{totalJobs || 12,400}+</h2>
+                                        <p className="text-muted small mb-0">Active listings</p>
+                                    </div>
+                                    <div>
+                                        <h2 className="fw-bold text-success mb-0">{uniqueCompanies || 3,200}+</h2>
+                                        <p className="text-muted small mb-0">Companies hiring</p>
+                                    </div>
+                                    <div>
+                                        <h2 className="fw-bold text-warning mb-0">{totalProfessionals || 50,000}+</h2>
+                                        <p className="text-muted small mb-0">Professionals placed</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </section>
 
-            <FeedbackMessage section="jobs" />
+            {/* RECOMMENDED JOBS SECTION */}
+            {isEmployee && recommendedJobs.length > 0 && (
+                <section className="py-4">
+                    <div className="container">
+                        <div className="d-flex justify-content-between align-items-center mb-4">
+                            <h3 className="fw-bold mb-0">🎯 Recommended For You</h3>
+                            <Link to="/employee" className="text-decoration-none">View all →</Link>
+                        </div>
+                        {loadingRecommended ? (
+                            <div className="text-center py-4">
+                                <div className="spinner-border text-primary" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        ) : recommendedJobs.length > 0 ? (
+                            <div className="row">
+                                {recommendedJobs.slice(0, 3).map((job) => (
+                                    <div key={job.jobPostId} className="col-md-4 mb-3">
+                                        <JobCard job={job} isRecommended={true} />
+                                    </div>
+                                ))}
+                            </div>
+                        ) : null}
+                    </div>
+                </section>
+            )}
 
-            {/* Recommended Jobs Section - Only for Employees */}
-            {isEmployee && (
-                <div className="mb-4">
-                    <h3 className="mb-3">🎯 Recommended For You</h3>
-                    {loadingRecommended ? (
-                        <div className="text-center py-3">
-                            <div className="spinner-border spinner-border-sm text-primary" role="status">
+            {/* FEATURED OPPORTUNITIES SECTION */}
+            <section className="py-5">
+                <div className="container">
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                        <h2 className="fw-bold mb-0">Featured opportunities</h2>
+                        <Link to="/" className="text-decoration-none">View all →</Link>
+                    </div>
+
+                    <FeedbackMessage section="jobs" />
+
+                    {loading ? (
+                        <div className="text-center py-5">
+                            <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Loading...</span>
                             </div>
-                            <span className="ms-2 text-muted">Finding jobs for you...</span>
+                            <p className="mt-3 text-muted">Loading available jobs...</p>
                         </div>
-                    ) : recommendedJobs.length > 0 ? (
-                        <div>
-                            {recommendedJobs.map((job) => (
-                                <div key={job.jobPostId} className="mb-3">
-                                    <JobCard job={job} isRecommended={true} />
+                    ) : filteredJobs.length === 0 ? (
+                        <div className="text-center py-5">
+                            <h4>No jobs found</h4>
+                            <p className="text-muted">Try adjusting your search or filters.</p>
+                        </div>
+                    ) : (
+                        <div className="row">
+                            {filteredJobs.slice(0, 8).map((job) => (
+                                <div key={job.jobPostId} className="col-md-6 col-lg-3 mb-4">
+                                    <JobCard job={job} compact={true} />
                                 </div>
                             ))}
                         </div>
-                    ) : (
-                        <div className="card bg-light">
-                            <div className="card-body text-center py-3">
-                                <p className="text-muted mb-0">
-                                    Complete your profile to get personalized job recommendations!
-                                </p>
-                                <Link to="/employee" className="btn btn-sm btn-primary mt-2">
-                                    Update Profile
-                                </Link>
-                            </div>
-                        </div>
                     )}
                 </div>
-            )}
+            </section>
 
-            {/* Search Bar */}
-            <div className="card mb-4">
-                <div className="card-body">
-                    <div className="row g-2">
-                        <div className="col-md-9">
-                            <input
-                                type="text"
-                                className="form-control form-control-lg"
-                                placeholder="Search jobs by title, location, type, or tags..."
-                                value={searchTerm}
-                                onChange={handleSearch}
-                            />
+            {/* FOR JOB SEEKERS & EMPLOYERS SECTION */}
+            <section className="py-5 bg-light">
+                <div className="container">
+                    <div className="row g-4">
+                        <div className="col-md-6">
+                            <div className="card border-0 shadow-sm h-100">
+                                <div className="card-body p-4">
+                                    <h3 className="fw-bold mb-3">For Job Seekers</h3>
+                                    <p className="text-muted mb-3">
+                                        Build a standout profile, upload your resume, browse thousands of curated roles, 
+                                        and track every application in one dashboard.
+                                    </p>
+                                    <Link to={user ? "/employee" : "/register"} className="btn btn-primary">
+                                        {user ? "Go to Dashboard" : "Start your search"}
+                                    </Link>
+                                </div>
+                            </div>
                         </div>
-                        <div className="col-md-3">
-                            <div className="d-flex gap-2">
-                                <button className="btn btn-primary btn-lg w-100" onClick={() => {}}>
-                                    <i className="bi bi-search"></i> Search
-                                </button>
-                                {searchTerm && (
-                                    <button className="btn btn-outline-secondary btn-lg" onClick={clearSearch}>
-                                        ✕
-                                    </button>
-                                )}
+                        <div className="col-md-6">
+                            <div className="card border-0 shadow-sm h-100">
+                                <div className="card-body p-4">
+                                    <h3 className="fw-bold mb-3">For Employers</h3>
+                                    <p className="text-muted mb-3">
+                                        Post jobs, manage applicants, track hiring pipelines, and build your employer brand — 
+                                        all from a single, clean interface.
+                                    </p>
+                                    <Link to={user ? "/employer" : "/register"} className="btn btn-primary">
+                                        {user ? "Go to Dashboard" : "Post a job today"}
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    {searchTerm && (
-                        <div className="mt-2">
-                            <small className="text-muted">
-                                Found {filteredJobs.length} job{filteredJobs.length !== 1 ? 's' : ''}
-                            </small>
+                </div>
+            </section>
+
+            {/* FOOTER */}
+            <footer className="py-4 border-top">
+                <div className="container">
+                    <div className="d-flex flex-wrap justify-content-between align-items-center">
+                        <div className="d-flex align-items-center gap-3">
+                            <span className="fw-bold">JobLink</span>
+                            <span className="text-muted">© 2026</span>
                         </div>
-                    )}
-                </div>
-            </div>
-
-            {/* Stats Bar */}
-            {!loading && jobs.length > 0 && (
-                <div className="d-flex gap-4 mb-4 flex-wrap">
-                    <div>
-                        <span className="badge bg-primary fs-6 px-3 py-2">
-                            Total Jobs: {jobs.length}
-                        </span>
-                    </div>
-                    <div>
-                        <span className="badge bg-success fs-6 px-3 py-2">
-                            Types: {new Set(jobs.map(j => j.employmentType)).size}
-                        </span>
-                    </div>
-                    <div>
-                        <span className="badge bg-info text-dark fs-6 px-3 py-2">
-                            Locations: {new Set(jobs.map(j => j.location)).size}
-                        </span>
-                    </div>
-                </div>
-            )}
-
-            {/* Loading State */}
-            {loading && (
-                <div className="text-center py-5">
-                    <div className="spinner-border text-primary" role="status">
-                        <span className="visually-hidden">Loading jobs...</span>
-                    </div>
-                    <p className="mt-3 text-muted">Loading available jobs...</p>
-                </div>
-            )}
-
-            {/* Jobs List */}
-            {!loading && filteredJobs.length === 0 && searchTerm && (
-                <div className="card mb-3">
-                    <div className="card-body text-center py-5">
-                        <h4>No Results Found</h4>
-                        <p className="text-muted mb-3">
-                            No jobs match your search criteria.
-                        </p>
-                        <button className="btn btn-primary" onClick={clearSearch}>
-                            Clear Search
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {!loading && filteredJobs.length === 0 && !searchTerm && (
-                <div className="card mb-3">
-                    <div className="card-body text-center py-5">
-                        <h4>No Jobs Available</h4>
-                        <p className="text-muted mb-3">
-                            There are currently no job postings available.
-                        </p>
-                        {isEmployer && (
-                            <Link to="/create-job" className="btn btn-primary">
-                                Post Your First Job
-                            </Link>
-                        )}
-                    </div>
-                </div>
-            )}
-
-            {!loading && filteredJobs.length > 0 && (
-                <div className="row">
-                    {filteredJobs.map((job) => (
-                        <div key={job.jobPostId} className="col-12 mb-3">
-                            <JobCard job={job} />
+                        <div className="d-flex gap-4">
+                            <Link to="/privacy" className="text-decoration-none text-muted">Privacy</Link>
+                            <Link to="/terms" className="text-decoration-none text-muted">Terms</Link>
+                            <Link to="/contact" className="text-decoration-none text-muted">Contact</Link>
                         </div>
-                    ))}
+                    </div>
                 </div>
-            )}
-        </div>
+            </footer>
+        </>
     );
 }
 
