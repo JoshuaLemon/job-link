@@ -108,14 +108,13 @@ function Home() {
         setSearchTerm("");
     };
 
-    // Stats for the hero section
     const totalJobs = jobs.length;
     const uniqueCompanies = new Set(jobs.map(j => j.companyName)).size;
     const totalProfessionals = totalJobs * 12 || 50000;
 
     return (
         <>
-            {/* HERO SECTION - Dark Theme */}
+            {/* HERO SECTION */}
             <section className="hero-section-dark py-5">
                 <div className="container">
                     <div className="row align-items-center">
@@ -135,7 +134,6 @@ function Home() {
                                 {totalProfessionals.toLocaleString()}+ professionals found their place here.
                             </p>
 
-                            {/* Search Bar - Hero Style */}
                             <div className="hero-search bg-white p-2 rounded-4 shadow-sm mb-4">
                                 <div className="d-flex flex-wrap gap-2">
                                     <div className="flex-grow-1">
@@ -168,7 +166,6 @@ function Home() {
                                 </div>
                             </div>
 
-                            {/* Category Pills - Dark Theme */}
                             <div className="d-flex flex-wrap gap-2">
                                 {['Engineering', 'Design', 'Product', 'Marketing', 'Data Science'].map((category) => (
                                     <button 
@@ -204,11 +201,11 @@ function Home() {
 
             {/* RECOMMENDED JOBS SECTION */}
             {isEmployee && recommendedJobs.length > 0 && (
-                <section className="py-4 bg-white">
+                <section className="py-4 bg-light-section">
                     <div className="container">
                         <div className="d-flex justify-content-between align-items-center mb-4">
-                            <h3 className="fw-bold mb-0">🎯 Recommended For You</h3>
-                            <Link to="/employee" className="text-decoration-none">View all →</Link>
+                            <h3 className="fw-bold mb-0 section-title-dark">🎯 Recommended For You</h3>
+                            <Link to="/employee" className="text-primary text-decoration-none">View all →</Link>
                         </div>
                         {loadingRecommended ? (
                             <div className="text-center py-4">
@@ -230,11 +227,11 @@ function Home() {
             )}
 
             {/* FEATURED OPPORTUNITIES SECTION */}
-            <section className="py-5 bg-white">
+            <section className="py-5 bg-light-section">
                 <div className="container">
                     <div className="d-flex justify-content-between align-items-center mb-4">
-                        <h2 className="fw-bold mb-0">Featured opportunities</h2>
-                        <Link to="/" className="text-decoration-none">View all →</Link>
+                        <h2 className="fw-bold mb-0 section-title-dark">Featured opportunities</h2>
+                        <Link to="/" className="text-primary text-decoration-none">View all →</Link>
                     </div>
 
                     <FeedbackMessage section="jobs" />
@@ -248,7 +245,7 @@ function Home() {
                         </div>
                     ) : filteredJobs.length === 0 ? (
                         <div className="text-center py-5">
-                            <h4>No jobs found</h4>
+                            <h4 className="text-light">No jobs found</h4>
                             <p className="text-muted">Try adjusting your search or filters.</p>
                         </div>
                     ) : (
@@ -264,14 +261,14 @@ function Home() {
             </section>
 
             {/* FOR JOB SEEKERS & EMPLOYERS SECTION */}
-            <section className="py-5 bg-light">
+            <section className="py-5 bg-light-section">
                 <div className="container">
                     <div className="row g-4">
                         <div className="col-md-6">
-                            <div className="card border-0 shadow-sm h-100">
+                            <div className="card border-0 shadow-sm h-100 bg-dark-card">
                                 <div className="card-body p-4">
-                                    <h3 className="fw-bold mb-3">For Job Seekers</h3>
-                                    <p className="text-muted mb-3">
+                                    <h3 className="fw-bold mb-3 text-white">For Job Seekers</h3>
+                                    <p className="text-light-muted mb-3">
                                         Build a standout profile, upload your resume, browse thousands of curated roles, 
                                         and track every application in one dashboard.
                                     </p>
@@ -282,10 +279,10 @@ function Home() {
                             </div>
                         </div>
                         <div className="col-md-6">
-                            <div className="card border-0 shadow-sm h-100">
+                            <div className="card border-0 shadow-sm h-100 bg-dark-card">
                                 <div className="card-body p-4">
-                                    <h3 className="fw-bold mb-3">For Employers</h3>
-                                    <p className="text-muted mb-3">
+                                    <h3 className="fw-bold mb-3 text-white">For Employers</h3>
+                                    <p className="text-light-muted mb-3">
                                         Post jobs, manage applicants, track hiring pipelines, and build your employer brand — 
                                         all from a single, clean interface.
                                     </p>
@@ -300,17 +297,17 @@ function Home() {
             </section>
 
             {/* FOOTER */}
-            <footer className="py-4 border-top bg-white">
+            <footer className="py-4 border-top bg-dark-footer">
                 <div className="container">
                     <div className="d-flex flex-wrap justify-content-between align-items-center">
                         <div className="d-flex align-items-center gap-3">
-                            <span className="fw-bold">JobLink</span>
-                            <span className="text-muted">© 2026</span>
+                            <span className="fw-bold text-white">JobLink</span>
+                            <span className="text-light-muted">© 2026</span>
                         </div>
                         <div className="d-flex gap-4">
-                            <Link to="/privacy" className="text-decoration-none text-muted">Privacy</Link>
-                            <Link to="/terms" className="text-decoration-none text-muted">Terms</Link>
-                            <Link to="/contact" className="text-decoration-none text-muted">Contact</Link>
+                            <Link to="/privacy" className="text-light-muted text-decoration-none">Privacy</Link>
+                            <Link to="/terms" className="text-light-muted text-decoration-none">Terms</Link>
+                            <Link to="/contact" className="text-light-muted text-decoration-none">Contact</Link>
                         </div>
                     </div>
                 </div>
