@@ -211,10 +211,22 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var testEmails = new[] { "employee@test.com", "employer@test.com", "joshualemon249@gmail.com" };
+            var testEmails = new[] { "joshualemon249@gmail.com" };
+            
+            // Get all users with @test.com emails OR that are in the testEmails list
             var users = await _context.Users
-                .Where(u => testEmails.Contains(u.Email) && !u.IsVerified)
+                .Where(u => !u.IsVerified && 
+                    (u.Email.EndsWith("@test.com") || testEmails.Contains(u.Email)))
                 .ToListAsync();
+
+            if (users.Count == 0)
+            {
+                return Ok(new
+                {
+                    message = "No unverified test accounts found.",
+                    verified = new string[] { }
+                });
+            }
 
             foreach (var user in users)
             {
