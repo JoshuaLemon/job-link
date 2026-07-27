@@ -40,7 +40,6 @@ function JobCard({ job, isRecommended = false, compact = false }) {
         );
     }
 
-    // Full view (non-compact)
     return (
         <div className={`job-card ${isRecommended ? 'job-card-recommended' : ''}`}>
             {isRecommended && (
