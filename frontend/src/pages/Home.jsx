@@ -115,11 +115,11 @@ function Home() {
     return (
         <>
             {/* HERO SECTION */}
-            <section className="hero-section-dark py-5">
+            <section className="hero-section-dark">
                 <div className="container">
-                    <div className="row align-items-center min-vh-50">
+                    <div className="row align-items-center">
                         <div className="col-lg-7">
-                            <div className="mb-4">
+                            <div className="mb-3">
                                 <span className="badge-hero">
                                     🌟 Over {(totalJobs || 12000).toLocaleString()}+ jobs from top-tier companies
                                 </span>
@@ -134,7 +134,6 @@ function Home() {
                                 {totalProfessionals.toLocaleString()}+ professionals found their place here.
                             </p>
 
-                            {/* Search Bar */}
                             <div className="search-container">
                                 <div className="search-wrapper">
                                     <input
@@ -160,7 +159,6 @@ function Home() {
                                 </div>
                             </div>
 
-                            {/* Category Pills */}
                             <div className="category-pills">
                                 {['Engineering', 'Design', 'Product', 'Marketing', 'Data Science'].map((category) => (
                                     <button key={category} className="pill">
@@ -170,7 +168,6 @@ function Home() {
                             </div>
                         </div>
 
-                        {/* Stats */}
                         <div className="col-lg-5 d-none d-lg-block">
                             <div className="stats-container">
                                 <div className="stats-grid">
@@ -254,28 +251,46 @@ function Home() {
                 </div>
             </section>
 
-            {/* CTA CARDS */}
+            {/* CTA SECTION */}
             <section className="section-cta">
                 <div className="container">
+                    <div className="text-center mb-5">
+                        <h2 className="section-title-cta">Ready to find your next opportunity?</h2>
+                        <p className="section-subtitle-cta">Join thousands of professionals and employers already using JobLink</p>
+                    </div>
                     <div className="cta-grid">
-                        <div className="cta-card">
+                        <div className="cta-card cta-card-seekers">
+                            <div className="cta-icon">🔍</div>
                             <h3>For Job Seekers</h3>
                             <p>
                                 Build a standout profile, upload your resume, browse thousands of curated roles, 
                                 and track every application in one dashboard.
                             </p>
+                            <ul className="cta-features">
+                                <li>✓ Create a professional profile</li>
+                                <li>✓ Apply to jobs with one click</li>
+                                <li>✓ Track your application status</li>
+                                <li>✓ Get AI-powered recommendations</li>
+                            </ul>
                             <Link to={user ? "/employee" : "/register"} className="cta-btn">
-                                {user ? "Go to Dashboard" : "Start your search"}
+                                {user ? "Go to Dashboard →" : "Start your search →"}
                             </Link>
                         </div>
-                        <div className="cta-card">
+                        <div className="cta-card cta-card-employers">
+                            <div className="cta-icon">🏢</div>
                             <h3>For Employers</h3>
                             <p>
                                 Post jobs, manage applicants, track hiring pipelines, and build your employer brand — 
                                 all from a single, clean interface.
                             </p>
+                            <ul className="cta-features">
+                                <li>✓ Post jobs in minutes</li>
+                                <li>✓ Manage all applicants</li>
+                                <li>✓ Track hiring pipelines</li>
+                                <li>✓ Build your employer brand</li>
+                            </ul>
                             <Link to={user ? "/employer" : "/register"} className="cta-btn">
-                                {user ? "Go to Dashboard" : "Post a job today"}
+                                {user ? "Go to Dashboard →" : "Post a job today →"}
                             </Link>
                         </div>
                     </div>
