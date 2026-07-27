@@ -117,80 +117,74 @@ function Home() {
             {/* HERO SECTION */}
             <section className="hero-section-dark py-5">
                 <div className="container">
-                    <div className="row align-items-center">
+                    <div className="row align-items-center min-vh-50">
                         <div className="col-lg-7">
-                            <div className="mb-3">
-                                <span className="badge bg-white-soft text-white px-3 py-2 rounded-pill">
+                            <div className="mb-4">
+                                <span className="badge-hero">
                                     🌟 Over {(totalJobs || 12000).toLocaleString()}+ jobs from top-tier companies
                                 </span>
                             </div>
-                            <h1 className="display-2 fw-bold mb-3 text-white">
+                            <h1 className="hero-title">
                                 Find your next
                                 <br />
-                                <span className="text-primary-light">great role</span>
+                                <span className="text-gradient">great role</span>
                             </h1>
-                            <p className="lead text-white-50 mb-4">
+                            <p className="hero-subtitle">
                                 Connect with forward-thinking companies that value what you bring. 
                                 {totalProfessionals.toLocaleString()}+ professionals found their place here.
                             </p>
 
-                            <div className="hero-search bg-white p-2 rounded-4 shadow-sm mb-4">
-                                <div className="d-flex flex-wrap gap-2">
-                                    <div className="flex-grow-1">
-                                        <input
-                                            type="text"
-                                            className="form-control form-control-lg border-0"
-                                            placeholder="Job title, company, or keyword"
-                                            value={searchTerm}
-                                            onChange={handleSearch}
-                                            style={{ boxShadow: 'none' }}
-                                        />
-                                    </div>
-                                    <div className="d-flex gap-2">
-                                        <div className="position-relative">
-                                            <select className="form-select form-select-lg border-0 bg-light rounded-3" style={{ minWidth: '140px' }}>
-                                                <option>Remote</option>
-                                                <option>On-site</option>
-                                                <option>Hybrid</option>
-                                            </select>
-                                        </div>
-                                        <button className="btn btn-primary btn-lg px-4 rounded-3" onClick={() => {}}>
-                                            Search
+                            {/* Search Bar */}
+                            <div className="search-container">
+                                <div className="search-wrapper">
+                                    <input
+                                        type="text"
+                                        className="search-input"
+                                        placeholder="Job title, company, or keyword"
+                                        value={searchTerm}
+                                        onChange={handleSearch}
+                                    />
+                                    <select className="search-select">
+                                        <option>Remote</option>
+                                        <option>On-site</option>
+                                        <option>Hybrid</option>
+                                    </select>
+                                    <button className="search-btn" onClick={() => {}}>
+                                        Search
+                                    </button>
+                                    {searchTerm && (
+                                        <button className="search-clear" onClick={clearSearch}>
+                                            ✕
                                         </button>
-                                        {searchTerm && (
-                                            <button className="btn btn-outline-secondary btn-lg" onClick={clearSearch}>
-                                                ✕
-                                            </button>
-                                        )}
-                                    </div>
+                                    )}
                                 </div>
                             </div>
 
-                            <div className="d-flex flex-wrap gap-2">
+                            {/* Category Pills */}
+                            <div className="category-pills">
                                 {['Engineering', 'Design', 'Product', 'Marketing', 'Data Science'].map((category) => (
-                                    <button 
-                                        key={category}
-                                        className="btn btn-outline-white rounded-pill px-4 py-2"
-                                    >
+                                    <button key={category} className="pill">
                                         {category}
                                     </button>
                                 ))}
                             </div>
                         </div>
+
+                        {/* Stats */}
                         <div className="col-lg-5 d-none d-lg-block">
-                            <div className="hero-stats-dark bg-white bg-opacity-10 p-4 rounded-4">
-                                <div className="d-flex justify-content-between text-center">
-                                    <div>
-                                        <h2 className="fw-bold text-white mb-0">{(totalJobs || 12400).toLocaleString()}+</h2>
-                                        <p className="text-white-50 small mb-0">Active listings</p>
+                            <div className="stats-container">
+                                <div className="stats-grid">
+                                    <div className="stat-item">
+                                        <div className="stat-number">{(totalJobs || 12400).toLocaleString()}+</div>
+                                        <div className="stat-label">Active listings</div>
                                     </div>
-                                    <div>
-                                        <h2 className="fw-bold text-white mb-0">{(uniqueCompanies || 3200).toLocaleString()}+</h2>
-                                        <p className="text-white-50 small mb-0">Companies hiring</p>
+                                    <div className="stat-item">
+                                        <div className="stat-number">{(uniqueCompanies || 3200).toLocaleString()}+</div>
+                                        <div className="stat-label">Companies hiring</div>
                                     </div>
-                                    <div>
-                                        <h2 className="fw-bold text-white mb-0">{(totalProfessionals || 50000).toLocaleString()}+</h2>
-                                        <p className="text-white-50 small mb-0">Professionals placed</p>
+                                    <div className="stat-item">
+                                        <div className="stat-number">{(totalProfessionals || 50000).toLocaleString()}+</div>
+                                        <div className="stat-label">Professionals placed</div>
                                     </div>
                                 </div>
                             </div>
@@ -199,13 +193,13 @@ function Home() {
                 </div>
             </section>
 
-            {/* RECOMMENDED JOBS SECTION */}
+            {/* RECOMMENDED JOBS */}
             {isEmployee && recommendedJobs.length > 0 && (
-                <section className="py-4 bg-light-section">
+                <section className="section-light">
                     <div className="container">
-                        <div className="d-flex justify-content-between align-items-center mb-4">
-                            <h3 className="fw-bold mb-0 section-title-dark">🎯 Recommended For You</h3>
-                            <Link to="/employee" className="text-primary text-decoration-none">View all →</Link>
+                        <div className="section-header">
+                            <h2 className="section-title">🎯 Recommended For You</h2>
+                            <Link to="/employee" className="section-link">View all →</Link>
                         </div>
                         {loadingRecommended ? (
                             <div className="text-center py-4">
@@ -213,25 +207,25 @@ function Home() {
                                     <span className="visually-hidden">Loading...</span>
                                 </div>
                             </div>
-                        ) : recommendedJobs.length > 0 ? (
-                            <div className="row">
+                        ) : (
+                            <div className="job-grid">
                                 {recommendedJobs.slice(0, 3).map((job) => (
-                                    <div key={job.jobPostId} className="col-md-4 mb-3">
+                                    <div key={job.jobPostId}>
                                         <JobCard job={job} isRecommended={true} />
                                     </div>
                                 ))}
                             </div>
-                        ) : null}
+                        )}
                     </div>
                 </section>
             )}
 
-            {/* FEATURED OPPORTUNITIES SECTION */}
-            <section className="py-5 bg-light-section">
+            {/* FEATURED OPPORTUNITIES */}
+            <section className="section-light">
                 <div className="container">
-                    <div className="d-flex justify-content-between align-items-center mb-4">
-                        <h2 className="fw-bold mb-0 section-title-dark">Featured opportunities</h2>
-                        <Link to="/" className="text-primary text-decoration-none">View all →</Link>
+                    <div className="section-header">
+                        <h2 className="section-title">Featured opportunities</h2>
+                        <Link to="/" className="section-link">View all →</Link>
                     </div>
 
                     <FeedbackMessage section="jobs" />
@@ -241,17 +235,17 @@ function Home() {
                             <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Loading...</span>
                             </div>
-                            <p className="mt-3 text-muted">Loading available jobs...</p>
+                            <p className="mt-3 text-muted-light">Loading available jobs...</p>
                         </div>
                     ) : filteredJobs.length === 0 ? (
                         <div className="text-center py-5">
                             <h4 className="text-light">No jobs found</h4>
-                            <p className="text-muted">Try adjusting your search or filters.</p>
+                            <p className="text-muted-light">Try adjusting your search or filters.</p>
                         </div>
                     ) : (
-                        <div className="row">
+                        <div className="job-grid">
                             {filteredJobs.slice(0, 8).map((job) => (
-                                <div key={job.jobPostId} className="col-md-6 col-lg-3 mb-4">
+                                <div key={job.jobPostId}>
                                     <JobCard job={job} compact={true} />
                                 </div>
                             ))}
@@ -260,54 +254,46 @@ function Home() {
                 </div>
             </section>
 
-            {/* FOR JOB SEEKERS & EMPLOYERS SECTION */}
-            <section className="py-5 bg-light-section">
+            {/* CTA CARDS */}
+            <section className="section-cta">
                 <div className="container">
-                    <div className="row g-4">
-                        <div className="col-md-6">
-                            <div className="card border-0 shadow-sm h-100 bg-dark-card">
-                                <div className="card-body p-4">
-                                    <h3 className="fw-bold mb-3 text-white">For Job Seekers</h3>
-                                    <p className="text-light-muted mb-3">
-                                        Build a standout profile, upload your resume, browse thousands of curated roles, 
-                                        and track every application in one dashboard.
-                                    </p>
-                                    <Link to={user ? "/employee" : "/register"} className="btn btn-primary">
-                                        {user ? "Go to Dashboard" : "Start your search"}
-                                    </Link>
-                                </div>
-                            </div>
+                    <div className="cta-grid">
+                        <div className="cta-card">
+                            <h3>For Job Seekers</h3>
+                            <p>
+                                Build a standout profile, upload your resume, browse thousands of curated roles, 
+                                and track every application in one dashboard.
+                            </p>
+                            <Link to={user ? "/employee" : "/register"} className="cta-btn">
+                                {user ? "Go to Dashboard" : "Start your search"}
+                            </Link>
                         </div>
-                        <div className="col-md-6">
-                            <div className="card border-0 shadow-sm h-100 bg-dark-card">
-                                <div className="card-body p-4">
-                                    <h3 className="fw-bold mb-3 text-white">For Employers</h3>
-                                    <p className="text-light-muted mb-3">
-                                        Post jobs, manage applicants, track hiring pipelines, and build your employer brand — 
-                                        all from a single, clean interface.
-                                    </p>
-                                    <Link to={user ? "/employer" : "/register"} className="btn btn-primary">
-                                        {user ? "Go to Dashboard" : "Post a job today"}
-                                    </Link>
-                                </div>
-                            </div>
+                        <div className="cta-card">
+                            <h3>For Employers</h3>
+                            <p>
+                                Post jobs, manage applicants, track hiring pipelines, and build your employer brand — 
+                                all from a single, clean interface.
+                            </p>
+                            <Link to={user ? "/employer" : "/register"} className="cta-btn">
+                                {user ? "Go to Dashboard" : "Post a job today"}
+                            </Link>
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* FOOTER */}
-            <footer className="py-4 border-top bg-dark-footer">
+            <footer className="footer-dark">
                 <div className="container">
-                    <div className="d-flex flex-wrap justify-content-between align-items-center">
-                        <div className="d-flex align-items-center gap-3">
-                            <span className="fw-bold text-white">JobLink</span>
-                            <span className="text-light-muted">© 2026</span>
+                    <div className="footer-content">
+                        <div className="footer-brand">
+                            <span className="footer-logo">JobLink</span>
+                            <span className="footer-copyright">© 2026</span>
                         </div>
-                        <div className="d-flex gap-4">
-                            <Link to="/privacy" className="text-light-muted text-decoration-none">Privacy</Link>
-                            <Link to="/terms" className="text-light-muted text-decoration-none">Terms</Link>
-                            <Link to="/contact" className="text-light-muted text-decoration-none">Contact</Link>
+                        <div className="footer-links">
+                            <Link to="/privacy">Privacy</Link>
+                            <Link to="/terms">Terms</Link>
+                            <Link to="/contact">Contact</Link>
                         </div>
                     </div>
                 </div>
