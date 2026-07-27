@@ -28,9 +28,11 @@ function JobCard({ job, isRecommended = false, compact = false }) {
                         )}
                     </div>
                     <p className="fw-bold text-primary mb-2">
-                        ${job.salary.toLocaleString()}
+                        ₱{job.salary.toLocaleString()}
                     </p>
-                    <small className="text-muted">{Math.floor(Math.random() * 5) + 1} days ago</small>
+                    <small className="text-muted">
+                        {Math.floor(Math.random() * 5) + 1} days ago
+                    </small>
                     <Link to={`/jobs/${job.jobPostId}`} className="btn btn-outline-primary btn-sm w-100 mt-2">
                         View Details
                     </Link>
@@ -50,6 +52,9 @@ function JobCard({ job, isRecommended = false, compact = false }) {
                 <div className="d-flex justify-content-between align-items-start">
                     <div>
                         <h4>{job.title}</h4>
+                        <p className="text-muted mb-2">
+                            <strong>🏢</strong> {job.companyName || "Company"}
+                        </p>
                         <p className="text-muted mb-2">
                             <strong>📍</strong> {job.location}
                         </p>
