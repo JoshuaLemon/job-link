@@ -1,4 +1,3 @@
-/* ===== RESET & BASE ===== */
 :root {
   --primary: #4a6cf7;
   --primary-hover: #3a5cd9;
@@ -52,38 +51,93 @@ body {
   margin: 0 auto;
   padding: 40px 20px;
   width: 100%;
+  color: #cbd5e1; /* ← Add this to fix text color */
 }
 
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 32px;
+/* Also fix all child elements */
+.page-container * {
+    color: #cbd5e1;
 }
 
-.page-title {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0;
+.page-container h1,
+.page-container h2,
+.page-container h3,
+.page-container h4,
+.page-container h5,
+.page-container .page-title,
+.page-container .section-title {
+    color: #ffffff !important;
 }
 
-.btn-back {
-  padding: 8px 20px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.6);
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
+.page-container strong,
+.page-container b {
+    color: #f1f5f9 !important;
 }
 
-.btn-back:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  text-decoration: none;
+/* Fix form inputs - they need white text on dark background */
+.page-container .form-input,
+.page-container .form-textarea,
+.page-container .form-select-custom {
+    color: #ffffff !important;
+}
+
+.page-container .form-input::placeholder,
+.page-container .form-textarea::placeholder {
+    color: #64748b !important;
+}
+
+/* Fix search bar (white background) */
+.page-container .search-wrapper .search-input,
+.page-container .search-wrapper .search-select {
+    color: #1a1a2e !important;
+}
+
+.page-container .search-wrapper .search-input::placeholder {
+    color: #999 !important;
+}
+
+/* Fix links in page-container */
+.page-container a:not(.btn-primary):not(.btn-success):not(.btn-outline):not(.navbar-brand-modern):not(.nav-link-modern) {
+    color: #7a9cff;
+}
+
+.page-container a:not(.btn-primary):not(.btn-success):not(.btn-outline):not(.navbar-brand-modern):not(.nav-link-modern):hover {
+    color: #4a6cf7;
+}
+
+/* Fix tags and badges */
+.page-container .tag,
+.page-container .badge {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.page-container .tag-more {
+    color: #7a9cff !important;
+}
+
+/* Fix job card text */
+.page-container .job-card-title,
+.page-container .job-card-company,
+.page-container .job-card-location,
+.page-container .job-card-salary,
+.page-container .job-card-time {
+    color: #ffffff !important;
+}
+
+.page-container .stat-number {
+    color: #ffffff !important;
+}
+
+.page-container .stat-label {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.page-container .text-muted-light {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.page-container .text-light {
+    color: #ffffff !important;
 }
 
 /* ===== HERO SECTION ===== */
