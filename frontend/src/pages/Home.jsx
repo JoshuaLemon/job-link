@@ -111,7 +111,7 @@ function Home() {
     // Stats for the hero section
     const totalJobs = jobs.length;
     const uniqueCompanies = new Set(jobs.map(j => j.companyName)).size;
-    const totalProfessionals = totalJobs * 12; // Just for display
+    const totalProfessionals = totalJobs * 12 || 50000;
 
     return (
         <>
@@ -122,7 +122,7 @@ function Home() {
                         <div className="col-lg-7">
                             <div className="mb-3">
                                 <span className="badge bg-primary-soft text-primary px-3 py-2 rounded-pill">
-                                    🌟 Over {totalJobs || 12,000}+ jobs from top-tier companies
+                                    🌟 Over {(totalJobs || 12000).toLocaleString()}+ jobs from top-tier companies
                                 </span>
                             </div>
                             <h1 className="display-2 fw-bold mb-3">
@@ -185,15 +185,15 @@ function Home() {
                             <div className="hero-stats bg-white p-4 rounded-4 shadow-sm">
                                 <div className="d-flex justify-content-between text-center">
                                     <div>
-                                        <h2 className="fw-bold text-primary mb-0">{totalJobs || 12,400}+</h2>
+                                        <h2 className="fw-bold text-primary mb-0">{(totalJobs || 12400).toLocaleString()}+</h2>
                                         <p className="text-muted small mb-0">Active listings</p>
                                     </div>
                                     <div>
-                                        <h2 className="fw-bold text-success mb-0">{uniqueCompanies || 3,200}+</h2>
+                                        <h2 className="fw-bold text-success mb-0">{(uniqueCompanies || 3200).toLocaleString()}+</h2>
                                         <p className="text-muted small mb-0">Companies hiring</p>
                                     </div>
                                     <div>
-                                        <h2 className="fw-bold text-warning mb-0">{totalProfessionals || 50,000}+</h2>
+                                        <h2 className="fw-bold text-warning mb-0">{(totalProfessionals || 50000).toLocaleString()}+</h2>
                                         <p className="text-muted small mb-0">Professionals placed</p>
                                     </div>
                                 </div>
