@@ -2462,6 +2462,277 @@ body {
     font-size: 1.1rem;
     margin-bottom: 1rem;
 }
+
+/* ===== EMPLOYER DASHBOARD MODERN STYLES ===== */
+.profile-container .stats-grid-dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.profile-container .stat-card {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.profile-container .stat-card:hover {
+    border-color: rgba(74, 108, 247, 0.3);
+    transform: translateY(-2px);
+}
+
+.profile-container .stat-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.profile-container .stat-label {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 0.25rem 0;
+}
+
+.profile-container .stat-number {
+    color: #ffffff;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.profile-container .stat-sub {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 0.7rem;
+    display: block;
+    margin-top: 0.25rem;
+}
+
+/* Company details grid */
+.profile-container .company-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.profile-container .company-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.profile-container .company-detail-label {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.profile-container .company-detail-value {
+    color: #e2e8f0;
+    font-size: 0.95rem;
+}
+
+/* Modern job cards */
+.profile-container .job-card-modern {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.profile-container .job-card-modern:hover {
+    border-color: rgba(74, 108, 247, 0.2);
+}
+
+.profile-container .job-card-body {
+    padding: 1.5rem;
+}
+
+.profile-container .job-card-header-modern {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+}
+
+.profile-container .job-card-title-modern {
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+
+.profile-container .job-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+}
+
+.profile-container .job-meta-item {
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+.profile-container .employment-badge {
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.profile-container .badge-fulltime {
+    background: rgba(74, 108, 247, 0.15);
+    color: #7a9cff;
+    border: 1px solid rgba(74, 108, 247, 0.1);
+}
+
+.profile-container .badge-parttime {
+    background: rgba(13, 202, 240, 0.15);
+    color: #4dd0e1;
+    border: 1px solid rgba(13, 202, 240, 0.1);
+}
+
+.profile-container .badge-contract {
+    background: rgba(255, 193, 7, 0.15);
+    color: #fdd835;
+    border: 1px solid rgba(255, 193, 7, 0.1);
+}
+
+.profile-container .badge-other {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.profile-container .job-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.5rem 0 0.75rem 0;
+}
+
+.profile-container .job-tag {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 4px;
+    padding: 0.15rem 0.6rem;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.profile-container .job-description {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0.5rem 0 1rem 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.profile-container .job-card-footer-modern {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.profile-container .btn-view-talent {
+    padding: 0.4rem 1.2rem;
+    background: rgba(74, 108, 247, 0.08);
+    border: 1px solid rgba(74, 108, 247, 0.12);
+    border-radius: 6px;
+    color: #7a9cff;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.profile-container .btn-view-talent:hover {
+    background: #4a6cf7;
+    color: #ffffff;
+    border-color: #4a6cf7;
+}
+
+.profile-container .job-card-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.profile-container .btn-edit {
+    padding: 0.25rem 0.8rem;
+    background: rgba(255, 193, 7, 0.15);
+    color: #fdd835;
+    border: 1px solid rgba(255, 193, 7, 0.1);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile-container .btn-edit:hover {
+    background: rgba(255, 193, 7, 0.25);
+}
+
+.profile-container .btn-delete {
+    padding: 0.25rem 0.8rem;
+    background: rgba(220, 53, 69, 0.15);
+    color: #f28b82;
+    border: 1px solid rgba(220, 53, 69, 0.1);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile-container .btn-delete:hover {
+    background: rgba(220, 53, 69, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .profile-container .company-details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-container .job-card-header-modern {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .profile-container .job-card-actions {
+        width: 100%;
+    }
+
+    .profile-container .job-card-actions button {
+        flex: 1;
+        text-align: center;
+    }
+
+    .profile-container .stats-grid-dashboard {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-container .stats-grid-dashboard {
+        grid-template-columns: 1fr;
+    }
+}
 /* ========================================
    DARK MODE OVERRIDE
    ======================================== */

@@ -69,7 +69,7 @@ function EmployerDashboard() {
             return null;
         }
         return (
-            <div className={`alert alert-${feedback.type} mt-3`} role="alert">
+            <div className={`alert alert-${feedback.type}`} role="alert">
                 {feedback.message}
             </div>
         );
@@ -221,12 +221,16 @@ function EmployerDashboard() {
 
     return (
         <div className="profile-container">
+            {/* Header */}
             <div className="dashboard-header">
-                <h2 className="page-title">Employer Dashboard</h2>
+                <div>
+                    <h2 className="page-title">Employer Dashboard</h2>
+                    <p className="text-muted-light" style={{ marginTop: '4px' }}>Manage your company and job postings</p>
+                </div>
                 <div>
                     {companyExists ? (
                         <Link to="/create-job" className="btn-primary">
-                            + Post a Job
+                            ➕ Post a Job
                         </Link>
                     ) : (
                         <button className="btn-secondary" disabled>
@@ -237,44 +241,58 @@ function EmployerDashboard() {
             </div>
 
             {!companyExists && (
-                <div className="alert-warning">
+                <div className="alert alert-warning" style={{ marginBottom: '1.5rem' }}>
                     <strong>⚠️ Complete your company profile</strong>
-                    <p className="mt-1">Set up your company details before posting your first job.</p>
+                    <p style={{ marginTop: '4px', marginBottom: '0' }}>Set up your company details before posting your first job.</p>
                 </div>
             )}
 
-            <div className="stats-grid">
+            {/* Stats Cards */}
+            <div className="stats-grid-dashboard">
                 <div className="stat-card">
+                    <div className="stat-icon">📋</div>
                     <h6 className="stat-label">Jobs Posted</h6>
                     <h2 className="stat-number">{stats.jobsPosted}</h2>
                     <small className="stat-sub">Total job postings</small>
                 </div>
                 <div className="stat-card">
+                    <div className="stat-icon">👥</div>
                     <h6 className="stat-label">Total Applicants</h6>
                     <h2 className="stat-number">{stats.totalApplicants}</h2>
                     <small className="stat-sub">Across all jobs</small>
                 </div>
                 <div className="stat-card">
+                    <div className="stat-icon">⏳</div>
                     <h6 className="stat-label">Pending</h6>
                     <h2 className="stat-number">{stats.pending}</h2>
                     <small className="stat-sub">Awaiting review</small>
                 </div>
                 <div className="stat-card">
+                    <div className="stat-icon">🎯</div>
                     <h6 className="stat-label">Interviews</h6>
                     <h2 className="stat-number">{stats.interviews}</h2>
                     <small className="stat-sub">Scheduled interviews</small>
                 </div>
                 <div className="stat-card">
+                    <div className="stat-icon">✅</div>
                     <h6 className="stat-label">Hired</h6>
                     <h2 className="stat-number">{stats.hired}</h2>
                     <small className="stat-sub">Successful placements</small>
                 </div>
             </div>
 
+            {/* Company Profile */}
             <div className="profile-card">
                 <div className="profile-card-body">
                     <div className="profile-header">
-                        <h5 className="profile-title">Company Profile</h5>
+                        <div>
+                            <h5 className="profile-title">🏢 Company Profile</h5>
+                            {companyExists && company.companyName && (
+                                <p className="text-muted-light" style={{ fontSize: '0.85rem', marginTop: '2px' }}>
+                                    {company.companyName}
+                                </p>
+                            )}
+                        </div>
                         {!isEditingCompany && (
                             <button className="btn-edit-profile" onClick={handleEditCompany}>
                                 ✏️ {companyExists ? "Edit Company" : "Add Company"}
@@ -306,23 +324,25 @@ function EmployerDashboard() {
                                     />
                                 </div>
                             </div>
-                            <div className="form-group">
-                                <label className="form-label">Website</label>
-                                <input
-                                    className="form-input"
-                                    placeholder="e.g., https://www.yourcompany.com"
-                                    value={company.website}
-                                    onChange={(e) => setCompany({ ...company, website: e.target.value })}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label">Location <span className="form-required">*</span></label>
-                                <input
-                                    className="form-input"
-                                    placeholder="e.g., Makati, Philippines"
-                                    value={company.location}
-                                    onChange={(e) => setCompany({ ...company, location: e.target.value })}
-                                />
+                            <div className="form-row">
+                                <div className="form-group-half">
+                                    <label className="form-label">Website</label>
+                                    <input
+                                        className="form-input"
+                                        placeholder="e.g., https://www.yourcompany.com"
+                                        value={company.website}
+                                        onChange={(e) => setCompany({ ...company, website: e.target.value })}
+                                    />
+                                </div>
+                                <div className="form-group-half">
+                                    <label className="form-label">Location <span className="form-required">*</span></label>
+                                    <input
+                                        className="form-input"
+                                        placeholder="e.g., Makati, Philippines"
+                                        value={company.location}
+                                        onChange={(e) => setCompany({ ...company, location: e.target.value })}
+                                    />
+                                </div>
                             </div>
                             <div className="form-group">
                                 <label className="form-label">Description <span className="form-required">*</span></label>
@@ -344,37 +364,67 @@ function EmployerDashboard() {
                             </div>
                         </>
                     ) : (
-                        <>
+                        <div className="company-details-grid">
                             {company.companyName && (
-                                <p><strong>Company Name:</strong> {company.companyName}</p>
+                                <div className="company-detail-item">
+                                    <span className="company-detail-label">Company Name</span>
+                                    <span className="company-detail-value">{company.companyName}</span>
+                                </div>
                             )}
                             {company.industry && (
-                                <p><strong>Industry:</strong> {company.industry}</p>
+                                <div className="company-detail-item">
+                                    <span className="company-detail-label">Industry</span>
+                                    <span className="company-detail-value">{company.industry}</span>
+                                </div>
                             )}
                             {company.website && (
-                                <p><strong>Website:</strong> <a href={company.website} target="_blank" rel="noopener noreferrer">{company.website}</a></p>
+                                <div className="company-detail-item">
+                                    <span className="company-detail-label">Website</span>
+                                    <span className="company-detail-value">
+                                        <a href={company.website} target="_blank" rel="noopener noreferrer" style={{ color: '#7a9cff' }}>
+                                            {company.website}
+                                        </a>
+                                    </span>
+                                </div>
                             )}
                             {company.location && (
-                                <p><strong>Location:</strong> {company.location}</p>
+                                <div className="company-detail-item">
+                                    <span className="company-detail-label">Location</span>
+                                    <span className="company-detail-value">{company.location}</span>
+                                </div>
                             )}
                             {company.description && (
-                                <p><strong>Description:</strong> {company.description}</p>
+                                <div className="company-detail-item" style={{ gridColumn: '1 / -1' }}>
+                                    <span className="company-detail-label">Description</span>
+                                    <span className="company-detail-value" style={{ lineHeight: '1.6' }}>{company.description}</span>
+                                </div>
                             )}
                             {!company.companyName && !company.industry && !company.description && (
-                                <div className="empty-state-small">
+                                <div className="empty-state-small" style={{ gridColumn: '1 / -1' }}>
                                     <p className="text-muted-light">No company information added yet.</p>
-                                    <button className="btn-primary-sm mt-2" onClick={handleEditCompany}>
+                                    <button className="btn-primary-sm" onClick={handleEditCompany}>
                                         ✏️ Add Company Information
                                     </button>
                                 </div>
                             )}
-                        </>
+                        </div>
                     )}
                 </div>
             </div>
 
+            {/* My Jobs Section */}
             <div className="section-header">
-                <h2 className="section-title">My Jobs</h2>
+                <div>
+                    <h2 className="section-title">💼 My Jobs</h2>
+                    <p className="text-muted-light" style={{ fontSize: '0.9rem', marginTop: '2px' }}>
+                        {jobs.length} {jobs.length === 1 ? 'job' : 'jobs'} posted
+                    </p>
+                </div>
+                {companyExists && jobs.length > 0 && (
+                    <Link to="/create-job" className="btn-primary-sm">
+                        + Post New Job
+                    </Link>
+                )}
             </div>
 
             <FeedbackMessage section="job" />
@@ -383,6 +433,7 @@ function EmployerDashboard() {
                 <div className="empty-state-large">
                     {companyExists ? (
                         <>
+                            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📌</div>
                             <h4>No Jobs Posted Yet</h4>
                             <p className="text-muted-light">Start attracting talent by posting your first job opening.</p>
                             <Link to="/create-job" className="btn-primary">
@@ -391,6 +442,7 @@ function EmployerDashboard() {
                         </>
                     ) : (
                         <>
+                            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏢</div>
                             <h4>Complete Your Company Profile First</h4>
                             <p className="text-muted-light">You need to set up your company profile before posting jobs.</p>
                             <button className="btn-primary" onClick={handleEditCompany}>
@@ -402,62 +454,52 @@ function EmployerDashboard() {
             ) : (
                 <>
                     {jobs.map(job => (
-                        <div key={job.jobPostId} className="item-card">
-                            <div className="item-card-body">
-                                {editingJobId === job.jobPostId ? (
-                                    <>
-                                        <h5 className="item-card-title">Edit Job</h5>
-                                        <div className="form-group">
-                                            <label className="form-label">Title <span className="form-required">*</span></label>
+                        <div key={job.jobPostId} className="job-card-modern">
+                            {editingJobId === job.jobPostId ? (
+                                <div className="job-card-body">
+                                    <h5 className="item-card-title">✏️ Edit Job</h5>
+                                    <div className="form-group">
+                                        <label className="form-label">Title <span className="form-required">*</span></label>
+                                        <input
+                                            className="form-input"
+                                            placeholder="e.g., Senior Software Engineer"
+                                            value={editForm.title}
+                                            onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Description <span className="form-required">*</span></label>
+                                        <textarea
+                                            className="form-textarea"
+                                            rows="3"
+                                            placeholder="Describe the role, responsibilities, and requirements..."
+                                            value={editForm.description}
+                                            onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="form-row">
+                                        <div className="form-group-half">
+                                            <label className="form-label">Location <span className="form-required">*</span></label>
                                             <input
                                                 className="form-input"
-                                                placeholder="e.g., Senior Software Engineer"
-                                                value={editForm.title}
-                                                onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                                                placeholder="e.g., Makati, Philippines"
+                                                value={editForm.location}
+                                                onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
                                             />
                                         </div>
-                                        <div className="form-group">
-                                            <label className="form-label">Description <span className="form-required">*</span></label>
-                                            <textarea
-                                                className="form-textarea"
-                                                rows="3"
-                                                placeholder="Describe the role, responsibilities, and requirements..."
-                                                value={editForm.description}
-                                                onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-                                            />
-                                        </div>
-                                        <div className="form-row">
-                                            <div className="form-group-half">
-                                                <label className="form-label">Location <span className="form-required">*</span></label>
-                                                <input
-                                                    className="form-input"
-                                                    placeholder="e.g., Makati, Philippines"
-                                                    value={editForm.location}
-                                                    onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
-                                                />
-                                            </div>
-                                            <div className="form-group-half">
-                                                <label className="form-label">Salary <span className="form-required">*</span></label>
-                                                <input
-                                                    className="form-input"
-                                                    type="number"
-                                                    placeholder="e.g., 50000"
-                                                    value={editForm.salary}
-                                                    onChange={(e) => setEditForm({ ...editForm, salary: Number(e.target.value) })}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="form-label">Tags <span className="form-hint">(comma-separated)</span></label>
+                                        <div className="form-group-half">
+                                            <label className="form-label">Salary <span className="form-required">*</span></label>
                                             <input
                                                 className="form-input"
-                                                placeholder="e.g., Remote, Full-stack, Senior"
-                                                value={editForm.tags}
-                                                onChange={(e) => setEditForm({ ...editForm, tags: e.target.value })}
+                                                type="number"
+                                                placeholder="e.g., 50000"
+                                                value={editForm.salary}
+                                                onChange={(e) => setEditForm({ ...editForm, salary: Number(e.target.value) })}
                                             />
-                                            <small className="form-hint-text">Separate tags with commas</small>
                                         </div>
-                                        <div className="form-group">
+                                    </div>
+                                    <div className="form-row">
+                                        <div className="form-group-half">
                                             <label className="form-label">Employment Type <span className="form-required">*</span></label>
                                             <select
                                                 className="form-select-custom"
@@ -472,71 +514,80 @@ function EmployerDashboard() {
                                                 <option value="Internship">Internship</option>
                                             </select>
                                         </div>
-                                        <div className="form-actions">
-                                            <button className="btn-save" onClick={handleSave}>
-                                                Save Changes
-                                            </button>
-                                            <button className="btn-cancel" onClick={handleCancelEdit}>
-                                                Cancel
-                                            </button>
+                                        <div className="form-group-half">
+                                            <label className="form-label">Tags <span className="form-hint">(comma-separated)</span></label>
+                                            <input
+                                                className="form-input"
+                                                placeholder="e.g., Remote, Full-stack, Senior"
+                                                value={editForm.tags}
+                                                onChange={(e) => setEditForm({ ...editForm, tags: e.target.value })}
+                                            />
                                         </div>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div className="item-content">
-                                            <div>
-                                                <h4 className="item-title">{job.title}</h4>
-                                                <p className="item-subtitle">
-                                                    <strong>📍</strong> {job.location}
-                                                </p>
-                                                <p className="item-detail">
-                                                    <strong>💰 Salary:</strong> ₱{job.salary.toLocaleString()}
-                                                </p>
+                                    </div>
+                                    <div className="form-actions">
+                                        <button className="btn-save" onClick={handleSave}>
+                                            💾 Save Changes
+                                        </button>
+                                        <button className="btn-cancel" onClick={handleCancelEdit}>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="job-card-body">
+                                    <div className="job-card-header-modern">
+                                        <div>
+                                            <h3 className="job-card-title-modern">{job.title}</h3>
+                                            <div className="job-card-meta">
+                                                <span className="job-meta-item">📍 {job.location}</span>
+                                                <span className="job-meta-item">💰 ₱{job.salary.toLocaleString()}</span>
+                                                <span className={`employment-badge ${job.employmentType === 'Full-time' ? 'badge-fulltime' : job.employmentType === 'Part-time' ? 'badge-parttime' : job.employmentType === 'Contract' ? 'badge-contract' : 'badge-other'}`}>
+                                                    {job.employmentType}
+                                                </span>
                                             </div>
-                                            <span className={`badge ${job.employmentType === 'Full-time' ? 'badge-primary' : job.employmentType === 'Part-time' ? 'badge-info' : job.employmentType === 'Contract' ? 'badge-warning' : 'badge-secondary'}`}>
-                                                {job.employmentType}
-                                            </span>
                                         </div>
-
-                                        {job.tags && (
-                                            <div className="item-tags">
-                                                {getTags(job.tags).map((tag, index) => (
-                                                    <span key={index} className="tag">
-                                                        #{tag}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        )}
-
-                                        <p className="item-description">{job.description}</p>
-
-                                        <div className="item-actions">
-                                            <button className="btn-warning-sm" onClick={() => handleEdit(job)}>
+                                        <div className="job-card-actions">
+                                            <button className="btn-edit" onClick={() => handleEdit(job)}>
                                                 ✏️ Edit
                                             </button>
-                                            <button className="btn-danger-sm" onClick={() => handleDelete(job.jobPostId)}>
+                                            <button className="btn-delete" onClick={() => handleDelete(job.jobPostId)}>
                                                 🗑️ Delete
                                             </button>
-                                            <Link
-                                                to={`/job/${job.jobPostId}`}
-                                                className="btn-info-sm"
-                                            >
-                                                👁️ View Job & Talents
-                                            </Link>
                                         </div>
-                                    </>
-                                )}
-                            </div>
+                                    </div>
+
+                                    {job.tags && (
+                                        <div className="job-tags">
+                                            {getTags(job.tags).map((tag, index) => (
+                                                <span key={index} className="job-tag">
+                                                    #{tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    <p className="job-description">{job.description}</p>
+
+                                    <div className="job-card-footer-modern">
+                                        <Link
+                                            to={`/job/${job.jobPostId}`}
+                                            className="btn-view-talent"
+                                        >
+                                            👁️ View Job & Talents
+                                        </Link>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     ))}
 
                     {companyExists && (
-                        <div className="text-center mt-3">
+                        <div className="text-center" style={{ marginTop: '1.5rem' }}>
                             <Link 
                                 to="/create-job" 
                                 className="btn-add-dashed"
                             >
-                                + Post a Job
+                                ➕ Post a New Job
                             </Link>
                         </div>
                     )}
