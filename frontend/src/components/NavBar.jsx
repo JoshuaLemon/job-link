@@ -42,7 +42,7 @@ function Navbar() {
         <nav className="navbar-modern">
             <div className="navbar-container">
                 <Link className="navbar-brand-modern" to="/">
-                    <span className="brand-icon"></span>
+                    <span className="brand-icon">💼</span>
                     JobLink
                 </Link>
 
@@ -91,7 +91,7 @@ function Navbar() {
                                 Logout
                             </button>
                             <button className="btn-delete" onClick={handleDeleteAccount} aria-label="Delete account">
-                                🗑️
+                                🗑️ Delete
                             </button>
                         </div>
                     )}
