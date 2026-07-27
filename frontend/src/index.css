@@ -3973,6 +3973,29 @@ body.light-theme .page-container .text-muted-light {
 body.light-theme .page-container .text-light {
   color: #1a2332 !important;
 }
+/* ===== LIGHT THEME - GENERAL TEXT FIX ===== */
+body.light-theme .section-title-cta,
+body.light-theme .section-subtitle-cta,
+body.light-theme .cta-card h3,
+body.light-theme .cta-card p,
+body.light-theme .cta-features li,
+body.light-theme .cta-icon {
+  color: #1a2332 !important;
+}
+
+body.light-theme .cta-card p,
+body.light-theme .cta-features li {
+  color: #4a5568 !important;
+}
+
+body.light-theme .cta-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme .cta-card:hover {
+  border-color: rgba(74, 108, 247, 0.3);
+}
 @media (max-width: 768px) {
   .menu-toggle {
     display: block;
