@@ -4078,32 +4078,6 @@ body.light-theme .auth-card-body a:not(.btn-primary):hover {
     font-size: 0.95rem;
   }
 
-  .search-wrapper {
-    flex-direction: column;
-    padding: 12px;
-    border-radius: 12px;
-  }
-
-  .search-input {
-    min-width: unset;
-    padding: 10px 14px;
-  }
-
-  .search-select {
-    min-width: unset;
-    padding: 10px 14px;
-  }
-
-  .search-btn {
-    padding: 10px 20px;
-    width: 100%;
-    justify-content: center;
-  }
-
-  .search-clear {
-    padding: 10px 14px;
-    width: 100%;
-  }
 
   .category-pills {
     gap: 8px;
@@ -4389,25 +4363,7 @@ body.light-theme .auth-card-body a:not(.btn-primary):hover {
     font-size: 0.85rem;
   }
 
-  .search-wrapper {
-    padding: 8px;
-  }
-
-  .search-input {
-    font-size: 0.9rem;
-    padding: 8px 12px;
-  }
-
-  .search-select {
-    font-size: 0.9rem;
-    padding: 8px 12px;
-  }
-
-  .search-btn {
-    font-size: 0.9rem;
-    padding: 8px 16px;
-  }
-
+  
   .pill {
     padding: 4px 12px;
     font-size: 0.75rem;
