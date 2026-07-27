@@ -2488,7 +2488,32 @@ body {
     min-height: 100vh;
 }
 
-/* Make dashboard header more spacious */
+/* Fix all text colors inside profile-container */
+.profile-container * {
+    color: #cbd5e1;
+}
+
+.profile-container h1,
+.profile-container h2,
+.profile-container h3,
+.profile-container h4,
+.profile-container h5,
+.profile-container .page-title,
+.profile-container .section-title,
+.profile-container .profile-title,
+.profile-container .item-title,
+.profile-container .application-title,
+.profile-container .form-card-title,
+.profile-container .item-card-title {
+    color: #ffffff !important;
+}
+
+.profile-container strong,
+.profile-container b {
+    color: #f1f5f9 !important;
+}
+
+/* Dashboard header */
 .profile-container .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -2586,10 +2611,6 @@ body {
     padding: 1rem 1.5rem;
 }
 
-.profile-container .item-card-title {
-    color: #ffffff !important;
-}
-
 .profile-container .item-content {
     display: flex;
     justify-content: space-between;
@@ -2649,7 +2670,6 @@ body {
     margin-bottom: 0.5rem;
 }
 
-/* Text colors */
 .profile-container .text-muted-light {
     color: #94a3b8 !important;
 }
@@ -2742,6 +2762,260 @@ body {
     color: #cbd5e1 !important;
 }
 
+/* Form inputs in profile */
+.profile-container .form-group {
+    margin-bottom: 1rem;
+}
+
+.profile-container .form-label {
+    color: #94a3b8 !important;
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+}
+
+.profile-container .form-input {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: #ffffff !important;
+    font-size: 0.95rem;
+}
+
+.profile-container .form-input:focus {
+    outline: none;
+    border-color: #4a6cf7;
+    box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+}
+
+.profile-container .form-input::placeholder {
+    color: #64748b;
+}
+
+.profile-container .form-textarea {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: #ffffff !important;
+    font-size: 0.95rem;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.profile-container .form-textarea:focus {
+    outline: none;
+    border-color: #4a6cf7;
+    box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+}
+
+.profile-container .form-textarea::placeholder {
+    color: #64748b;
+}
+
+.profile-container .form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.profile-container .form-group-half {
+    flex: 1;
+}
+
+.profile-container .form-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.profile-container .form-hint-text {
+    color: #64748b !important;
+    font-size: 0.75rem;
+    display: block;
+    margin-top: 0.25rem;
+}
+
+/* Buttons inside profile */
+.profile-container .btn-edit-profile {
+    padding: 0.4rem 1rem;
+    background: rgba(74, 108, 247, 0.15);
+    color: #7a9cff !important;
+    border: 1px solid rgba(74, 108, 247, 0.15);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile-container .btn-edit-profile:hover {
+    background: rgba(74, 108, 247, 0.25);
+}
+
+.profile-container .btn-primary-sm {
+    padding: 0.4rem 1rem;
+    background: #4a6cf7;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile-container .btn-primary-sm:hover {
+    background: #3a5cd9;
+}
+
+.profile-container .btn-warning-sm {
+    padding: 0.25rem 0.75rem;
+    background: rgba(255, 193, 7, 0.15);
+    color: #fdd835 !important;
+    border: 1px solid rgba(255, 193, 7, 0.1);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile-container .btn-warning-sm:hover {
+    background: rgba(255, 193, 7, 0.25);
+}
+
+.profile-container .btn-danger-sm {
+    padding: 0.25rem 0.75rem;
+    background: rgba(220, 53, 69, 0.15);
+    color: #f28b82 !important;
+    border: 1px solid rgba(220, 53, 69, 0.1);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile-container .btn-danger-sm:hover {
+    background: rgba(220, 53, 69, 0.25);
+}
+
+.profile-container .btn-add-dashed {
+    padding: 0.6rem 2rem;
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    background: transparent;
+    color: #94a3b8 !important;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile-container .btn-add-dashed:hover {
+    border-color: rgba(74, 108, 247, 0.3);
+    color: #7a9cff !important;
+}
+
+.profile-container .btn-save {
+    padding: 0.6rem 1.5rem;
+    background: #4a6cf7;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile-container .btn-save:hover {
+    background: #3a5cd9;
+}
+
+.profile-container .btn-cancel {
+    padding: 0.6rem 1.5rem;
+    background: rgba(255, 255, 255, 0.06);
+    color: #94a3b8 !important;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile-container .btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff !important;
+}
+
+.profile-container .btn-success {
+    padding: 0.6rem 1.5rem;
+    background: rgba(40, 167, 69, 0.15);
+    color: #6fcf97 !important;
+    border: 1px solid rgba(40, 167, 69, 0.2);
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile-container .btn-success:hover {
+    background: rgba(40, 167, 69, 0.25);
+}
+
+.profile-container .btn-primary {
+    padding: 0.6rem 1.5rem;
+    background: #4a6cf7;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.profile-container .btn-primary:hover {
+    background: #3a5cd9;
+}
+
+/* Skill edit row */
+.profile-container .skill-edit-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.profile-container .skill-edit-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Alert feedback */
+.profile-container .alert {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.profile-container .alert-success {
+    background: rgba(40, 167, 69, 0.12);
+    color: #6fcf97 !important;
+    border: 1px solid rgba(40, 167, 69, 0.15);
+}
+
+.profile-container .alert-danger {
+    background: rgba(220, 53, 69, 0.12);
+    color: #f28b82 !important;
+    border: 1px solid rgba(220, 53, 69, 0.15);
+}
+
+.profile-container .alert-warning {
+    background: rgba(255, 193, 7, 0.12);
+    color: #fdd835 !important;
+    border: 1px solid rgba(255, 193, 7, 0.15);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .profile-container {
@@ -2783,6 +3057,19 @@ body {
 
     .profile-container .header-actions button {
         flex: 1;
+        text-align: center;
+    }
+
+    .profile-container .form-row {
+        flex-direction: column;
+    }
+
+    .profile-container .form-actions {
+        flex-direction: column;
+    }
+
+    .profile-container .form-actions button {
+        width: 100%;
         text-align: center;
     }
 }
