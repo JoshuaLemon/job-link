@@ -1,11 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api from "../services/api";
+import { useTheme } from "../context/ThemeContext";
 
 function Navbar() {
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const user = JSON.parse(localStorage.getItem("user"));
+    const { theme, toggleTheme } = useTheme();
 
     const handleLogout = () => {
         localStorage.removeItem("token");
@@ -40,7 +42,7 @@ function Navbar() {
         <nav className="navbar-modern">
             <div className="navbar-container">
                 <Link className="navbar-brand-modern" to="/">
-                    <span className="brand-icon"></span>
+                    <span className="brand-icon">💼</span>
                     JobLink
                 </Link>
 
@@ -78,13 +80,30 @@ function Navbar() {
 
                     {user && (
                         <div className="nav-actions">
+                            <button 
+                                className="btn-theme-toggle" 
+                                onClick={toggleTheme}
+                                aria-label="Toggle theme"
+                            >
+                                {theme === 'dark' ? '☀️' : '🌙'}
+                            </button>
                             <button className="btn-logout" onClick={handleLogout}>
                                 Logout
                             </button>
                             <button className="btn-delete" onClick={handleDeleteAccount} aria-label="Delete account">
-                                🗑️ Delete Account
+                                🗑️
                             </button>
                         </div>
+                    )}
+
+                    {!user && (
+                        <button 
+                            className="btn-theme-toggle" 
+                            onClick={toggleTheme}
+                            aria-label="Toggle theme"
+                        >
+                            {theme === 'dark' ? '☀️' : '🌙'}
+                        </button>
                     )}
                 </div>
             </div>
