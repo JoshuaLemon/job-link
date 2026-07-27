@@ -1927,17 +1927,18 @@ body {
 }
 
 /* ========================================
-   PROFILE PAGE - DESKTOP FIRST
+   PROFILE PAGE / EMPLOYEE DASHBOARD - DESKTOP ONLY
    ======================================== */
 .profile-container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 2rem 2.5rem;
+    max-width: 1400px;
+    width: 100%;
+    margin: 1.5rem auto;
+    padding: 2rem 3rem;
     background: #1a1a2e;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.06);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    min-height: 100vh;
+    min-height: calc(100vh - 3rem);
 }
 
 /* Fix all text colors inside profile-container */
@@ -1965,7 +1966,7 @@ body {
     color: #f1f5f9 !important;
 }
 
-/* Dashboard header - DESKTOP */
+/* Dashboard header */
 .profile-container .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -1988,7 +1989,7 @@ body {
     align-items: center;
 }
 
-/* Profile card - DESKTOP */
+/* Profile card */
 .profile-container .profile-card {
     background: #0f172a;
     border: 1px solid rgba(255, 255, 255, 0.04);
@@ -1997,7 +1998,7 @@ body {
 }
 
 .profile-container .profile-card-body {
-    padding: 1.5rem;
+    padding: 1.5rem 2rem;
 }
 
 .profile-container .profile-header {
@@ -2016,7 +2017,7 @@ body {
     margin: 0;
 }
 
-/* Section headers - DESKTOP */
+/* Section headers */
 .profile-container .section-header {
     display: flex;
     justify-content: space-between;
@@ -2033,7 +2034,7 @@ body {
     margin: 0;
 }
 
-/* Item cards - DESKTOP */
+/* Item cards */
 .profile-container .item-card {
     background: #0f172a;
     border: 1px solid rgba(255, 255, 255, 0.04);
@@ -2043,19 +2044,30 @@ body {
 
 .profile-container .item-card-body {
     padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .profile-container .item-content {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
+    flex: 1;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 1rem;
+}
+
+.profile-container .item-info {
+    flex: 1;
 }
 
 .profile-container .item-title {
     color: #ffffff !important;
     font-weight: 600;
+    font-size: 1.05rem;
     margin: 0 0 0.25rem 0;
 }
 
@@ -2079,16 +2091,17 @@ body {
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
+    flex-shrink: 0;
 }
 
-/* Application details - DESKTOP */
+/* Application details */
 .profile-container .application-details {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
 }
 
-/* Form rows - DESKTOP */
+/* Form rows */
 .profile-container .form-row {
     display: flex;
     gap: 1rem;
@@ -2104,9 +2117,9 @@ body {
     margin-top: 1rem;
 }
 
-/* Buttons - DESKTOP */
+/* Buttons */
 .profile-container .btn-edit-profile {
-    padding: 0.4rem 1rem;
+    padding: 0.4rem 1.2rem;
     background: rgba(74, 108, 247, 0.15);
     color: #7a9cff !important;
     border: 1px solid rgba(74, 108, 247, 0.15);
@@ -2122,7 +2135,7 @@ body {
 }
 
 .profile-container .btn-warning-sm {
-    padding: 0.25rem 0.75rem;
+    padding: 0.3rem 0.8rem;
     background: rgba(255, 193, 7, 0.15);
     color: #fdd835 !important;
     border: 1px solid rgba(255, 193, 7, 0.1);
@@ -2137,7 +2150,7 @@ body {
 }
 
 .profile-container .btn-danger-sm {
-    padding: 0.25rem 0.75rem;
+    padding: 0.3rem 0.8rem;
     background: rgba(220, 53, 69, 0.15);
     color: #f28b82 !important;
     border: 1px solid rgba(220, 53, 69, 0.1);
@@ -2230,7 +2243,7 @@ body {
     background: #3a5cd9;
 }
 
-/* Skill edit row - DESKTOP */
+/* Skill edit row */
 .profile-container .skill-edit-row {
     display: flex;
     gap: 0.75rem;
@@ -2449,165 +2462,6 @@ body {
     font-size: 1.1rem;
     margin-bottom: 1rem;
 }
-
-/* ========================================
-   PROFILE PAGE - MOBILE RESPONSIVE
-   (Only applies on small screens, desktop remains unchanged)
-   ======================================== */
-@media (max-width: 768px) {
-    .profile-container {
-        padding: 1rem;
-        margin: 0.5rem;
-    }
-
-    .profile-container .dashboard-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.75rem;
-    }
-
-    .profile-container .dashboard-header .page-title {
-        font-size: 1.5rem;
-    }
-
-    .profile-container .header-actions {
-        width: 100%;
-        flex-wrap: wrap;
-    }
-
-    .profile-container .header-actions button {
-        flex: 1;
-        min-width: 120px;
-        text-align: center;
-    }
-
-    .profile-container .profile-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-
-    .profile-container .profile-header .btn-edit-profile {
-        width: 100%;
-        text-align: center;
-    }
-
-    .profile-container .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-
-    .profile-container .section-title {
-        font-size: 1.2rem;
-    }
-
-    .profile-container .item-content {
-        flex-direction: column;
-        align-items: flex-start;
-        width: 100%;
-    }
-
-    .profile-container .item-actions {
-        width: 100%;
-        display: flex;
-        gap: 0.5rem;
-    }
-
-    .profile-container .item-actions button {
-        flex: 1;
-        text-align: center;
-        padding: 0.4rem 0.5rem;
-    }
-
-    .profile-container .application-details {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-    }
-
-    .profile-container .form-row {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .profile-container .form-actions {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .profile-container .form-actions button {
-        width: 100%;
-        text-align: center;
-    }
-
-    .profile-container .profile-card-body {
-        padding: 1rem;
-    }
-
-    .profile-container .item-card-body {
-        padding: 0.75rem 1rem;
-    }
-
-    .profile-container .empty-state,
-    .profile-container .empty-state-large {
-        padding: 2rem 1rem;
-    }
-
-    .profile-container .ai-resume-card-body {
-        padding: 1rem;
-    }
-
-    .profile-container .application-card-body {
-        padding: 1rem;
-    }
-
-    .profile-container .skill-edit-row {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .profile-container .skill-edit-row .form-input {
-        max-width: 100% !important;
-    }
-
-    .profile-container .skill-edit-actions {
-        justify-content: center;
-    }
-}
-
-/* Extra small screens */
-@media (max-width: 480px) {
-    .profile-container {
-        padding: 0.75rem;
-        margin: 0.25rem;
-    }
-
-    .profile-container .dashboard-header .page-title {
-        font-size: 1.2rem;
-    }
-
-    .profile-container .section-title {
-        font-size: 1rem;
-    }
-
-    .profile-container .header-actions {
-        flex-direction: column;
-    }
-
-    .profile-container .header-actions button {
-        width: 100%;
-        min-width: unset;
-    }
-
-    .profile-container .item-actions {
-        flex-direction: column;
-    }
-
-    .profile-container .item-actions button {
-        width: 100%;
-    }
-}
-
 /* ========================================
    DARK MODE OVERRIDE
    ======================================== */
