@@ -4110,6 +4110,15 @@ body.light-theme .auth-card-body a:not(.btn-primary):hover {
   }
 
 
+  .category-pills {
+    gap: 8px;
+  }
+
+  .pill {
+    padding: 6px 16px;
+    font-size: 0.85rem;
+  }
+
   .stats-grid {
     flex-direction: column;
     gap: 16px;
@@ -4383,6 +4392,12 @@ body.light-theme .auth-card-body a:not(.btn-primary):hover {
 
   .hero-subtitle {
     font-size: 0.85rem;
+  }
+
+  
+  .pill {
+    padding: 4px 12px;
+    font-size: 0.75rem;
   }
 
   .stat-number {
