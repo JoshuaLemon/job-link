@@ -220,7 +220,7 @@ function EmployerDashboard() {
     };
 
     return (
-        <div className="page-container">
+        <div className="profile-container">
             <div className="dashboard-header">
                 <h2 className="page-title">Employer Dashboard</h2>
                 <div>
