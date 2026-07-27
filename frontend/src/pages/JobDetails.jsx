@@ -45,7 +45,7 @@ function JobDetails() {
             return null;
         }
         return (
-            <div className={`alert alert-${feedback.type} mt-3`} role="alert">
+            <div className={`alert alert-${feedback.type}`} role="alert">
                 {feedback.message}
             </div>
         );
@@ -134,13 +134,13 @@ function JobDetails() {
 
     const getEmploymentBadgeClass = (type) => {
         const typeMap = {
-            "Full-time": "badge-primary",
-            "Part-time": "badge-info",
-            "Contract": "badge-warning",
-            "Freelance": "badge-secondary",
-            "Internship": "badge-success"
+            "Full-time": "badge-fulltime",
+            "Part-time": "badge-parttime",
+            "Contract": "badge-contract",
+            "Freelance": "badge-other",
+            "Internship": "badge-internship"
         };
-        return typeMap[type] || "badge-default";
+        return typeMap[type] || "badge-other";
     };
 
     const getTags = (tags) => {
@@ -151,11 +151,9 @@ function JobDetails() {
     if (loading) {
         return (
             <div className="page-container">
-                <div className="text-center py-5">
-                    <div className="spinner-border text-primary" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
-                    <p className="text-muted-light mt-3">Loading job details...</p>
+                <div className="loading-container">
+                    <div className="spinner"></div>
+                    <p className="text-muted-light">Loading job details...</p>
                 </div>
             </div>
         );
@@ -164,9 +162,10 @@ function JobDetails() {
     if (!job) {
         return (
             <div className="page-container">
-                <div className="empty-state">
-                    <h4 className="empty-state-title">Job Not Found</h4>
-                    <p className="empty-state-text">The job you're looking for doesn't exist or has been removed.</p>
+                <div className="empty-state-large">
+                    <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🔍</div>
+                    <h4>Job Not Found</h4>
+                    <p className="text-muted-light">The job you're looking for doesn't exist or has been removed.</p>
                     <Link to="/" className="btn-primary">
                         Browse Jobs
                     </Link>
@@ -179,107 +178,133 @@ function JobDetails() {
 
     return (
         <div className="page-container">
-            <div className="page-header">
-                <h2 className="page-title">Job Details</h2>
-                <Link to="/" className="btn-back">
-                    ← Back to Jobs
-                </Link>
-            </div>
+            <Link to="/" className="btn-back" style={{ marginBottom: '1.5rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                ← Back to Jobs
+            </Link>
 
             <FeedbackMessage section="job" />
             <FeedbackMessage section="apply" />
 
-            <div className="details-card">
-                <div className="details-card-body">
-                    <div className="details-header">
-                        <div>
-                            <h2 className="details-title">{job.title}</h2>
-                            {company ? (
-                                <Link 
-                                    to={`/company/${company.companyId}`} 
-                                    className="company-link"
-                                >
-                                    🏢 {company.companyName}
-                                </Link>
-                            ) : (
-                                <h6 className="details-company">
-                                    {job.companyName || "Company"}
-                                </h6>
-                            )}
-                        </div>
-                        <span className={`badge ${getEmploymentBadgeClass(job.employmentType)}`}>
-                            {job.employmentType}
-                        </span>
-                    </div>
-
-                    {tags.length > 0 && (
-                        <div className="details-tags">
-                            {tags.map((tag, index) => (
-                                <span key={index} className="tag">
-                                    #{tag}
-                                </span>
-                            ))}
-                        </div>
-                    )}
-
-                    <div className="details-grid">
-                        <div>
-                            <strong>Location</strong>
-                            <p>{job.location}</p>
-                        </div>
-                        <div>
-                            <strong>Salary</strong>
-                            <p>{formatSalary(job.salary)}</p>
-                        </div>
-                        <div>
-                            <strong>Posted</strong>
-                            <p>{new Date(job.postedAt || Date.now()).toLocaleDateString()}</p>
-                        </div>
-                    </div>
-
-                    <div className="details-description">
-                        <h5>Job Description</h5>
-                        <p style={{ whiteSpace: 'pre-wrap' }}>{job.description}</p>
-                    </div>
-
-                    <div className="apply-section">
-                        {!user ? (
-                            <Link to="/login" className="btn-primary btn-lg">
-                                Login to Apply
-                            </Link>
-                        ) : hasApplied ? (
-                            <button className="btn-success btn-lg" disabled>
-                                ✅ Already Applied
-                            </button>
-                        ) : user.role === "Employee" ? (
-                            <button
-                                className="btn-success btn-lg"
-                                onClick={handleApply}
-                                disabled={applying}
+            <div className="job-details-modern">
+                {/* Header Section */}
+                <div className="job-details-header">
+                    <div className="job-details-title-section">
+                        <h1 className="job-details-title">{job.title}</h1>
+                        {company ? (
+                            <Link 
+                                to={`/company/${company.companyId}`} 
+                                className="job-details-company"
                             >
-                                {applying ? (
-                                    <>
-                                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                        Applying...
-                                    </>
-                                ) : (
-                                    "Apply Now"
-                                )}
-                            </button>
+                                🏢 {company.companyName}
+                            </Link>
                         ) : (
-                            <button className="btn-secondary btn-lg" disabled>
-                                Employers cannot apply
-                            </button>
+                            <span className="job-details-company">
+                                🏢 {job.companyName || "Company"}
+                            </span>
                         )}
-                        
-                        <Link to="/" className="btn-outline">
-                            Browse More Jobs
-                        </Link>
                     </div>
+                    <span className={`employment-badge ${getEmploymentBadgeClass(job.employmentType)}`}>
+                        {job.employmentType}
+                    </span>
+                </div>
 
+                {/* Tags */}
+                {tags.length > 0 && (
+                    <div className="job-details-tags">
+                        {tags.map((tag, index) => (
+                            <span key={index} className="job-tag">
+                                #{tag}
+                            </span>
+                        ))}
+                    </div>
+                )}
+
+                {/* Quick Info Grid */}
+                <div className="job-details-info-grid">
+                    <div className="info-item">
+                        <span className="info-icon">📍</span>
+                        <div>
+                            <span className="info-label">Location</span>
+                            <span className="info-value">{job.location}</span>
+                        </div>
+                    </div>
+                    <div className="info-item">
+                        <span className="info-icon">💰</span>
+                        <div>
+                            <span className="info-label">Salary</span>
+                            <span className="info-value">{formatSalary(job.salary)}</span>
+                        </div>
+                    </div>
+                    <div className="info-item">
+                        <span className="info-icon">📅</span>
+                        <div>
+                            <span className="info-label">Posted</span>
+                            <span className="info-value">{new Date(job.postedAt || Date.now()).toLocaleDateString('en-US', { 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric' 
+                            })}</span>
+                        </div>
+                    </div>
+                    <div className="info-item">
+                        <span className="info-icon">👤</span>
+                        <div>
+                            <span className="info-label">Employment Type</span>
+                            <span className="info-value">{job.employmentType}</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Description */}
+                <div className="job-details-description">
+                    <h3>📋 Job Description</h3>
+                    <p>{job.description}</p>
+                </div>
+
+                {/* Apply Section */}
+                <div className="job-details-apply">
+                    <div className="apply-content">
+                        <div className="apply-text">
+                            <h4>Ready to apply?</h4>
+                            <p className="text-muted-light">Join {company?.companyName || 'this company'} and be part of their team.</p>
+                        </div>
+                        <div className="apply-buttons">
+                            {!user ? (
+                                <Link to="/login" className="btn-primary btn-lg">
+                                    🔑 Login to Apply
+                                </Link>
+                            ) : hasApplied ? (
+                                <button className="btn-success btn-lg" disabled>
+                                    ✅ Already Applied
+                                </button>
+                            ) : user.role === "Employee" ? (
+                                <button
+                                    className="btn-success btn-lg"
+                                    onClick={handleApply}
+                                    disabled={applying}
+                                >
+                                    {applying ? (
+                                        <>
+                                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                            Applying...
+                                        </>
+                                    ) : (
+                                        "📝 Apply Now"
+                                    )}
+                                </button>
+                            ) : (
+                                <button className="btn-secondary btn-lg" disabled>
+                                    Employers cannot apply
+                                </button>
+                            )}
+                            <Link to="/" className="btn-outline">
+                                Browse More Jobs
+                            </Link>
+                        </div>
+                    </div>
                     {hasApplied && (
-                        <div className="alert-success mt-3">
-                            <strong>✓ Application Submitted!</strong> You have already applied for this position. The employer will review your application.
+                        <div className="alert-success" style={{ marginTop: '1rem' }}>
+                            ✅ <strong>Application Submitted!</strong> You have already applied for this position. The employer will review your application.
                         </div>
                     )}
                 </div>
