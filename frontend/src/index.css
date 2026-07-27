@@ -3708,7 +3708,271 @@ body.light-theme .search-select {
   background: #f8fafc;
   color: #1a2332 !important;
 }
+body.light-theme .job-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
 
+body.light-theme .job-card:hover {
+  border-color: rgba(74, 108, 247, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .job-card-title {
+  color: #1a2332 !important;
+}
+
+body.light-theme .job-card-company {
+  color: #4a5568 !important;
+}
+
+body.light-theme .job-card-location {
+  color: #64748b !important;
+}
+
+body.light-theme .job-card-salary {
+  color: #4a6cf7 !important;
+}
+
+body.light-theme .job-card-time {
+  color: #94a3b8 !important;
+}
+
+body.light-theme .job-card-type {
+  color: #4a6cf7 !important;
+  background: rgba(74, 108, 247, 0.1);
+  border: 1px solid rgba(74, 108, 247, 0.1);
+}
+
+body.light-theme .job-card-btn {
+  color: #4a6cf7 !important;
+  background: rgba(74, 108, 247, 0.08);
+  border: 1px solid rgba(74, 108, 247, 0.12);
+}
+
+body.light-theme .job-card-btn:hover {
+  background: #4a6cf7;
+  color: #ffffff !important;
+}
+
+body.light-theme .job-card-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme .tag {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  color: #64748b !important;
+}
+
+body.light-theme .tag:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: #1a2332 !important;
+}
+
+body.light-theme .job-card-recommended-badge {
+  background: linear-gradient(135deg, #4a6cf7, #7a9cff);
+  color: #ffffff !important;
+}
+
+body.light-theme .pill {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #4a5568;
+}
+
+body.light-theme .pill:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1a2332;
+}
+
+body.light-theme .section-link {
+  color: #4a6cf7;
+}
+
+body.light-theme .section-link:hover {
+  color: #3a5cd9;
+}
+
+body.light-theme .btn-secondary {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #64748b !important;
+}
+
+body.light-theme .btn-outline {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  color: #4a5568 !important;
+}
+
+body.light-theme .btn-outline:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1a2332 !important;
+}
+
+body.light-theme .job-card-tags .tag {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  color: #64748b !important;
+}
+
+body.light-theme .job-card-tags .tag:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: #1a2332 !important;
+}
+
+body.light-theme .job-card-tags .tag-more {
+  background: rgba(74, 108, 247, 0.1);
+  color: #4a6cf7 !important;
+  border-color: rgba(74, 108, 247, 0.15);
+}
+
+body.light-theme .job-card-tags .tag-more:hover {
+  background: rgba(74, 108, 247, 0.2);
+}
+
+body.light-theme .job-card-header .job-card-type {
+  background: rgba(74, 108, 247, 0.1);
+  color: #4a6cf7 !important;
+  border: 1px solid rgba(74, 108, 247, 0.1);
+}
+
+body.light-theme .location-icon {
+  color: #64748b !important;
+}
+
+body.light-theme .stats-container .stat-number {
+  color: #1a2332 !important;
+}
+
+body.light-theme .stats-container .stat-label {
+  color: #64748b !important;
+}
+
+body.light-theme .text-muted-light {
+  color: #64748b !important;
+}
+
+body.light-theme .text-light {
+  color: #1a2332 !important;
+}
+
+body.light-theme .badge-hero {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #1a2332 !important;
+}
+
+body.light-theme .hero-title {
+  color: #1a2332 !important;
+}
+
+body.light-theme .hero-subtitle {
+  color: #4a5568 !important;
+}
+
+body.light-theme .text-gradient {
+  background: linear-gradient(135deg, #4a6cf7, #3a5cd9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+body.light-theme .search-btn {
+  background: #4a6cf7;
+  color: #ffffff !important;
+}
+
+body.light-theme .search-btn:hover {
+  background: #3a5cd9;
+}
+
+body.light-theme .search-clear {
+  color: #94a3b8;
+}
+
+body.light-theme .search-clear:hover {
+  color: #1a2332;
+}
+
+body.light-theme .search-select {
+  background: #f8fafc;
+  color: #1a2332 !important;
+}
+
+body.light-theme .search-input {
+  color: #1a2332 !important;
+}
+
+body.light-theme .search-input::placeholder {
+  color: #94a3b8 !important;
+}
+
+body.light-theme .search-wrapper {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Fix for any remaining dark text in light mode */
+body.light-theme .page-container *:not(.search-input):not(.search-select):not(.btn-primary):not(.btn-success):not(.btn-outline):not(.btn-danger):not(.btn-warning) {
+  color: inherit;
+}
+
+body.light-theme .page-container .job-card-title,
+body.light-theme .page-container .job-card-company,
+body.light-theme .page-container .job-card-location,
+body.light-theme .page-container .job-card-salary,
+body.light-theme .page-container .job-card-time,
+body.light-theme .page-container .job-card-type {
+  color: inherit !important;
+}
+
+body.light-theme .page-container .job-card-title {
+  color: #1a2332 !important;
+}
+
+body.light-theme .page-container .job-card-company {
+  color: #4a5568 !important;
+}
+
+body.light-theme .page-container .job-card-location {
+  color: #64748b !important;
+}
+
+body.light-theme .page-container .job-card-salary {
+  color: #4a6cf7 !important;
+}
+
+body.light-theme .page-container .job-card-time {
+  color: #94a3b8 !important;
+}
+
+body.light-theme .page-container .job-card-type {
+  color: #4a6cf7 !important;
+}
+
+body.light-theme .page-container .stat-number {
+  color: #1a2332 !important;
+}
+
+body.light-theme .page-container .stat-label {
+  color: #64748b !important;
+}
+
+body.light-theme .page-container .tag {
+  color: #64748b !important;
+}
+
+body.light-theme .page-container .tag-more {
+  color: #4a6cf7 !important;
+}
+
+body.light-theme .page-container .text-muted-light {
+  color: #64748b !important;
+}
+
+body.light-theme .page-container .text-light {
+  color: #1a2332 !important;
+}
 @media (max-width: 768px) {
   .menu-toggle {
     display: block;
