@@ -339,6 +339,8 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  position: relative;  /* Add this */
+  z-index: 5;  /* Add this */
 }
 
 .pill {
@@ -350,6 +352,8 @@ body {
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  position: relative;  /* Add this */
+  z-index: 2;  /* Add this */
 }
 
 .pill:hover {
@@ -357,7 +361,6 @@ body {
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.4);
 }
-
 
 .pill.active {
   background: rgba(74, 108, 247, 0.2);
