@@ -118,7 +118,7 @@ function Home() {
             <section className="hero-section-dark">
                 <div className="container">
                     <div className="row align-items-center">
-                        <div className="col-lg-7">
+                        <div className="col-lg-7 col-md-12">
                             <div className="mb-3">
                                 <span className="badge-hero">
                                     🌟 Over {(totalJobs || 12000).toLocaleString()}+ jobs from top-tier companies
