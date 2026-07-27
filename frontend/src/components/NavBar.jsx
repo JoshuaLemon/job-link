@@ -3,7 +3,6 @@ import { useState } from "react";
 import api from "../services/api";
 
 function Navbar() {
-
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const user = JSON.parse(localStorage.getItem("user"));
@@ -39,14 +38,14 @@ function Navbar() {
 
     return (
         <nav className="navbar-modern">
-            <div className="container">
+            <div className="navbar-container">
                 <Link className="navbar-brand-modern" to="/">
                     <span className="brand-icon">💼</span>
-                    JobLink
+                    JobLint {/* Changed to match image */}
                 </Link>
 
-                <button className="menu-toggle" onClick={toggleMenu}>
-                    <span className="menu-icon">☰</span>
+                <button className="menu-toggle" onClick={toggleMenu} aria-label="Toggle menu">
+                    <span className="menu-icon">{isMenuOpen ? '✕' : '☰'}</span>
                 </button>
 
                 <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
@@ -82,7 +81,7 @@ function Navbar() {
                             <button className="btn-logout" onClick={handleLogout}>
                                 Logout
                             </button>
-                            <button className="btn-delete" onClick={handleDeleteAccount}>
+                            <button className="btn-delete" onClick={handleDeleteAccount} aria-label="Delete account">
                                 🗑️
                             </button>
                         </div>
