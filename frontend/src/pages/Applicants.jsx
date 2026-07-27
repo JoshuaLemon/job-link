@@ -86,30 +86,28 @@ function Applicants() {
 
     const getStatusBadgeClass = (status) => {
         const statusMap = {
-            "Hired": "bg-success",
-            "Interview": "bg-primary",
-            "Rejected": "bg-danger",
-            "Pending": "bg-warning text-dark",
-            "Screening": "bg-info text-dark",
-            "Technical Exam": "bg-dark",
-            "Offer": "bg-secondary"
+            "Hired": "status-hired",
+            "Interview": "status-interview",
+            "Rejected": "status-rejected",
+            "Pending": "status-pending",
+            "Screening": "status-screening",
+            "Technical Exam": "status-technical",
+            "Offer": "status-offer"
         };
-        return statusMap[status] || "bg-light text-dark";
+        return statusMap[status] || "status-default";
     };
 
     return (
-        <div className="container mt-5">
-            {/* Header */}
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2>Applicants</h2>
-                <Link to="/employer" className="btn btn-secondary">
+        <div className="page-container">
+            <div className="page-header">
+                <h2 className="page-title">Applicants</h2>
+                <Link to="/employer" className="btn-back">
                     ← Back to Dashboard
                 </Link>
             </div>
 
             <FeedbackMessage section="applicants" />
 
-            {/* Loading State */}
             {loading && (
                 <div className="text-center py-4">
                     <div className="spinner-border text-primary" role="status">
@@ -118,52 +116,46 @@ function Applicants() {
                 </div>
             )}
 
-            {/* Applicants List */}
             {!loading && applicants.length === 0 ? (
-                <div className="card mb-3">
-                    <div className="card-body text-center py-4">
-                        <p className="text-muted mb-0">No applicants yet.</p>
-                    </div>
+                <div className="empty-state">
+                    <p className="empty-state-text">No applicants yet.</p>
                 </div>
             ) : (
                 applicants.map(application => (
-                    <div key={application.applicationId} className="card mb-3">
-                        <div className="card-body">
-                            {/* Applicant Header */}
-                            <div className="d-flex justify-content-between align-items-start mb-3">
+                    <div key={application.applicationId} className="applicant-card">
+                        <div className="applicant-card-body">
+                            <div className="applicant-header">
                                 <div>
-                                    <h4 className="mb-1">
+                                    <h4 className="applicant-name">
                                         {application.applicant.firstName} {application.applicant.lastName}
                                     </h4>
-                                    <p className="text-muted mb-0">
+                                    <p className="applicant-headline">
                                         <strong>Headline:</strong> {application.applicant.headline || "Not specified"}
                                     </p>
                                 </div>
-                                <span className={`badge fs-6 px-3 py-2 ${getStatusBadgeClass(application.status)}`}>
+                                <span className={`status-badge ${getStatusBadgeClass(application.status)}`}>
                                     {application.status}
                                 </span>
                             </div>
 
-                            {/* Applicant Details */}
-                            <div className="row mb-3">
-                                <div className="col-md-4">
-                                    <p className="mb-1">
+                            <div className="applicant-details">
+                                <div>
+                                    <p className="applicant-detail">
                                         <strong>Location:</strong> {application.applicant.location || "Not specified"}
                                     </p>
                                 </div>
-                                <div className="col-md-4">
-                                    <p className="mb-1">
+                                <div>
+                                    <p className="applicant-detail">
                                         <strong>Applied:</strong> {new Date(application.appliedAt).toLocaleDateString()}
                                     </p>
                                 </div>
                             </div>
 
-                            {/* Status Update */}
-                            <div className="row align-items-end">
-                                <div className="col-md-6">
-                                    <label className="form-label fw-semibold">Update Status</label>
+                            <div className="applicant-actions">
+                                <div className="status-update">
+                                    <label className="status-label">Update Status</label>
                                     <select
-                                        className="form-select"
+                                        className="status-select"
                                         value={application.status}
                                         onChange={(e) => updateStatus(application.applicationId, e.target.value)}
                                         disabled={updatingId === application.applicationId}
@@ -177,15 +169,15 @@ function Applicants() {
                                         <option value="Rejected">Rejected</option>
                                     </select>
                                     {updatingId === application.applicationId && (
-                                        <small className="text-muted">Updating...</small>
+                                        <small className="updating-text">Updating...</small>
                                     )}
                                 </div>
-                                <div className="col-md-6 text-md-end mt-3 mt-md-0">
+                                <div>
                                     <Link
                                         to={`/employee-profile/${application.applicant.employeeProfileId}`}
-                                        className="btn btn-primary"
+                                        className="btn-profile"
                                     >
-                                        View Full Profile
+                                        View Full Profile →
                                     </Link>
                                 </div>
                             </div>

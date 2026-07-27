@@ -53,11 +53,9 @@ function CompanyProfile() {
     const loadCompany = async () => {
         setLoading(true);
         try {
-            // ✅ FIXED: Use by-company-id endpoint
             const response = await api.get(`/Company/by-company-id/${id}`);
             setCompany(response.data);
             
-            // Load jobs for this company
             try {
                 const jobsResponse = await api.get(`/JobPost?companyId=${id}`);
                 setJobs(jobsResponse.data.data || []);
@@ -74,12 +72,12 @@ function CompanyProfile() {
 
     if (loading) {
         return (
-            <div className="container mt-5">
+            <div className="page-container">
                 <div className="text-center py-5">
                     <div className="spinner-border text-primary" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </div>
-                    <p className="mt-3 text-muted">Loading company details...</p>
+                    <p className="text-muted-light mt-3">Loading company details...</p>
                 </div>
             </div>
         );
@@ -87,53 +85,58 @@ function CompanyProfile() {
 
     if (!company) {
         return (
-            <div className="container mt-5">
-                <div className="card">
-                    <div className="card-body text-center py-5">
-                        <h4 className="text-danger">Company Not Found</h4>
-                        <p className="text-muted">The company you're looking for doesn't exist.</p>
-                        <Link to="/" className="btn btn-primary">
-                            Back to Home
-                        </Link>
-                    </div>
+            <div className="page-container">
+                <div className="empty-state">
+                    <h4 className="empty-state-title">Company Not Found</h4>
+                    <p className="empty-state-text">The company you're looking for doesn't exist.</p>
+                    <Link to="/" className="btn-primary-custom">
+                        Back to Home
+                    </Link>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="container mt-5">
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2>Company Profile</h2>
-                <Link to="/" className="btn btn-secondary">
+        <div className="page-container">
+            <div className="page-header">
+                <h2 className="page-title">Company Profile</h2>
+                <Link to="/" className="btn-back">
                     ← Back to Jobs
                 </Link>
             </div>
 
             <FeedbackMessage section="company" />
 
-            <div className="card mb-4">
-                <div className="card-body">
-                    <h2 className="mb-2">{company.companyName}</h2>
+            <div className="company-card">
+                <div className="company-card-body">
+                    <h2 className="company-name">{company.companyName}</h2>
                     
-                    {company.industry && (
-                        <p><strong>Industry:</strong> {company.industry}</p>
-                    )}
-                    {company.location && (
-                        <p><strong>Location:</strong> {company.location}</p>
-                    )}
-                    {company.website && (
-                        <p>
-                            <strong>Website:</strong>{" "}
-                            <a href={company.website} target="_blank" rel="noopener noreferrer">
-                                {company.website}
-                            </a>
-                        </p>
-                    )}
+                    <div className="company-details">
+                        {company.industry && (
+                            <p className="company-detail">
+                                <strong>Industry:</strong> {company.industry}
+                            </p>
+                        )}
+                        {company.location && (
+                            <p className="company-detail">
+                                <strong>Location:</strong> {company.location}
+                            </p>
+                        )}
+                        {company.website && (
+                            <p className="company-detail">
+                                <strong>Website:</strong>{" "}
+                                <a href={company.website} target="_blank" rel="noopener noreferrer" className="company-link">
+                                    {company.website}
+                                </a>
+                            </p>
+                        )}
+                    </div>
+
                     {company.description && (
-                        <div className="mt-3">
-                            <h5>About</h5>
-                            <p>{company.description}</p>
+                        <div className="company-about">
+                            <h5 className="company-about-title">About</h5>
+                            <p className="company-about-text">{company.description}</p>
                         </div>
                     )}
                 </div>
@@ -141,19 +144,19 @@ function CompanyProfile() {
 
             {jobs.length > 0 && (
                 <div className="mt-4">
-                    <h3 className="mb-3">Jobs at {company.companyName}</h3>
+                    <h3 className="jobs-title">Jobs at {company.companyName}</h3>
                     {jobs.map((job) => (
-                        <div key={job.jobPostId} className="card mb-3">
-                            <div className="card-body">
-                                <h5>{job.title}</h5>
-                                <p className="text-muted mb-1">
-                                    <strong>📍</strong> {job.location}
+                        <div key={job.jobPostId} className="job-item">
+                            <div className="job-item-body">
+                                <h5 className="job-item-title">{job.title}</h5>
+                                <p className="job-item-location">
+                                    <span className="location-icon">📍</span> {job.location}
                                 </p>
-                                <p className="text-muted mb-1">
+                                <p className="job-item-salary">
                                     <strong>💰 Salary:</strong> ₱{job.salary.toLocaleString()}
                                 </p>
-                                <Link to={`/jobs/${job.jobPostId}`} className="btn btn-primary btn-sm">
-                                    View Job
+                                <Link to={`/jobs/${job.jobPostId}`} className="job-item-btn">
+                                    View Job →
                                 </Link>
                             </div>
                         </div>

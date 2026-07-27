@@ -83,12 +83,12 @@ function EmployerJobDetails() {
 
     if (loading) {
         return (
-            <div className="container mt-5">
+            <div className="page-container">
                 <div className="text-center py-5">
                     <div className="spinner-border text-primary" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </div>
-                    <p className="mt-3 text-muted">Loading job details...</p>
+                    <p className="text-muted-light mt-3">Loading job details...</p>
                 </div>
             </div>
         );
@@ -96,15 +96,13 @@ function EmployerJobDetails() {
 
     if (!job) {
         return (
-            <div className="container mt-5">
-                <div className="card">
-                    <div className="card-body text-center py-5">
-                        <h4 className="text-danger">Job Not Found</h4>
-                        <p className="text-muted">The job you're looking for doesn't exist or has been removed.</p>
-                        <Link to="/employer" className="btn btn-primary">
-                            Back to Dashboard
-                        </Link>
-                    </div>
+            <div className="page-container">
+                <div className="empty-state">
+                    <h4 className="empty-state-title">Job Not Found</h4>
+                    <p className="empty-state-text">The job you're looking for doesn't exist or has been removed.</p>
+                    <Link to="/employer" className="btn-primary">
+                        Back to Dashboard
+                    </Link>
                 </div>
             </div>
         );
@@ -113,56 +111,56 @@ function EmployerJobDetails() {
     const tags = job.tags ? job.tags.split(',').map(t => t.trim()).filter(t => t) : [];
 
     return (
-        <div className="container mt-5">
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2>Job Details</h2>
-                <Link to="/employer" className="btn btn-secondary">
+        <div className="page-container">
+            <div className="page-header">
+                <h2 className="page-title">Job Details</h2>
+                <Link to="/employer" className="btn-back">
                     ← Back to Dashboard
                 </Link>
             </div>
 
             <FeedbackMessage section="job" />
 
-            <div className="card mb-4">
-                <div className="card-body">
-                    <div className="d-flex justify-content-between align-items-start">
+            <div className="details-card">
+                <div className="details-card-body">
+                    <div className="details-header">
                         <div>
-                            <h2 className="mb-2">{job.title}</h2>
-                            <h6 className="text-muted">
+                            <h2 className="details-title">{job.title}</h2>
+                            <h6 className="details-company">
                                 {job.companyName || "Your Company"}
                             </h6>
                         </div>
-                        <span className={`badge fs-6 px-3 py-2 bg-${job.employmentType === 'Full-time' ? 'primary' : job.employmentType === 'Part-time' ? 'info' : job.employmentType === 'Contract' ? 'warning' : 'secondary'}`}>
+                        <span className={`badge ${job.employmentType === 'Full-time' ? 'badge-primary' : job.employmentType === 'Part-time' ? 'badge-info' : job.employmentType === 'Contract' ? 'badge-warning' : 'badge-secondary'}`}>
                             {job.employmentType}
                         </span>
                     </div>
 
                     {tags.length > 0 && (
-                        <div className="mt-2">
+                        <div className="details-tags">
                             {tags.map((tag, index) => (
-                                <span key={index} className="badge bg-secondary me-1 px-2 py-1">
+                                <span key={index} className="tag">
                                     #{tag}
                                 </span>
                             ))}
                         </div>
                     )}
 
-                    <div className="row mt-3">
-                        <div className="col-md-4">
+                    <div className="details-grid">
+                        <div>
                             <strong>Location</strong>
                             <p>{job.location}</p>
                         </div>
-                        <div className="col-md-4">
+                        <div>
                             <strong>Salary</strong>
                             <p>₱{job.salary.toLocaleString()}</p>
                         </div>
-                        <div className="col-md-4">
+                        <div>
                             <strong>Posted</strong>
                             <p>{new Date(job.postedAt).toLocaleDateString()}</p>
                         </div>
                     </div>
 
-                    <div className="mt-3">
+                    <div className="details-description">
                         <h5>Description</h5>
                         <p style={{ whiteSpace: 'pre-wrap' }}>{job.description}</p>
                     </div>
@@ -170,14 +168,14 @@ function EmployerJobDetails() {
             </div>
 
             {user?.role === "Employer" && (
-                <div className="mt-4">
-                    <h3 className="mb-3">🌟 Recommended Talents for this Job</h3>
+                <div className="talents-section">
+                    <h3 className="talents-title">🌟 Recommended Talents for this Job</h3>
                     {loadingTalents ? (
                         <div className="text-center py-3">
                             <div className="spinner-border spinner-border-sm text-primary" role="status">
                                 <span className="visually-hidden">Loading...</span>
                             </div>
-                            <span className="ms-2 text-muted">Finding matching talents...</span>
+                            <span className="ms-2 text-muted-light">Finding matching talents...</span>
                         </div>
                     ) : talents.length > 0 ? (
                         <div>
@@ -186,15 +184,9 @@ function EmployerJobDetails() {
                             ))}
                         </div>
                     ) : (
-                        <div className="card bg-light">
-                            <div className="card-body text-center py-4">
-                                <p className="text-muted mb-0">
-                                    No matching talents found for this job posting yet.
-                                </p>
-                                <p className="text-muted small mt-1">
-                                    As more employees join, they'll appear here.
-                                </p>
-                            </div>
+                        <div className="empty-state-small">
+                            <p className="text-muted-light">No matching talents found for this job posting yet.</p>
+                            <p className="text-muted-light small mt-1">As more employees join, they'll appear here.</p>
                         </div>
                     )}
                 </div>

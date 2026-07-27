@@ -50,7 +50,6 @@ function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        // Validate form
         if (!email.trim()) {
             showFeedback("login", "danger", "Please enter your email address.");
             return;
@@ -95,114 +94,93 @@ function Login() {
     };
 
     return (
-        <div className="container mt-5">
-            <div className="row justify-content-center">
-                <div className="col-md-6 col-lg-5">
-                    <div className="card shadow-sm">
-                        <div className="card-body p-4 p-md-5">
-                            {/* Header */}
-                            <div className="text-center mb-4">
-                                <h2 className="mb-1">Welcome Back</h2>
-                                <p className="text-muted">Login to your account to continue</p>
-                            </div>
+        <div className="auth-page">
+            <div className="auth-card">
+                <div className="auth-card-body">
+                    <div className="auth-header">
+                        <h2 className="auth-title">Welcome Back</h2>
+                        <p className="auth-subtitle">Login to your account to continue</p>
+                    </div>
 
-                            <FeedbackMessage section="login" />
+                    <FeedbackMessage section="login" />
 
-                            <form onSubmit={handleLogin}>
-                                {/* Email */}
-                                <div className="mb-3">
-                                    <label className="form-label fw-semibold">
-                                        Email Address
-                                    </label>
-                                    <input
-                                        className="form-control form-control-lg"
-                                        type="email"
-                                        placeholder="Enter your email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        disabled={loading}
-                                        autoFocus
-                                    />
-                                </div>
+                    <form onSubmit={handleLogin}>
+                        <div className="form-group">
+                            <label className="form-label">Email Address</label>
+                            <input
+                                className="form-input"
+                                type="email"
+                                placeholder="Enter your email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                disabled={loading}
+                                autoFocus
+                            />
+                        </div>
 
-                                {/* Password */}
-                                <div className="mb-3">
-                                    <label className="form-label fw-semibold">
-                                        Password
-                                    </label>
-                                    <div className="input-group">
-                                        <input
-                                            className="form-control form-control-lg"
-                                            type={showPassword ? "text" : "password"}
-                                            placeholder="Enter your password"
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
-                                            disabled={loading}
-                                        />
-                                        <button
-                                            className="btn btn-outline-secondary"
-                                            type="button"
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            disabled={loading}
-                                        >
-                                            {showPassword ? "👁️" : "👁️‍🗨️"}
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Submit Button */}
+                        <div className="form-group">
+                            <label className="form-label">Password</label>
+                            <div className="password-input-wrapper">
+                                <input
+                                    className="form-input"
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="Enter your password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    disabled={loading}
+                                />
                                 <button
-                                    className="btn btn-primary btn-lg w-100"
-                                    type="submit"
+                                    className="password-toggle"
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
                                     disabled={loading}
                                 >
-                                    {loading ? (
-                                        <>
-                                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                            Logging in...
-                                        </>
-                                    ) : (
-                                        "Login"
-                                    )}
+                                    {showPassword ? "👁️" : "👁️‍🗨️"}
                                 </button>
-                            </form>
-
-                            {/* Register Link */}
-                            <div className="text-center mt-4">
-                                <p className="text-muted mb-0">
-                                    Don't have an account?{" "}
-                                    <Link to="/register" className="text-decoration-none">
-                                        Register here
-                                    </Link>
-                                </p>
-                            </div>
-                            {/*Forget Password Link*/}
-                            <div className="text-end mt-1">
-                                <Link to="/forgot-password" className="text-decoration-none small">
-                                    Forgot Password?
-                                </Link>
-                            </div>
-
-                            {/* Demo Credentials */}
-                            <div className="mt-4 p-3 bg-light rounded">
-                                <p className="text-muted small mb-1">
-                                    <strong>Demo Credentials:</strong>
-                                </p>
-                                <p className="text-muted small mb-0">
-                                    Employee: employee@test.com / password123
-                                </p>
-                                <p className="text-muted small mb-0">
-                                    Employer: employer@test.com / password123
-                                </p>
-                            </div>
-
-                            {/* Back to Home */}
-                            <div className="text-center mt-3">
-                                <Link to="/" className="text-decoration-none small">
-                                    ← Back to Home
-                                </Link>
                             </div>
                         </div>
+
+                        <div className="auth-options">
+                            <Link to="/forgot-password" className="auth-link-small">
+                                Forgot Password?
+                            </Link>
+                        </div>
+
+                        <button
+                            className="btn-primary btn-full"
+                            type="submit"
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <>
+                                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    Logging in...
+                                </>
+                            ) : (
+                                "Login"
+                            )}
+                        </button>
+                    </form>
+
+                    <div className="auth-footer">
+                        <p className="auth-text">
+                            Don't have an account?{" "}
+                            <Link to="/register" className="auth-link">
+                                Register here
+                            </Link>
+                        </p>
+                    </div>
+
+                    <div className="demo-credentials">
+                        <p className="demo-title">Demo Credentials:</p>
+                        <p className="demo-text">Employee: employee@test.com / password123</p>
+                        <p className="demo-text">Employer: employer@test.com / password123</p>
+                    </div>
+
+                    <div className="auth-footer mt-3">
+                        <Link to="/" className="auth-link">
+                            ← Back to Home
+                        </Link>
                     </div>
                 </div>
             </div>

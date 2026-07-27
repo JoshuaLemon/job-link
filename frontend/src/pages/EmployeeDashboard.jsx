@@ -21,7 +21,6 @@ function EmployeeDashboard() {
 
     const [educations, setEducations] = useState([]);
 
-    // Education states
     const [isAddingEducation, setIsAddingEducation] = useState(false);
     const [educationForm, setEducationForm] = useState({
         schoolName: "",
@@ -41,8 +40,6 @@ function EmployeeDashboard() {
     });
 
     const [experiences, setExperiences] = useState([]);
-
-    // Experience states
     const [isAddingExperience, setIsAddingExperience] = useState(false);
     const [experienceForm, setExperienceForm] = useState({
         companyName: "",
@@ -53,8 +50,6 @@ function EmployeeDashboard() {
     });
 
     const [skills, setSkills] = useState([]);
-
-    // Skill states
     const [isAddingSkill, setIsAddingSkill] = useState(false);
     const [skillForm, setSkillForm] = useState({
         skillName: ""
@@ -72,7 +67,6 @@ function EmployeeDashboard() {
     });
 
     useEffect(() => {
-        // Load employee applications
         api.get("/Application/my-applications")
             .then((response) => {
                 console.log(response.data);
@@ -82,7 +76,6 @@ function EmployeeDashboard() {
                 console.error(error);
             });
 
-        // Load employee profile
         api.get(`/Profile/${user.userId}`)
             .then((response) => {
                 console.log(response.data);
@@ -99,7 +92,6 @@ function EmployeeDashboard() {
                 console.log("No profile found.");
             });
 
-        // Load education
         api.get("/Education/my-education")
             .then((response) => {
                 console.log(response.data);
@@ -109,7 +101,6 @@ function EmployeeDashboard() {
                 console.error(error);
             });
 
-        // Load experience
         api.get("/Experience/my-experience")
             .then((response) => {
                 console.log(response.data);
@@ -119,7 +110,6 @@ function EmployeeDashboard() {
                 console.error(error);
             });
 
-        // Load skills
         api.get("/Skill/my-skills")
             .then((response) => {
                 console.log(response.data);
@@ -162,7 +152,6 @@ function EmployeeDashboard() {
 
     const handleCancelProfile = () => {
         setIsEditingProfile(false);
-        // Refetch profile to reset to original values
         api.get(`/Profile/${user.userId}`)
             .then((response) => {
                 setProfile({
@@ -209,7 +198,6 @@ function EmployeeDashboard() {
         setIsEditingProfile(true);
     };
 
-    // Education handlers
     const handleAddEducationClick = () => {
         setIsAddingEducation(true);
         setEducationForm({
@@ -246,14 +234,13 @@ function EmployeeDashboard() {
             return;
         }
 
-        // Validate date format (YYYY-MM)
         const dateRegex = /^\d{4}-\d{2}$/;
         if (!dateRegex.test(educationForm.startDate)) {
-            showFeedback("education", "danger", "Start date must be in YYYY-MM format (e.g., 2024-01).");
+            showFeedback("education", "danger", "Start date must be in YYYY-MM format.");
             return;
         }
         if (!dateRegex.test(educationForm.endDate)) {
-            showFeedback("education", "danger", "End date must be in YYYY-MM format (e.g., 2024-12).");
+            showFeedback("education", "danger", "End date must be in YYYY-MM format.");
             return;
         }
 
@@ -261,7 +248,6 @@ function EmployeeDashboard() {
         const endDate = new Date(educationForm.endDate);
         const currentDate = new Date();
         
-        // Compare only month/year (set both to the 1st of the month)
         const startYearMonth = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
         const endYearMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
         const currentYearMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
@@ -279,11 +265,11 @@ function EmployeeDashboard() {
             return;
         }
         if (startYearMonth > currentYearMonth) {
-            showFeedback("education", "danger", `Start date (${startDate.toLocaleString('default', { month: 'long', year: 'numeric' })}) cannot be in the future.`);
+            showFeedback("education", "danger", `Start date cannot be in the future.`);
             return;
         }
         if (endYearMonth > currentYearMonth) {
-            showFeedback("education", "danger", `End date (${endDate.toLocaleString('default', { month: 'long', year: 'numeric' })}) cannot be in the future.`);
+            showFeedback("education", "danger", `End date cannot be in the future.`);
             return;
         }
         if (endYearMonth < startYearMonth) {
@@ -359,11 +345,11 @@ function EmployeeDashboard() {
             return;
         }
         if (startYearMonth > currentYearMonth) {
-            showFeedback("education", "danger", `Start date (${startDate.toLocaleString('default', { month: 'long', year: 'numeric' })}) cannot be in the future.`);
+            showFeedback("education", "danger", `Start date cannot be in the future.`);
             return;
         }
         if (endYearMonth > currentYearMonth) {
-            showFeedback("education", "danger", `End date (${endDate.toLocaleString('default', { month: 'long', year: 'numeric' })}) cannot be in the future.`);
+            showFeedback("education", "danger", `End date cannot be in the future.`);
             return;
         }
         if (endYearMonth < startYearMonth) {
@@ -418,7 +404,6 @@ function EmployeeDashboard() {
         }
     };
 
-    // Experience handlers
     const handleAddExperienceClick = () => {
         setIsAddingExperience(true);
         setExperienceForm({
@@ -468,11 +453,11 @@ function EmployeeDashboard() {
             return;
         }
         if (startYearMonth > currentYearMonth) {
-            showFeedback("experience", "danger", `Start date (${startDate.toLocaleString('default', { month: 'long', year: 'numeric' })}) cannot be in the future.`);
+            showFeedback("experience", "danger", `Start date cannot be in the future.`);
             return;
         }
         if (endYearMonth > currentYearMonth) {
-            showFeedback("experience", "danger", `End date (${endDate.toLocaleString('default', { month: 'long', year: 'numeric' })}) cannot be in the future.`);
+            showFeedback("experience", "danger", `End date cannot be in the future.`);
             return;
         }
         if (endYearMonth < startYearMonth) {
@@ -539,7 +524,6 @@ function EmployeeDashboard() {
         }
     };
 
-    // Skill handlers
     const handleAddSkillClick = () => {
         setIsAddingSkill(true);
         setSkillForm({ skillName: "" });
@@ -674,58 +658,29 @@ function EmployeeDashboard() {
         });
     };
 
-    // Helper component for date input (works on all browsers)
-    const DateMonthInput = ({ value, onChange, label, maxDate, placeholder }) => {
-        const handleChange = (e) => {
-            let val = e.target.value.replace(/[^0-9-]/g, '');
-            if (val.length === 4 && !val.includes('-')) {
-                val = val + '-';
-            }
-            if (val.length > 7) val = val.substring(0, 7);
-            onChange(val);
-        };
-
-        return (
-            <div className="mb-3">
-                <label className="form-label">{label}</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    placeholder={placeholder || "YYYY-MM"}
-                    maxLength="7"
-                    value={value}
-                    onChange={handleChange}
-                    inputMode="numeric"
-                    autoComplete="off"
-                />
-                <small className="text-muted">Format: YYYY-MM (e.g., 2024-01)</small>
-            </div>
-        );
-    };
-
     return (
-        <div className="container mt-5">
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2>My Profile</h2>
-                <div>
-                    <button className="btn btn-success me-2" onClick={downloadResume}>
+        <div className="page-container">
+            <div className="dashboard-header">
+                <h2 className="page-title">My Profile</h2>
+                <div className="header-actions">
+                    <button className="btn-success" onClick={downloadResume}>
                         📄 Download Resume
                     </button>
-                    <button className="btn btn-primary" onClick={generateAIResume} disabled={loadingAI}>
+                    <button className="btn-primary" onClick={generateAIResume} disabled={loadingAI}>
                         {loadingAI ? "Generating..." : "✨ Generate with AI"}
                     </button>
                     {hasGenerated && (
                         <>
-                            <button className="btn btn-success ms-2" onClick={downloadAIResume}>
+                            <button className="btn-success ms-2" onClick={downloadAIResume}>
                                 📄 Download AI Resume
                             </button>
-                            <div className="card mt-4">
-                                <div className="card-header">
-                                    <h5 className="mb-0">AI Resume Preview</h5>
+                            <div className="ai-resume-preview">
+                                <div className="ai-resume-header">
+                                    <h5 className="ai-resume-title">AI Resume Preview</h5>
                                 </div>
-                                <div className="card-body">
+                                <div className="ai-resume-body">
                                     <h3>{aiResume.firstName} {aiResume.lastName}</h3>
-                                    <h5 className="text-muted">{aiResume.headline}</h5>
+                                    <h5 className="text-muted-light">{aiResume.headline}</h5>
                                     <p><strong>Email:</strong> {aiResume.email}</p>
                                     <p><strong>Phone:</strong> {aiResume.phoneNumber}</p>
                                     <p><strong>Location:</strong> {aiResume.location}</p>
@@ -774,14 +729,13 @@ function EmployeeDashboard() {
                     )}
                 </div>
             </div>
-      
-            {/* Profile Section */}
-            <div className="card mb-5">
-                <div className="card-body">
-                    <div className="d-flex justify-content-between align-items-center">
-                        <h5 className="mb-0">Profile Information</h5>
+
+            <div className="profile-card">
+                <div className="profile-card-body">
+                    <div className="profile-header">
+                        <h5 className="profile-title">Profile Information</h5>
                         {!isEditingProfile && (
-                            <button className="btn btn-primary" onClick={handleEditProfileClick}>
+                            <button className="btn-edit-profile" onClick={handleEditProfileClick}>
                                 ✏️ Edit Profile
                             </button>
                         )}
@@ -790,74 +744,63 @@ function EmployeeDashboard() {
                     <FeedbackMessage section="profile" />
 
                     {isEditingProfile ? (
-                        // Edit mode - show form fields
                         <>
-                            <div className="mb-3">
-                                <label className="form-label">Headline <span className="text-muted">(e.g., Senior Software Engineer, Marketing Specialist, Graphic Designer)</span></label>
+                            <div className="form-group">
+                                <label className="form-label">Headline</label>
                                 <input
-                                    className="form-control"
-                                    placeholder="e.g., Senior Software Engineer, Marketing Specialist, Graphic Designer"
+                                    className="form-input"
+                                    placeholder="e.g., Senior Software Engineer, Marketing Specialist"
                                     value={profile.headline}
                                     onChange={(e) => setProfile({ ...profile, headline: e.target.value })}
                                 />
                             </div>
-                            <div className="mb-3">
-                                <label className="form-label">Bio <span className="text-muted">(Tell employers about yourself)</span></label>
+                            <div className="form-group">
+                                <label className="form-label">Bio</label>
                                 <textarea
-                                    className="form-control"
+                                    className="form-textarea"
                                     rows="4"
-                                    placeholder="e.g., Passionate professional with experience in [your field], skilled in [your skills], and dedicated to [your goals]."
+                                    placeholder="Tell employers about yourself..."
                                     value={profile.bio}
                                     onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                                 />
                             </div>
-                            <div className="mb-3">
-                                <label className="form-label">Location <span className="text-muted">(City, Country)</span></label>
+                            <div className="form-group">
+                                <label className="form-label">Location</label>
                                 <input
-                                    className="form-control"
+                                    className="form-input"
                                     placeholder="e.g., Manila, Philippines"
                                     value={profile.location}
                                     onChange={(e) => setProfile({ ...profile, location: e.target.value })}
                                 />
                             </div>
-                            <div className="mb-3">
+                            <div className="form-group">
                                 <label className="form-label">Phone Number</label>
                                 <input
-                                    className="form-control"
+                                    className="form-input"
                                     placeholder="e.g., +63 912 345 6789"
                                     value={profile.phoneNumber}
                                     onChange={(e) => setProfile({ ...profile, phoneNumber: e.target.value })}
                                 />
                             </div>
-                            <div>
-                                <button className="btn btn-success me-2" onClick={handleSaveProfile}>
+                            <div className="form-actions">
+                                <button className="btn-save" onClick={handleSaveProfile}>
                                     Save Profile
                                 </button>
-                                <button className="btn btn-secondary" onClick={handleCancelProfile}>
+                                <button className="btn-cancel" onClick={handleCancelProfile}>
                                     Cancel
                                 </button>
                             </div>
                         </>
                     ) : (
-                        // View mode - show profile data
                         <>
-                            {profile.headline && (
-                                <p><strong>Headline:</strong> {profile.headline}</p>
-                            )}
-                            {profile.bio && (
-                                <p><strong>Bio:</strong> {profile.bio}</p>
-                            )}
-                            {profile.location && (
-                                <p><strong>Location:</strong> {profile.location}</p>
-                            )}
-                            {profile.phoneNumber && (
-                                <p><strong>Phone:</strong> {profile.phoneNumber}</p>
-                            )}
+                            {profile.headline && <p><strong>Headline:</strong> {profile.headline}</p>}
+                            {profile.bio && <p><strong>Bio:</strong> {profile.bio}</p>}
+                            {profile.location && <p><strong>Location:</strong> {profile.location}</p>}
+                            {profile.phoneNumber && <p><strong>Phone:</strong> {profile.phoneNumber}</p>}
                             {!profile.headline && !profile.bio && !profile.location && !profile.phoneNumber && (
-                                <div className="text-center py-3">
-                                    <p className="text-muted mb-2">No profile information added yet.</p>
-                                    <p className="text-muted small">Add your headline, bio, location, and phone number to help employers find you.</p>
-                                    <button className="btn btn-primary btn-sm mt-2" onClick={handleEditProfileClick}>
+                                <div className="empty-state-small">
+                                    <p className="text-muted-light">No profile information added yet.</p>
+                                    <button className="btn-primary-sm mt-2" onClick={handleEditProfileClick}>
                                         ✏️ Add Profile Information
                                     </button>
                                 </div>
@@ -868,11 +811,11 @@ function EmployeeDashboard() {
             </div>
 
             {aiResume && (
-                <div className="card mb-5">
-                    <div className="card-header">
+                <div className="ai-resume-card">
+                    <div className="ai-resume-card-header">
                         <h4>AI Generated Resume</h4>
                     </div>
-                    <div className="card-body">
+                    <div className="ai-resume-card-body">
                         <h2>{aiResume.firstName} {aiResume.lastName}</h2>
                         <p><strong>{aiResume.headline}</strong></p>
                         <p>{aiResume.email}</p>
@@ -914,51 +857,49 @@ function EmployeeDashboard() {
                 </div>
             )}
 
-            {/* Education Section */}
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2 className="mb-0">Education</h2>
+            <div className="section-header">
+                <h2 className="section-title">Education</h2>
             </div>
 
             <FeedbackMessage section="education" />
 
-            {/* Education Add Form */}
             {isAddingEducation && (
-                <div className="card mb-4">
-                    <div className="card-body">
-                        <h5 className="mb-3">Add New Education</h5>
-                        <div className="mb-3">
+                <div className="form-card">
+                    <div className="form-card-body">
+                        <h5 className="form-card-title">Add New Education</h5>
+                        <div className="form-group">
                             <label className="form-label">School Name</label>
                             <input
-                                className="form-control"
+                                className="form-input"
                                 placeholder="e.g., University Name"
                                 value={educationForm.schoolName}
                                 onChange={(e) => setEducationForm({ ...educationForm, schoolName: e.target.value })}
                             />
                         </div>
-                        <div className="mb-3">
+                        <div className="form-group">
                             <label className="form-label">Degree</label>
                             <input
-                                className="form-control"
-                                placeholder="e.g., Bachelor of Science, Master of Arts"
+                                className="form-input"
+                                placeholder="e.g., Bachelor of Science"
                                 value={educationForm.degree}
                                 onChange={(e) => setEducationForm({ ...educationForm, degree: e.target.value })}
                             />
                         </div>
-                        <div className="mb-3">
+                        <div className="form-group">
                             <label className="form-label">Field Of Study</label>
                             <input
-                                className="form-control"
-                                placeholder="e.g., Computer Science, Business Administration"
+                                className="form-input"
+                                placeholder="e.g., Computer Science"
                                 value={educationForm.fieldOfStudy}
                                 onChange={(e) => setEducationForm({ ...educationForm, fieldOfStudy: e.target.value })}
                             />
                         </div>
-                        <div className="row">
-                            <div className="col">
+                        <div className="form-row">
+                            <div className="form-group-half">
                                 <label className="form-label">Start Date</label>
                                 <input
                                     type="text"
-                                    className="form-control"
+                                    className="form-input"
                                     placeholder="YYYY-MM"
                                     maxLength="7"
                                     value={educationForm.startDate}
@@ -971,15 +912,14 @@ function EmployeeDashboard() {
                                         setEducationForm({ ...educationForm, startDate: val });
                                     }}
                                     inputMode="numeric"
-                                    autoComplete="off"
                                 />
-                                <small className="text-muted">Format: YYYY-MM (e.g., 2024-01)</small>
+                                <small className="form-hint-text">Format: YYYY-MM</small>
                             </div>
-                            <div className="col">
+                            <div className="form-group-half">
                                 <label className="form-label">End Date</label>
                                 <input
                                     type="text"
-                                    className="form-control"
+                                    className="form-input"
                                     placeholder="YYYY-MM"
                                     maxLength="7"
                                     value={educationForm.endDate}
@@ -992,16 +932,15 @@ function EmployeeDashboard() {
                                         setEducationForm({ ...educationForm, endDate: val });
                                     }}
                                     inputMode="numeric"
-                                    autoComplete="off"
                                 />
-                                <small className="text-muted">Format: YYYY-MM (e.g., 2024-12)</small>
+                                <small className="form-hint-text">Format: YYYY-MM</small>
                             </div>
                         </div>
-                        <div className="mt-3">
-                            <button className="btn btn-success me-2" onClick={handleAddEducation}>
+                        <div className="form-actions">
+                            <button className="btn-success" onClick={handleAddEducation}>
                                 Confirm Add
                             </button>
-                            <button className="btn btn-secondary" onClick={handleCancelEducation}>
+                            <button className="btn-cancel" onClick={handleCancelEducation}>
                                 Cancel
                             </button>
                         </div>
@@ -1009,44 +948,43 @@ function EmployeeDashboard() {
                 </div>
             )}
 
-            {/* Education List */}
             {educations.length > 0 && (
                 educations.map((education) => (
-                    <div key={education.educationId} className="card mb-3">
-                        <div className="card-body">
+                    <div key={education.educationId} className="item-card">
+                        <div className="item-card-body">
                             {editingEducationId === education.educationId ? (
                                 <>
-                                    <h5 className="mb-3">Edit Education</h5>
-                                    <div className="mb-3">
-                                        <label>School Name</label>
+                                    <h5 className="item-card-title">Edit Education</h5>
+                                    <div className="form-group">
+                                        <label className="form-label">School Name</label>
                                         <input
-                                            className="form-control"
+                                            className="form-input"
                                             value={editEducationForm.schoolName}
                                             onChange={(e) => setEditEducationForm({ ...editEducationForm, schoolName: e.target.value })}
                                         />
                                     </div>
-                                    <div className="mb-3">
-                                        <label>Degree</label>
+                                    <div className="form-group">
+                                        <label className="form-label">Degree</label>
                                         <input
-                                            className="form-control"
+                                            className="form-input"
                                             value={editEducationForm.degree}
                                             onChange={(e) => setEditEducationForm({ ...editEducationForm, degree: e.target.value })}
                                         />
                                     </div>
-                                    <div className="mb-3">
-                                        <label>Field Of Study</label>
+                                    <div className="form-group">
+                                        <label className="form-label">Field Of Study</label>
                                         <input
-                                            className="form-control"
+                                            className="form-input"
                                             value={editEducationForm.fieldOfStudy}
                                             onChange={(e) => setEditEducationForm({ ...editEducationForm, fieldOfStudy: e.target.value })}
                                         />
                                     </div>
-                                    <div className="row">
-                                        <div className="col">
-                                            <label>Start Date</label>
+                                    <div className="form-row">
+                                        <div className="form-group-half">
+                                            <label className="form-label">Start Date</label>
                                             <input
                                                 type="text"
-                                                className="form-control"
+                                                className="form-input"
                                                 placeholder="YYYY-MM"
                                                 maxLength="7"
                                                 value={editEducationForm.startDate}
@@ -1059,15 +997,14 @@ function EmployeeDashboard() {
                                                     setEditEducationForm({ ...editEducationForm, startDate: val });
                                                 }}
                                                 inputMode="numeric"
-                                                autoComplete="off"
                                             />
-                                            <small className="text-muted">Format: YYYY-MM</small>
+                                            <small className="form-hint-text">Format: YYYY-MM</small>
                                         </div>
-                                        <div className="col">
-                                            <label>End Date</label>
+                                        <div className="form-group-half">
+                                            <label className="form-label">End Date</label>
                                             <input
                                                 type="text"
-                                                className="form-control"
+                                                className="form-input"
                                                 placeholder="YYYY-MM"
                                                 maxLength="7"
                                                 value={editEducationForm.endDate}
@@ -1080,43 +1017,36 @@ function EmployeeDashboard() {
                                                     setEditEducationForm({ ...editEducationForm, endDate: val });
                                                 }}
                                                 inputMode="numeric"
-                                                autoComplete="off"
                                             />
-                                            <small className="text-muted">Format: YYYY-MM</small>
+                                            <small className="form-hint-text">Format: YYYY-MM</small>
                                         </div>
                                     </div>
-                                    <div className="mt-3">
-                                        <button className="btn btn-success me-2" onClick={handleSaveEducation}>
+                                    <div className="form-actions">
+                                        <button className="btn-save" onClick={handleSaveEducation}>
                                             Save Changes
                                         </button>
-                                        <button className="btn btn-secondary" onClick={handleCancelEducation}>
+                                        <button className="btn-cancel" onClick={handleCancelEducation}>
                                             Cancel
                                         </button>
                                     </div>
                                 </>
                             ) : (
-                                <div className="d-flex justify-content-between align-items-start">
+                                <div className="item-content">
                                     <div>
-                                        <h5>{education.degree}</h5>
-                                        <p>{education.schoolName}</p>
-                                        <p>{education.fieldOfStudy}</p>
-                                        <p>
+                                        <h5 className="item-title">{education.degree}</h5>
+                                        <p className="item-subtitle">{education.schoolName}</p>
+                                        <p className="item-detail">{education.fieldOfStudy}</p>
+                                        <p className="item-date">
                                             {new Date(education.startDate).toLocaleString('default', { month: 'long', year: 'numeric' })}
                                             {" - "}
                                             {new Date(education.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })}
                                         </p>
                                     </div>
-                                    <div className="d-flex gap-2">
-                                        <button
-                                            className="btn btn-warning btn-sm"
-                                            onClick={() => handleEditEducation(education)}
-                                        >
+                                    <div className="item-actions">
+                                        <button className="btn-warning-sm" onClick={() => handleEditEducation(education)}>
                                             Edit
                                         </button>
-                                        <button
-                                            className="btn btn-danger btn-sm"
-                                            onClick={() => handleDeleteEducation(education.educationId)}
-                                        >
+                                        <button className="btn-danger-sm" onClick={() => handleDeleteEducation(education.educationId)}>
                                             Delete
                                         </button>
                                     </div>
@@ -1127,79 +1057,69 @@ function EmployeeDashboard() {
                 ))
             )}
 
-            {/* Add Education Button - Below the list or in empty state */}
             {!isAddingEducation && (
                 <div className="text-center mt-3">
                     {educations.length === 0 ? (
-                        <div className="card mb-3">
-                            <div className="card-body text-center py-4">
-                                <p className="text-muted mb-2">No education added yet.</p>
-                                <p className="text-muted small">Add your educational background to showcase your qualifications.</p>
-                                <button className="btn btn-primary btn-sm mt-2" onClick={handleAddEducationClick}>
-                                    + Add Education
-                                </button>
-                            </div>
+                        <div className="empty-state">
+                            <p className="text-muted-light">No education added yet.</p>
+                            <button className="btn-primary-sm mt-2" onClick={handleAddEducationClick}>
+                                + Add Education
+                            </button>
                         </div>
                     ) : (
-                        <button 
-                            className="btn btn-outline-primary" 
-                            onClick={handleAddEducationClick}
-                            style={{ borderStyle: 'dashed', padding: '10px 30px' }}
-                        >
+                        <button className="btn-add-dashed" onClick={handleAddEducationClick}>
                             + Add Education
                         </button>
                     )}
                 </div>
             )}
 
-            <hr className="my-5" />
+            <hr className="section-divider" />
 
-            {/* Experience Section */}
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2 className="mb-0">My Experience</h2>
+            <div className="section-header">
+                <h2 className="section-title">My Experience</h2>
             </div>
 
             <FeedbackMessage section="experience" />
 
-            {/* Experience Add Form */}
             {isAddingExperience && (
-                <div className="card mb-4">
-                    <div className="card-body">
-                        <h5 className="mb-3">Add New Experience</h5>
-                        <div className="mb-3">
+                <div className="form-card">
+                    <div className="form-card-body">
+                        <h5 className="form-card-title">Add New Experience</h5>
+                        <div className="form-group">
                             <label className="form-label">Company Name</label>
                             <input
-                                className="form-control"
+                                className="form-input"
                                 placeholder="e.g., Company Name"
                                 value={experienceForm.companyName}
                                 onChange={(e) => setExperienceForm({ ...experienceForm, companyName: e.target.value })}
                             />
                         </div>
-                        <div className="mb-3">
+                        <div className="form-group">
                             <label className="form-label">Job Title</label>
                             <input
-                                className="form-control"
+                                className="form-input"
                                 placeholder="e.g., Job Title"
                                 value={experienceForm.jobTitle}
                                 onChange={(e) => setExperienceForm({ ...experienceForm, jobTitle: e.target.value })}
                             />
                         </div>
-                        <div className="mb-3">
+                        <div className="form-group">
                             <label className="form-label">Description</label>
                             <textarea
-                                className="form-control"
+                                className="form-textarea"
                                 rows="4"
                                 placeholder="Describe your responsibilities and achievements..."
                                 value={experienceForm.description}
                                 onChange={(e) => setExperienceForm({ ...experienceForm, description: e.target.value })}
                             />
                         </div>
-                        <div className="row">
-                            <div className="col-md-6">
+                        <div className="form-row">
+                            <div className="form-group-half">
                                 <label className="form-label">Start Date</label>
                                 <input
                                     type="text"
-                                    className="form-control"
+                                    className="form-input"
                                     placeholder="YYYY-MM"
                                     maxLength="7"
                                     value={experienceForm.startDate}
@@ -1212,15 +1132,14 @@ function EmployeeDashboard() {
                                         setExperienceForm({ ...experienceForm, startDate: val });
                                     }}
                                     inputMode="numeric"
-                                    autoComplete="off"
                                 />
-                                <small className="text-muted">Format: YYYY-MM (e.g., 2024-01)</small>
+                                <small className="form-hint-text">Format: YYYY-MM</small>
                             </div>
-                            <div className="col-md-6">
+                            <div className="form-group-half">
                                 <label className="form-label">End Date</label>
                                 <input
                                     type="text"
-                                    className="form-control"
+                                    className="form-input"
                                     placeholder="YYYY-MM"
                                     maxLength="7"
                                     value={experienceForm.endDate}
@@ -1233,16 +1152,15 @@ function EmployeeDashboard() {
                                         setExperienceForm({ ...experienceForm, endDate: val });
                                     }}
                                     inputMode="numeric"
-                                    autoComplete="off"
                                 />
-                                <small className="text-muted">Format: YYYY-MM (e.g., 2024-12)</small>
+                                <small className="form-hint-text">Format: YYYY-MM</small>
                             </div>
                         </div>
-                        <div className="mt-3">
-                            <button className="btn btn-success me-2" onClick={handleSaveExperience}>
+                        <div className="form-actions">
+                            <button className="btn-success" onClick={handleSaveExperience}>
                                 Confirm Add
                             </button>
-                            <button className="btn btn-secondary" onClick={handleCancelExperience}>
+                            <button className="btn-cancel" onClick={handleCancelExperience}>
                                 Cancel
                             </button>
                         </div>
@@ -1250,45 +1168,44 @@ function EmployeeDashboard() {
                 </div>
             )}
 
-            {/* Experience List */}
             {experiences.length > 0 && (
                 experiences.map(experience => (
-                    <div key={experience.experienceId} className="card mb-3">
-                        <div className="card-body">
+                    <div key={experience.experienceId} className="item-card">
+                        <div className="item-card-body">
                             {editingExperienceId === experience.experienceId ? (
                                 <>
-                                    <h5 className="mb-3">Edit Experience</h5>
-                                    <div className="mb-3">
+                                    <h5 className="item-card-title">Edit Experience</h5>
+                                    <div className="form-group">
                                         <label className="form-label">Company Name</label>
                                         <input
-                                            className="form-control"
+                                            className="form-input"
                                             value={experienceForm.companyName}
                                             onChange={(e) => setExperienceForm({ ...experienceForm, companyName: e.target.value })}
                                         />
                                     </div>
-                                    <div className="mb-3">
+                                    <div className="form-group">
                                         <label className="form-label">Job Title</label>
                                         <input
-                                            className="form-control"
+                                            className="form-input"
                                             value={experienceForm.jobTitle}
                                             onChange={(e) => setExperienceForm({ ...experienceForm, jobTitle: e.target.value })}
                                         />
                                     </div>
-                                    <div className="mb-3">
+                                    <div className="form-group">
                                         <label className="form-label">Description</label>
                                         <textarea
-                                            className="form-control"
+                                            className="form-textarea"
                                             rows="4"
                                             value={experienceForm.description}
                                             onChange={(e) => setExperienceForm({ ...experienceForm, description: e.target.value })}
                                         />
                                     </div>
-                                    <div className="row">
-                                        <div className="col-md-6">
+                                    <div className="form-row">
+                                        <div className="form-group-half">
                                             <label className="form-label">Start Date</label>
                                             <input
                                                 type="text"
-                                                className="form-control"
+                                                className="form-input"
                                                 placeholder="YYYY-MM"
                                                 maxLength="7"
                                                 value={experienceForm.startDate}
@@ -1301,15 +1218,14 @@ function EmployeeDashboard() {
                                                     setExperienceForm({ ...experienceForm, startDate: val });
                                                 }}
                                                 inputMode="numeric"
-                                                autoComplete="off"
                                             />
-                                            <small className="text-muted">Format: YYYY-MM</small>
+                                            <small className="form-hint-text">Format: YYYY-MM</small>
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="form-group-half">
                                             <label className="form-label">End Date</label>
                                             <input
                                                 type="text"
-                                                className="form-control"
+                                                className="form-input"
                                                 placeholder="YYYY-MM"
                                                 maxLength="7"
                                                 value={experienceForm.endDate}
@@ -1322,46 +1238,37 @@ function EmployeeDashboard() {
                                                     setExperienceForm({ ...experienceForm, endDate: val });
                                                 }}
                                                 inputMode="numeric"
-                                                autoComplete="off"
                                             />
-                                            <small className="text-muted">Format: YYYY-MM</small>
+                                            <small className="form-hint-text">Format: YYYY-MM</small>
                                         </div>
                                     </div>
-                                    <div className="mt-3">
-                                        <button className="btn btn-success me-2" onClick={handleSaveExperience}>
+                                    <div className="form-actions">
+                                        <button className="btn-save" onClick={handleSaveExperience}>
                                             Save Changes
                                         </button>
-                                        <button className="btn btn-secondary" onClick={handleCancelExperience}>
+                                        <button className="btn-cancel" onClick={handleCancelExperience}>
                                             Cancel
                                         </button>
                                     </div>
                                 </>
                             ) : (
-                                <div className="d-flex justify-content-between align-items-start">
+                                <div className="item-content">
                                     <div>
-                                        <h5>{experience.jobTitle}</h5>
-                                        <h6 className="text-muted">{experience.companyName}</h6>
-                                        <p>{experience.description}</p>
-                                        <p>
-                                            <strong>Start:</strong>{" "}
-                                            {new Date(experience.startDate).toLocaleString('default', { month: 'long', year: 'numeric' })}
+                                        <h5 className="item-title">{experience.jobTitle}</h5>
+                                        <p className="item-subtitle">{experience.companyName}</p>
+                                        <p className="item-detail">{experience.description}</p>
+                                        <p className="item-date">
+                                            <strong>Start:</strong> {new Date(experience.startDate).toLocaleString('default', { month: 'long', year: 'numeric' })}
                                         </p>
-                                        <p>
-                                            <strong>End:</strong>{" "}
-                                            {new Date(experience.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })}
+                                        <p className="item-date">
+                                            <strong>End:</strong> {new Date(experience.endDate).toLocaleString('default', { month: 'long', year: 'numeric' })}
                                         </p>
                                     </div>
-                                    <div className="d-flex gap-2">
-                                        <button
-                                            className="btn btn-warning btn-sm"
-                                            onClick={() => handleEditExperience(experience)}
-                                        >
+                                    <div className="item-actions">
+                                        <button className="btn-warning-sm" onClick={() => handleEditExperience(experience)}>
                                             Edit
                                         </button>
-                                        <button
-                                            className="btn btn-danger btn-sm"
-                                            onClick={() => handleDeleteExperience(experience.experienceId)}
-                                        >
+                                        <button className="btn-danger-sm" onClick={() => handleDeleteExperience(experience.experienceId)}>
                                             Delete
                                         </button>
                                     </div>
@@ -1372,60 +1279,50 @@ function EmployeeDashboard() {
                 ))
             )}
 
-            {/* Add Experience Button - Below the list or in empty state */}
             {!isAddingExperience && (
                 <div className="text-center mt-3">
                     {experiences.length === 0 ? (
-                        <div className="card mb-3">
-                            <div className="card-body text-center py-4">
-                                <p className="text-muted mb-2">No experience added yet.</p>
-                                <p className="text-muted small">Add your work experience to demonstrate your skills and expertise.</p>
-                                <button className="btn btn-primary btn-sm mt-2" onClick={handleAddExperienceClick}>
-                                    + Add Experience
-                                </button>
-                            </div>
+                        <div className="empty-state">
+                            <p className="text-muted-light">No experience added yet.</p>
+                            <button className="btn-primary-sm mt-2" onClick={handleAddExperienceClick}>
+                                + Add Experience
+                            </button>
                         </div>
                     ) : (
-                        <button 
-                            className="btn btn-outline-primary" 
-                            onClick={handleAddExperienceClick}
-                            style={{ borderStyle: 'dashed', padding: '10px 30px' }}
-                        >
+                        <button className="btn-add-dashed" onClick={handleAddExperienceClick}>
                             + Add Experience
                         </button>
                     )}
                 </div>
             )}
 
-            <hr className="my-5" />
+            <hr className="section-divider" />
 
-            {/* Skills Section */}
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2 className="mb-0">My Skills</h2>
+            <div className="section-header">
+                <h2 className="section-title">My Skills</h2>
             </div>
 
             <FeedbackMessage section="skill" />
 
-            {/* Skill Add Form */}
             {isAddingSkill && (
-                <div className="card mb-4">
-                    <div className="card-body">
-                        <h5 className="mb-3">Add New Skill</h5>
-                        <div className="mb-3">
+                <div className="form-card">
+                    <div className="form-card-body">
+                        <h5 className="form-card-title">Add New Skill</h5>
+                        <div className="form-group">
                             <label className="form-label">Skill Name</label>
                             <input
-                                className="form-control"
+                                className="form-input"
                                 placeholder="e.g., JavaScript, Python, Project Management"
                                 value={skillForm.skillName}
                                 onChange={(e) => setSkillForm({ ...skillForm, skillName: e.target.value })}
                             />
-                            <small className="text-muted">Add one skill at a time (e.g., React, Python, Leadership)</small>
+                            <small className="form-hint-text">Add one skill at a time</small>
                         </div>
-                        <div className="mt-3">
-                            <button className="btn btn-success me-2" onClick={handleSaveSkill}>
+                        <div className="form-actions">
+                            <button className="btn-success" onClick={handleSaveSkill}>
                                 Confirm Add
                             </button>
-                            <button className="btn btn-secondary" onClick={handleCancelSkill}>
+                            <button className="btn-cancel" onClick={handleCancelSkill}>
                                 Cancel
                             </button>
                         </div>
@@ -1433,42 +1330,35 @@ function EmployeeDashboard() {
                 </div>
             )}
 
-            {/* Skills List */}
             {skills.length > 0 && (
                 skills.map(skill => (
-                    <div key={skill.skillId} className="card mb-3">
-                        <div className="card-body">
+                    <div key={skill.skillId} className="item-card">
+                        <div className="item-card-body">
                             {editingSkillId === skill.skillId ? (
-                                <div className="d-flex gap-3 align-items-center">
+                                <div className="skill-edit-row">
                                     <input
-                                        className="form-control"
+                                        className="form-input"
                                         value={skillForm.skillName}
                                         onChange={(e) => setSkillForm({ ...skillForm, skillName: e.target.value })}
                                         style={{ maxWidth: '300px' }}
                                     />
-                                    <div className="d-flex gap-2">
-                                        <button className="btn btn-success btn-sm" onClick={handleSaveSkill}>
+                                    <div className="skill-edit-actions">
+                                        <button className="btn-save-sm" onClick={handleSaveSkill}>
                                             Save
                                         </button>
-                                        <button className="btn btn-secondary btn-sm" onClick={handleCancelSkill}>
+                                        <button className="btn-cancel-sm" onClick={handleCancelSkill}>
                                             Cancel
                                         </button>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <h5 className="mb-0">{skill.skillName}</h5>
-                                    <div className="d-flex gap-2">
-                                        <button
-                                            className="btn btn-warning btn-sm"
-                                            onClick={() => handleEditSkill(skill)}
-                                        >
+                                <div className="item-content">
+                                    <h5 className="item-title">{skill.skillName}</h5>
+                                    <div className="item-actions">
+                                        <button className="btn-warning-sm" onClick={() => handleEditSkill(skill)}>
                                             Edit
                                         </button>
-                                        <button
-                                            className="btn btn-danger btn-sm"
-                                            onClick={() => handleDeleteSkill(skill.skillId)}
-                                        >
+                                        <button className="btn-danger-sm" onClick={() => handleDeleteSkill(skill.skillId)}>
                                             Delete
                                         </button>
                                     </div>
@@ -1479,90 +1369,67 @@ function EmployeeDashboard() {
                 ))
             )}
 
-            {/* Add Skill Button - Below the list or in empty state */}
             {!isAddingSkill && (
                 <div className="text-center mt-3">
                     {skills.length === 0 ? (
-                        <div className="card mb-3">
-                            <div className="card-body text-center py-4">
-                                <p className="text-muted mb-2">No skills added yet.</p>
-                                <p className="text-muted small">Add your skills to help employers find you.</p>
-                                <button className="btn btn-primary btn-sm mt-2" onClick={handleAddSkillClick}>
-                                    + Add Skill
-                                </button>
-                            </div>
+                        <div className="empty-state">
+                            <p className="text-muted-light">No skills added yet.</p>
+                            <button className="btn-primary-sm mt-2" onClick={handleAddSkillClick}>
+                                + Add Skill
+                            </button>
                         </div>
                     ) : (
-                        <button 
-                            className="btn btn-outline-primary" 
-                            onClick={handleAddSkillClick}
-                            style={{ borderStyle: 'dashed', padding: '10px 30px' }}
-                        >
+                        <button className="btn-add-dashed" onClick={handleAddSkillClick}>
                             + Add Skill
                         </button>
                     )}
                 </div>
             )}
 
-            {/* Applications Section */}
-            <h2 className="mb-4 fw-bold">My Applications</h2>
+            <div className="section-header mt-5">
+                <h2 className="section-title">My Applications</h2>
+            </div>
+
             {applications.length === 0 ? (
-                <div className="card shadow-sm">
-                    <div className="card-body text-center py-5">
-                        <h4>No Applications Yet</h4>
-                        <p className="text-muted mb-3">
-                            Start applying to jobs and track your application progress here.
-                        </p>
-                        <Link to="/" className="btn btn-primary">
-                            Browse Available Jobs
-                        </Link>
-                    </div>
+                <div className="empty-state-large">
+                    <h4>No Applications Yet</h4>
+                    <p className="text-muted-light">Start applying to jobs and track your application progress here.</p>
+                    <Link to="/" className="btn-primary">
+                        Browse Available Jobs
+                    </Link>
                 </div>
             ) : (
                 applications.map(application => (
-                    <div key={application.applicationId} className="card shadow-sm mb-4 border-0">
-                        <div className="card-body">
-                            <div className="d-flex justify-content-between align-items-start">
+                    <div key={application.applicationId} className="application-card">
+                        <div className="application-card-body">
+                            <div className="application-header">
                                 <div>
-                                    <h3 className="mb-1">{application.job.title}</h3>
-                                    <p className="text-muted mb-3">{application.job.location}</p>
+                                    <h3 className="application-title">{application.job.title}</h3>
+                                    <p className="application-location">{application.job.location}</p>
                                 </div>
-                                <span className={`badge fs-6 px-3 py-2 ${
-                                    application.status === "Hired" ? "bg-success" :
-                                    application.status === "Interview" ? "bg-primary" :
-                                    application.status === "Rejected" ? "bg-danger" :
-                                    application.status === "Pending" ? "bg-warning text-dark" :
-                                    application.status === "Screening" ? "bg-info text-dark" :
-                                    application.status === "Technical Exam" ? "bg-dark" :
-                                    application.status === "Offer" ? "bg-secondary" :
-                                    "bg-light text-dark"
-                                }`}>
+                                <span className={`status-badge ${application.status === "Hired" ? "status-hired" : application.status === "Interview" ? "status-interview" : application.status === "Rejected" ? "status-rejected" : application.status === "Pending" ? "status-pending" : application.status === "Screening" ? "status-screening" : application.status === "Technical Exam" ? "status-technical" : application.status === "Offer" ? "status-offer" : "status-default"}`}>
                                     {application.status}
                                 </span>
                             </div>
-                            <hr />
-                            <div className="row">
-                                <div className="col-md-4 mb-2">
+                            <hr className="application-divider" />
+                            <div className="application-details">
+                                <div>
                                     <strong>Employment</strong>
-                                    <br />
-                                    {application.job.employmentType}
+                                    <p>{application.job.employmentType}</p>
                                 </div>
-                                <div className="col-md-4 mb-2">
+                                <div>
                                     <strong>Salary</strong>
-                                    <br />
-                                    ₱{application.job.salary.toLocaleString()}
+                                    <p>₱{application.job.salary.toLocaleString()}</p>
                                 </div>
-                                <div className="col-md-4 mb-2">
+                                <div>
                                     <strong>Applied</strong>
-                                    <br />
-                                    {new Date(application.appliedAt).toLocaleDateString()}
+                                    <p>{new Date(application.appliedAt).toLocaleDateString()}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 ))
             )}
-
         </div>
     );
 }

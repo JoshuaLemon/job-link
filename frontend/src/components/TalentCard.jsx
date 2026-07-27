@@ -2,69 +2,62 @@ import { Link } from "react-router-dom";
 
 function TalentCard({ talent }) {
     return (
-        <div className="card mb-3 border-primary">
-            <div className="card-header bg-primary text-white py-1 d-flex justify-content-between align-items-center">
-                <small>⭐ Match Score: {talent.matchScore}%</small>
-                <small className="text-white-50">Top Candidate</small>
+        <div className="talent-card">
+            <div className="talent-card-header">
+                <span className="talent-match-badge">⭐ Match Score: {talent.matchScore}%</span>
+                <span className="talent-top-badge">Top Candidate</span>
             </div>
-            <div className="card-body">
-                <div className="d-flex justify-content-between align-items-start">
+            <div className="talent-card-body">
+                <div className="talent-card-top">
                     <div>
-                        <h4>{talent.firstName} {talent.lastName}</h4>
+                        <h4 className="talent-name">{talent.firstName} {talent.lastName}</h4>
                         {talent.headline && (
-                            <p className="text-muted mb-1">
-                                <strong>🎯</strong> {talent.headline}
+                            <p className="talent-headline">
+                                🎯 {talent.headline}
                             </p>
                         )}
                         {talent.location && (
-                            <p className="text-muted mb-1">
-                                <strong>📍</strong> {talent.location}
+                            <p className="talent-location">
+                                📍 {talent.location}
                             </p>
                         )}
                     </div>
-                    <span className="badge bg-success fs-6 px-3 py-2">
+                    <span className="talent-match-percentage">
                         {talent.matchScore}% Match
                     </span>
                 </div>
 
                 {talent.skills && talent.skills.length > 0 && (
-                    <div className="mt-2">
-                        <strong>Skills:</strong>
+                    <div className="talent-skills">
+                        <span className="talent-skills-label">Skills:</span>
                         {talent.skills.map((skill, index) => (
-                            <span key={index} className="badge bg-secondary me-1 px-2 py-1">
+                            <span key={index} className="talent-skill-tag">
                                 {skill}
                             </span>
                         ))}
                     </div>
                 )}
 
-                {talent.experiences && talent.experiences.length > 0 && (
-                    <div className="mt-2">
-                        <small className="text-muted">
-                            💼 {talent.experiences.length} experience
-                            {talent.experiences.length !== 1 ? 's' : ''}
-                        </small>
-                    </div>
-                )}
-
-                {talent.educations && talent.educations.length > 0 && (
-                    <div className="mt-1">
-                        <small className="text-muted">
-                            🎓 {talent.educations.length} education
-                            {talent.educations.length !== 1 ? 's' : ''}
-                        </small>
-                    </div>
-                )}
-
-                <div className="mt-3">
-                    <Link 
-                        to={`/employee-profile/${talent.employeeProfileId}`} 
-                        className="btn btn-primary btn-sm"
-                        target="_blank"
-                    >
-                        View Full Profile
-                    </Link>
+                <div className="talent-stats">
+                    {talent.experiences && talent.experiences.length > 0 && (
+                        <span className="talent-stat">
+                            💼 {talent.experiences.length} experience{talent.experiences.length !== 1 ? 's' : ''}
+                        </span>
+                    )}
+                    {talent.educations && talent.educations.length > 0 && (
+                        <span className="talent-stat">
+                            🎓 {talent.educations.length} education{talent.educations.length !== 1 ? 's' : ''}
+                        </span>
+                    )}
                 </div>
+
+                <Link 
+                    to={`/employee-profile/${talent.employeeProfileId}`} 
+                    className="talent-view-btn"
+                    target="_blank"
+                >
+                    View Full Profile →
+                </Link>
             </div>
         </div>
     );

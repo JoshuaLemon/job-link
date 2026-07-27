@@ -27,43 +27,41 @@ function VerifyEmail() {
     }, [token]);
 
     return (
-        <div className="container mt-5">
-            <div className="row justify-content-center">
-                <div className="col-md-6">
-                    <div className="card shadow-sm">
-                        <div className="card-body text-center py-5">
-                            {status === "loading" && (
-                                <>
-                                    <div className="spinner-border text-primary" role="status">
-                                        <span className="visually-hidden">Verifying...</span>
-                                    </div>
-                                    <p className="mt-3">Verifying your email...</p>
-                                </>
-                            )}
-                            {status === "success" && (
-                                <>
-                                    <h3 className="text-success">✅ Email Verified!</h3>
-                                    <p className="mt-3">{message}</p>
-                                    <Link to="/login" className="btn btn-primary mt-3">
-                                        Login Now
-                                    </Link>
-                                </>
-                            )}
-                            {status === "error" && (
-                                <>
-                                    <h3 className="text-danger">❌ Verification Failed</h3>
-                                    <p className="mt-3">{message}</p>
-                                    <Link to="/" className="btn btn-secondary mt-3">
-                                        Go Home
-                                    </Link>
-                                </>
-                            )}
-                        </div>
-                    </div>
+        <div className="auth-page">
+            <div className="auth-card">
+                <div className="auth-card-body text-center py-5">
+                    {status === "loading" && (
+                        <>
+                            <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Verifying...</span>
+                            </div>
+                            <p className="auth-text mt-3">Verifying your email...</p>
+                        </>
+                    )}
+                    {status === "success" && (
+                        <>
+                            <div className="auth-icon">✅</div>
+                            <h3 className="auth-success-title">Email Verified!</h3>
+                            <p className="auth-text">{message}</p>
+                            <Link to="/login" className="btn-primary mt-3">
+                                Login Now
+                            </Link>
+                        </>
+                    )}
+                    {status === "error" && (
+                        <>
+                            <div className="auth-icon" style={{ fontSize: '3rem' }}>❌</div>
+                            <h3 className="auth-error-title">Verification Failed</h3>
+                            <p className="auth-text">{message}</p>
+                            <Link to="/" className="btn-outline mt-3">
+                                Go Home
+                            </Link>
+                        </>
+                    )}
                 </div>
             </div>
         </div>
     );
 }
 
-export default VerifyEmail; 
+export default VerifyEmail;

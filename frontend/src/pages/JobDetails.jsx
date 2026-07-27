@@ -60,14 +60,13 @@ function JobDetails() {
         setLoading(true);
         try {
             const response = await api.get(`/JobPost/${id}`);
-            console.log("Job data:", response.data); // Debug log
+            console.log("Job data:", response.data);
             setJob(response.data);
             
-            // Use companyId from the job response
             if (response.data.companyId) {
                 try {
                     const companyResponse = await api.get(`/Company/by-company-id/${response.data.companyId}`);
-                    console.log("Company data:", companyResponse.data); // Debug log
+                    console.log("Company data:", companyResponse.data);
                     setCompany(companyResponse.data);
                 } catch (err) {
                     console.error("Failed to load company details:", err);
@@ -135,13 +134,13 @@ function JobDetails() {
 
     const getEmploymentBadgeClass = (type) => {
         const typeMap = {
-            "Full-time": "bg-primary",
-            "Part-time": "bg-info text-dark",
-            "Contract": "bg-warning text-dark",
-            "Freelance": "bg-secondary",
-            "Internship": "bg-success"
+            "Full-time": "badge-primary",
+            "Part-time": "badge-info",
+            "Contract": "badge-warning",
+            "Freelance": "badge-secondary",
+            "Internship": "badge-success"
         };
-        return typeMap[type] || "bg-light text-dark";
+        return typeMap[type] || "badge-default";
     };
 
     const getTags = (tags) => {
@@ -151,12 +150,12 @@ function JobDetails() {
 
     if (loading) {
         return (
-            <div className="container mt-5">
+            <div className="page-container">
                 <div className="text-center py-5">
                     <div className="spinner-border text-primary" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </div>
-                    <p className="mt-3 text-muted">Loading job details...</p>
+                    <p className="text-muted-light mt-3">Loading job details...</p>
                 </div>
             </div>
         );
@@ -164,15 +163,13 @@ function JobDetails() {
 
     if (!job) {
         return (
-            <div className="container mt-5">
-                <div className="card">
-                    <div className="card-body text-center py-5">
-                        <h4 className="text-danger">Job Not Found</h4>
-                        <p className="text-muted">The job you're looking for doesn't exist or has been removed.</p>
-                        <Link to="/" className="btn btn-primary">
-                            Browse Jobs
-                        </Link>
-                    </div>
+            <div className="page-container">
+                <div className="empty-state">
+                    <h4 className="empty-state-title">Job Not Found</h4>
+                    <p className="empty-state-text">The job you're looking for doesn't exist or has been removed.</p>
+                    <Link to="/" className="btn-primary">
+                        Browse Jobs
+                    </Link>
                 </div>
             </div>
         );
@@ -181,10 +178,10 @@ function JobDetails() {
     const tags = getTags(job.tags);
 
     return (
-        <div className="container mt-5">
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2>Job Details</h2>
-                <Link to="/" className="btn btn-secondary">
+        <div className="page-container">
+            <div className="page-header">
+                <h2 className="page-title">Job Details</h2>
+                <Link to="/" className="btn-back">
                     ← Back to Jobs
                 </Link>
             </div>
@@ -192,74 +189,71 @@ function JobDetails() {
             <FeedbackMessage section="job" />
             <FeedbackMessage section="apply" />
 
-            <div className="card">
-                <div className="card-body">
-                    <div className="d-flex justify-content-between align-items-start mb-3">
+            <div className="details-card">
+                <div className="details-card-body">
+                    <div className="details-header">
                         <div>
-                            <h2 className="mb-2">{job.title}</h2>
+                            <h2 className="details-title">{job.title}</h2>
                             {company ? (
                                 <Link 
                                     to={`/company/${company.companyId}`} 
-                                    className="text-decoration-none"
-                                    style={{ color: '#4a6cf7' }}
+                                    className="company-link"
                                 >
-                                    <h6 className="mb-0">
-                                        🏢 {company.companyName}
-                                    </h6>
+                                    🏢 {company.companyName}
                                 </Link>
                             ) : (
-                                <h6 className="text-muted">
+                                <h6 className="details-company">
                                     {job.companyName || "Company"}
                                 </h6>
                             )}
                         </div>
-                        <span className={`badge fs-6 px-3 py-2 ${getEmploymentBadgeClass(job.employmentType)}`}>
+                        <span className={`badge ${getEmploymentBadgeClass(job.employmentType)}`}>
                             {job.employmentType}
                         </span>
                     </div>
 
                     {tags.length > 0 && (
-                        <div className="mb-3">
+                        <div className="details-tags">
                             {tags.map((tag, index) => (
-                                <span key={index} className="badge bg-secondary me-1 px-3 py-2">
+                                <span key={index} className="tag">
                                     #{tag}
                                 </span>
                             ))}
                         </div>
                     )}
 
-                    <div className="row mb-4">
-                        <div className="col-md-4 mb-2">
+                    <div className="details-grid">
+                        <div>
                             <strong>Location</strong>
-                            <p className="mb-0">{job.location}</p>
+                            <p>{job.location}</p>
                         </div>
-                        <div className="col-md-4 mb-2">
+                        <div>
                             <strong>Salary</strong>
-                            <p className="mb-0">{formatSalary(job.salary)}</p>
+                            <p>{formatSalary(job.salary)}</p>
                         </div>
-                        <div className="col-md-4 mb-2">
+                        <div>
                             <strong>Posted</strong>
-                            <p className="mb-0">{new Date(job.postedAt || Date.now()).toLocaleDateString()}</p>
+                            <p>{new Date(job.postedAt || Date.now()).toLocaleDateString()}</p>
                         </div>
                     </div>
 
-                    <div className="mb-4">
+                    <div className="details-description">
                         <h5>Job Description</h5>
-                        <p className="mb-0" style={{ whiteSpace: 'pre-wrap' }}>{job.description}</p>
+                        <p style={{ whiteSpace: 'pre-wrap' }}>{job.description}</p>
                     </div>
 
-                    <div className="d-flex gap-3 flex-wrap">
+                    <div className="apply-section">
                         {!user ? (
-                            <Link to="/login" className="btn btn-primary btn-lg">
+                            <Link to="/login" className="btn-primary btn-lg">
                                 Login to Apply
                             </Link>
                         ) : hasApplied ? (
-                            <button className="btn btn-success btn-lg" disabled>
+                            <button className="btn-success btn-lg" disabled>
                                 ✅ Already Applied
                             </button>
                         ) : user.role === "Employee" ? (
                             <button
-                                className="btn btn-success btn-lg"
+                                className="btn-success btn-lg"
                                 onClick={handleApply}
                                 disabled={applying}
                             >
@@ -273,21 +267,19 @@ function JobDetails() {
                                 )}
                             </button>
                         ) : (
-                            <button className="btn btn-secondary btn-lg" disabled>
+                            <button className="btn-secondary btn-lg" disabled>
                                 Employers cannot apply
                             </button>
                         )}
                         
-                        <Link to="/" className="btn btn-outline-secondary btn-lg">
+                        <Link to="/" className="btn-outline">
                             Browse More Jobs
                         </Link>
                     </div>
 
                     {hasApplied && (
-                        <div className="mt-3">
-                            <div className="alert alert-success">
-                                <strong>✓ Application Submitted!</strong> You have already applied for this position. The employer will review your application.
-                            </div>
+                        <div className="alert-success mt-3">
+                            <strong>✓ Application Submitted!</strong> You have already applied for this position. The employer will review your application.
                         </div>
                     )}
                 </div>

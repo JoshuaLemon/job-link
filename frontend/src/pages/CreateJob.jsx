@@ -58,7 +58,6 @@ function CreateJob() {
     const handleTagInputChange = (e) => {
         const value = e.target.value;
         
-        // Check if space was pressed (last character is space)
         if (value.endsWith(' ')) {
             const newTag = value.trim();
             if (newTag && !tagList.includes(newTag)) {
@@ -73,7 +72,6 @@ function CreateJob() {
     };
 
     const handleTagKeyDown = (e) => {
-        // Add tag on Enter key
         if (e.key === 'Enter') {
             e.preventDefault();
             const newTag = tagInput.trim();
@@ -82,7 +80,6 @@ function CreateJob() {
                 setTagInput('');
             }
         }
-        // Remove last tag on Backspace when input is empty
         if (e.key === 'Backspace' && tagInput === '' && tagList.length > 0) {
             const newTagList = [...tagList];
             newTagList.pop();
@@ -118,12 +115,10 @@ function CreateJob() {
             return;
         }
 
-        // Add any remaining tag input as a tag
         if (tagInput.trim() && !tagList.includes(tagInput.trim())) {
             tagList.push(tagInput.trim());
         }
 
-        // Join tags with commas for the API
         const tagsString = tagList.join(', ');
         const requestData = {
             ...form,
@@ -147,25 +142,25 @@ function CreateJob() {
     };
 
     return (
-        <div className="container mt-5">
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2>Create New Job</h2>
-                <Link to="/employer" className="btn btn-secondary">
+        <div className="page-container">
+            <div className="page-header">
+                <h2 className="page-title">Create New Job</h2>
+                <Link to="/employer" className="btn-back">
                     ← Back to Dashboard
                 </Link>
             </div>
 
             <FeedbackMessage section="job" />
 
-            <div className="card">
-                <div className="card-body">
+            <div className="create-job-card">
+                <div className="create-job-card-body">
                     <form onSubmit={handleSubmit}>
-                        <div className="mb-3">
-                            <label className="form-label fw-semibold">
-                                Job Title <span className="text-danger">*</span>
+                        <div className="form-group">
+                            <label className="form-label">
+                                Job Title <span className="form-required">*</span>
                             </label>
                             <input
-                                className="form-control"
+                                className="form-input"
                                 placeholder="e.g., Senior Software Engineer"
                                 value={form.title}
                                 onChange={(e) =>
@@ -178,12 +173,12 @@ function CreateJob() {
                             />
                         </div>
 
-                        <div className="mb-3">
-                            <label className="form-label fw-semibold">
-                                Description <span className="text-danger">*</span>
+                        <div className="form-group">
+                            <label className="form-label">
+                                Description <span className="form-required">*</span>
                             </label>
                             <textarea
-                                className="form-control"
+                                className="form-textarea"
                                 rows="5"
                                 placeholder="Describe the job responsibilities, requirements, and benefits..."
                                 value={form.description}
@@ -197,12 +192,12 @@ function CreateJob() {
                             />
                         </div>
 
-                        <div className="mb-3">
-                            <label className="form-label fw-semibold">
-                                Location <span className="text-danger">*</span>
+                        <div className="form-group">
+                            <label className="form-label">
+                                Location <span className="form-required">*</span>
                             </label>
                             <input
-                                className="form-control"
+                                className="form-input"
                                 placeholder="e.g., Manila, Philippines or Remote"
                                 value={form.location}
                                 onChange={(e) =>
@@ -215,40 +210,21 @@ function CreateJob() {
                             />
                         </div>
 
-                        {/* Tags Input with Visual Chips */}
-                        <div className="mb-3">
-                            <label className="form-label fw-semibold">
-                                Tags <span className="text-muted">(press space or enter to add)</span>
+                        <div className="form-group">
+                            <label className="form-label">
+                                Tags <span className="form-hint">(press space or enter to add)</span>
                             </label>
                             <div 
-                                className="form-control d-flex flex-wrap align-items-center gap-1"
-                                style={{ minHeight: '38px', padding: '4px 8px' }}
+                                className="tag-container"
                                 onClick={() => document.getElementById('tagInput').focus()}
                             >
                                 {tagList.map((tag, index) => (
-                                    <span 
-                                        key={index} 
-                                        className="badge bg-primary d-inline-flex align-items-center gap-1"
-                                        style={{ fontSize: '0.9rem', padding: '6px 10px' }}
-                                    >
+                                    <span key={index} className="tag-chip">
                                         {tag}
-                                        <span 
-                                            className="badge bg-light text-dark rounded-circle"
-                                            style={{ 
-                                                cursor: 'pointer', 
-                                                width: '18px', 
-                                                height: '18px', 
-                                                display: 'flex', 
-                                                alignItems: 'center', 
-                                                justifyContent: 'center',
-                                                fontSize: '12px',
-                                                padding: 0
-                                            }}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                removeTag(tag);
-                                            }}
-                                        >
+                                        <span className="tag-remove" onClick={(e) => {
+                                            e.stopPropagation();
+                                            removeTag(tag);
+                                        }}>
                                             ×
                                         </span>
                                     </span>
@@ -256,13 +232,7 @@ function CreateJob() {
                                 <input
                                     id="tagInput"
                                     type="text"
-                                    className="border-0 flex-grow-1"
-                                    style={{ 
-                                        outline: 'none', 
-                                        minWidth: '80px',
-                                        background: 'transparent',
-                                        padding: '4px 0'
-                                    }}
+                                    className="tag-input"
                                     placeholder={tagList.length === 0 ? "Type a tag and press space..." : ""}
                                     value={tagInput}
                                     onChange={handleTagInputChange}
@@ -270,23 +240,23 @@ function CreateJob() {
                                     disabled={submitting}
                                 />
                             </div>
-                            <small className="text-muted">
+                            <small className="form-hint-text">
                                 Press <kbd>Space</kbd> or <kbd>Enter</kbd> to add a tag. Click × to remove.
                             </small>
                             {tagList.length > 0 && (
-                                <small className="text-muted d-block mt-1">
+                                <small className="form-hint-text d-block mt-1">
                                     {tagList.length} tag{tagList.length !== 1 ? 's' : ''} added
                                 </small>
                             )}
                         </div>
 
-                        <div className="row">
-                            <div className="col-md-6 mb-3">
-                                <label className="form-label fw-semibold">
-                                    Salary <span className="text-danger">*</span>
+                        <div className="form-row">
+                            <div className="form-group-half">
+                                <label className="form-label">
+                                    Salary <span className="form-required">*</span>
                                 </label>
                                 <input
-                                    className="form-control"
+                                    className="form-input"
                                     type="number"
                                     placeholder="e.g., 50000"
                                     value={form.salary}
@@ -300,12 +270,12 @@ function CreateJob() {
                                 />
                             </div>
 
-                            <div className="col-md-6 mb-3">
-                                <label className="form-label fw-semibold">
-                                    Employment Type <span className="text-danger">*</span>
+                            <div className="form-group-half">
+                                <label className="form-label">
+                                    Employment Type <span className="form-required">*</span>
                                 </label>
                                 <select
-                                    className="form-select"
+                                    className="form-select-custom"
                                     value={form.employmentType}
                                     onChange={(e) =>
                                         setForm({
@@ -325,9 +295,9 @@ function CreateJob() {
                             </div>
                         </div>
 
-                        <div className="d-flex gap-2 mt-4">
+                        <div className="form-actions">
                             <button
-                                className="btn btn-success"
+                                className="btn-submit"
                                 type="submit"
                                 disabled={submitting}
                             >
@@ -342,7 +312,7 @@ function CreateJob() {
                             </button>
                             <Link
                                 to="/employer"
-                                className="btn btn-secondary"
+                                className="btn-cancel"
                             >
                                 Cancel
                             </Link>

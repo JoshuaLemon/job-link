@@ -1,19 +1,17 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import api from "../services/api";
 
 function Navbar() {
 
     const navigate = useNavigate();
-
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const user = JSON.parse(localStorage.getItem("user"));
 
     const handleLogout = () => {
-
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-
         navigate("/login");
-
         window.location.reload();
     };
 
@@ -35,86 +33,62 @@ function Navbar() {
         }
     };
 
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
+
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-
+        <nav className="navbar-modern">
             <div className="container">
-
-                <Link
-                    className="navbar-brand"
-                    to="/"
-                >
-                    Job Link
+                <Link className="navbar-brand-modern" to="/">
+                    <span className="brand-icon">💼</span>
+                    JobLink
                 </Link>
 
-                <div className="navbar-nav">
+                <button className="menu-toggle" onClick={toggleMenu}>
+                    <span className="menu-icon">☰</span>
+                </button>
 
-                    <Link
-                        className="nav-link"
-                        to="/"
-                    >
+                <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
+                    <Link className="nav-link-modern" to="/" onClick={() => setIsMenuOpen(false)}>
                         Home
                     </Link>
 
                     {!user && (
                         <>
-                            <Link
-                                className="nav-link"
-                                to="/login"
-                            >
+                            <Link className="nav-link-modern" to="/login" onClick={() => setIsMenuOpen(false)}>
                                 Login
                             </Link>
-
-                            <Link
-                                className="nav-link"
-                                to="/register"
-                            >
+                            <Link className="nav-link-modern" to="/register" onClick={() => setIsMenuOpen(false)}>
                                 Register
                             </Link>
                         </>
                     )}
 
                     {user?.role === "Employee" && (
-                        <Link
-                            className="nav-link"
-                            to="/employee"
-                        >
-                            Employee Dashboard
+                        <Link className="nav-link-modern" to="/employee" onClick={() => setIsMenuOpen(false)}>
+                            Dashboard
                         </Link>
                     )}
 
                     {user?.role === "Employer" && (
-                        <Link
-                            className="nav-link"
-                            to="/employer"
-                        >
-                            Employer Dashboard
+                        <Link className="nav-link-modern" to="/employer" onClick={() => setIsMenuOpen(false)}>
+                            Dashboard
                         </Link>
                     )}
 
                     {user && (
-                        <>
-                            <button
-                                className="btn btn-danger ms-3"
-                                onClick={handleLogout}
-                            >
+                        <div className="nav-actions">
+                            <button className="btn-logout" onClick={handleLogout}>
                                 Logout
                             </button>
-
-                            <button
-                                className="btn btn-outline-danger ms-2"
-                                onClick={handleDeleteAccount}
-                                style={{ borderColor: '#dc3545', color: '#dc3545' }}
-                            >
-                                🗑️ Delete Account
+                            <button className="btn-delete" onClick={handleDeleteAccount}>
+                                🗑️
                             </button>
-                        </>
+                        </div>
                     )}
-
                 </div>
-
             </div>
-
         </nav>
     );
 }

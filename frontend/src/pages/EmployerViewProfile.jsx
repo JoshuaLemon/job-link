@@ -68,12 +68,12 @@ function EmployerViewProfile() {
 
     if (loading) {
         return (
-            <div className="container mt-5">
+            <div className="page-container">
                 <div className="text-center py-5">
                     <div className="spinner-border text-primary" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </div>
-                    <p className="mt-3 text-muted">Loading profile...</p>
+                    <p className="text-muted-light mt-3">Loading profile...</p>
                 </div>
             </div>
         );
@@ -81,64 +81,58 @@ function EmployerViewProfile() {
 
     if (error || !profile) {
         return (
-            <div className="container mt-5">
-                <div className="card">
-                    <div className="card-body text-center py-5">
-                        <h4 className="text-danger">Profile Not Found</h4>
-                        <p className="text-muted">Unable to load the employee profile.</p>
-                        <Link to="/employer-dashboard" className="btn btn-primary">
-                            Back to Dashboard
-                        </Link>
-                    </div>
+            <div className="page-container">
+                <div className="empty-state">
+                    <h4 className="empty-state-title">Profile Not Found</h4>
+                    <p className="empty-state-text">Unable to load the employee profile.</p>
+                    <Link to="/employer" className="btn-primary">
+                        Back to Dashboard
+                    </Link>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="container mt-5">
-            {/* Header */}
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2>Employee Profile</h2>
-                <Link to="/employer-dashboard" className="btn btn-secondary">
+        <div className="page-container">
+            <div className="page-header">
+                <h2 className="page-title">Employee Profile</h2>
+                <Link to="/employer" className="btn-back">
                     ← Back to Dashboard
                 </Link>
             </div>
 
             <FeedbackMessage section="profile" />
 
-            {/* Profile Information */}
-            <div className="card mb-4">
-                <div className="card-body">
-                    <div className="d-flex justify-content-between align-items-start mb-3">
+            <div className="profile-card">
+                <div className="profile-card-body">
+                    <div className="profile-header">
                         <div>
-                            <h2 className="mb-1">{profile.firstName} {profile.lastName}</h2>
+                            <h2 className="profile-name">{profile.firstName} {profile.lastName}</h2>
                             {profile.headline && (
-                                <h5 className="text-muted">{profile.headline}</h5>
+                                <h5 className="profile-headline">{profile.headline}</h5>
                             )}
                         </div>
-                        <span className="badge bg-primary fs-6 px-3 py-2">
-                            Employee
-                        </span>
+                        <span className="badge-employee">Employee</span>
                     </div>
 
                     {profile.bio && (
-                        <p className="mt-3">{profile.bio}</p>
+                        <p className="profile-bio">{profile.bio}</p>
                     )}
 
-                    <div className="row mt-3">
+                    <div className="profile-details">
                         {profile.email && (
-                            <div className="col-md-6 mb-2">
+                            <div>
                                 <strong>Email:</strong> {profile.email}
                             </div>
                         )}
                         {profile.location && (
-                            <div className="col-md-6 mb-2">
+                            <div>
                                 <strong>Location:</strong> {profile.location}
                             </div>
                         )}
                         {profile.phoneNumber && (
-                            <div className="col-md-6 mb-2">
+                            <div>
                                 <strong>Phone:</strong> {profile.phoneNumber}
                             </div>
                         )}
@@ -146,25 +140,24 @@ function EmployerViewProfile() {
                 </div>
             </div>
 
-            {/* Education Section */}
-            <div className="card mb-4">
-                <div className="card-body">
-                    <h3 className="mb-3">Education</h3>
+            <div className="profile-section">
+                <div className="profile-section-body">
+                    <h3 className="profile-section-title">Education</h3>
                     {!profile.educations || profile.educations.length === 0 ? (
-                        <div className="text-center py-3">
-                            <p className="text-muted mb-0">No education added.</p>
+                        <div className="empty-state-small">
+                            <p className="text-muted-light">No education added.</p>
                         </div>
                     ) : (
                         profile.educations.map(education => (
-                            <div key={education.educationId} className="mb-4">
-                                <h5>{education.schoolName}</h5>
-                                <p className="mb-1">
+                            <div key={education.educationId} className="profile-item">
+                                <h5 className="profile-item-title">{education.schoolName}</h5>
+                                <p className="profile-item-subtitle">
                                     <strong>{education.degree}</strong>
                                     {education.fieldOfStudy && (
                                         <> - {education.fieldOfStudy}</>
                                     )}
                                 </p>
-                                <small className="text-muted">
+                                <small className="profile-item-date">
                                     {new Date(education.startDate).toLocaleDateString()} - {new Date(education.endDate).toLocaleDateString()}
                                 </small>
                             </div>
@@ -173,25 +166,24 @@ function EmployerViewProfile() {
                 </div>
             </div>
 
-            {/* Experience Section */}
-            <div className="card mb-4">
-                <div className="card-body">
-                    <h3 className="mb-3">Experience</h3>
+            <div className="profile-section">
+                <div className="profile-section-body">
+                    <h3 className="profile-section-title">Experience</h3>
                     {!profile.experiences || profile.experiences.length === 0 ? (
-                        <div className="text-center py-3">
-                            <p className="text-muted mb-0">No experience added.</p>
+                        <div className="empty-state-small">
+                            <p className="text-muted-light">No experience added.</p>
                         </div>
                     ) : (
                         profile.experiences.map(experience => (
-                            <div key={experience.experienceId} className="mb-4">
-                                <h5>{experience.companyName}</h5>
-                                <p className="mb-1">
+                            <div key={experience.experienceId} className="profile-item">
+                                <h5 className="profile-item-title">{experience.companyName}</h5>
+                                <p className="profile-item-subtitle">
                                     <strong>{experience.jobTitle}</strong>
                                 </p>
                                 {experience.description && (
-                                    <p className="mb-1">{experience.description}</p>
+                                    <p className="profile-item-desc">{experience.description}</p>
                                 )}
-                                <small className="text-muted">
+                                <small className="profile-item-date">
                                     {new Date(experience.startDate).toLocaleDateString()} - {new Date(experience.endDate).toLocaleDateString()}
                                 </small>
                             </div>
@@ -200,18 +192,17 @@ function EmployerViewProfile() {
                 </div>
             </div>
 
-            {/* Skills Section */}
-            <div className="card">
-                <div className="card-body">
-                    <h3 className="mb-3">Skills</h3>
+            <div className="profile-section">
+                <div className="profile-section-body">
+                    <h3 className="profile-section-title">Skills</h3>
                     {!profile.skills || profile.skills.length === 0 ? (
-                        <div className="text-center py-3">
-                            <p className="text-muted mb-0">No skills added.</p>
+                        <div className="empty-state-small">
+                            <p className="text-muted-light">No skills added.</p>
                         </div>
                     ) : (
-                        <div className="d-flex flex-wrap gap-2">
+                        <div className="skills-container">
                             {profile.skills.map(skill => (
-                                <span key={skill.skillId} className="badge bg-primary fs-6 px-3 py-2">
+                                <span key={skill.skillId} className="skill-tag">
                                     {skill.skillName}
                                 </span>
                             ))}

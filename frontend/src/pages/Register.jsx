@@ -57,7 +57,6 @@ function Register() {
     const handleRegister = async (e) => {
         e.preventDefault();
 
-        // Validation
         if (!firstName.trim()) {
             showFeedback("register", "danger", "Please enter your first name.");
             return;
@@ -117,207 +116,171 @@ function Register() {
     };
 
     return (
-        <div className="container mt-5">
-            <div className="row justify-content-center">
-                <div className="col-md-8 col-lg-6">
-                    <div className="card shadow-sm">
-                        <div className="card-body p-4 p-md-5">
-                            {/* Header */}
-                            <div className="text-center mb-4">
-                                <h2 className="fw-bold mb-1">JobLink</h2>
-                                <p className="text-muted">Create your account and start your career journey</p>
-                            </div>
+        <div className="auth-page">
+            <div className="auth-card auth-card-wide">
+                <div className="auth-card-body">
+                    <div className="auth-header">
+                        <h2 className="auth-title">JobLink</h2>
+                        <p className="auth-subtitle">Create your account and start your career journey</p>
+                    </div>
 
-                            <FeedbackMessage section="register" />
+                    <FeedbackMessage section="register" />
 
-                            <form onSubmit={handleRegister}>
-                                {/* Name Fields */}
-                                <div className="row">
-                                    <div className="col-md-6 mb-3">
-                                        <label className="form-label fw-semibold">
-                                            First Name <span className="text-danger">*</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Enter your first name"
-                                            value={firstName}
-                                            onChange={(e) => setFirstName(e.target.value)}
-                                            disabled={loading}
-                                        />
-                                    </div>
-                                    <div className="col-md-6 mb-3">
-                                        <label className="form-label fw-semibold">
-                                            Last Name <span className="text-danger">*</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Enter your last name"
-                                            value={lastName}
-                                            onChange={(e) => setLastName(e.target.value)}
-                                            disabled={loading}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Email */}
-                                <div className="mb-3">
-                                    <label className="form-label fw-semibold">
-                                        Email Address <span className="text-danger">*</span>
-                                    </label>
-                                    <input
-                                        type="email"
-                                        className="form-control"
-                                        placeholder="Enter your email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        disabled={loading}
-                                    />
-                                </div>
-
-                                {/* Password */}
-                                <div className="mb-3">
-                                    <label className="form-label fw-semibold">
-                                        Password <span className="text-danger">*</span>
-                                    </label>
-                                    <div className="input-group">
-                                        <input
-                                            type={showPassword ? "text" : "password"}
-                                            className="form-control"
-                                            placeholder="Create a password (min 6 characters)"
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
-                                            disabled={loading}
-                                        />
-                                        <button
-                                            className="btn btn-outline-secondary"
-                                            type="button"
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            disabled={loading}
-                                        >
-                                            {showPassword ? "👁️" : "👁️‍🗨️"}
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Confirm Password */}
-                                <div className="mb-3">
-                                    <label className="form-label fw-semibold">
-                                        Confirm Password <span className="text-danger">*</span>
-                                    </label>
-                                    <div className="input-group">
-                                        <input
-                                            type={showConfirmPassword ? "text" : "password"}
-                                            className="form-control"
-                                            placeholder="Confirm your password"
-                                            value={confirmPassword}
-                                            onChange={(e) => setConfirmPassword(e.target.value)}
-                                            disabled={loading}
-                                        />
-                                        <button
-                                            className="btn btn-outline-secondary"
-                                            type="button"
-                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                            disabled={loading}
-                                        >
-                                            {showConfirmPassword ? "👁️" : "👁️‍🗨️"}
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Role Selection */}
-                                <div className="mb-4">
-                                    <label className="form-label d-block fw-semibold">
-                                        Register As <span className="text-danger">*</span>
-                                    </label>
-                                    <div className="d-flex gap-3">
-                                        <div className="form-check">
-                                            <input
-                                                className="form-check-input"
-                                                type="radio"
-                                                id="employeeRole"
-                                                checked={role === "Employee"}
-                                                onChange={() => setRole("Employee")}
-                                                disabled={loading}
-                                            />
-                                            <label className="form-check-label" htmlFor="employeeRole">
-                                                👤 Job Seeker
-                                            </label>
-                                        </div>
-                                        <div className="form-check">
-                                            <input
-                                                className="form-check-input"
-                                                type="radio"
-                                                id="employerRole"
-                                                checked={role === "Employer"}
-                                                onChange={() => setRole("Employer")}
-                                                disabled={loading}
-                                            />
-                                            <label className="form-check-label" htmlFor="employerRole">
-                                                🏢 Employer
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Terms Checkbox */}
-                                <div className="form-check mb-4">
-                                    <input
-                                        className="form-check-input"
-                                        type="checkbox"
-                                        id="termsCheck"
-                                        checked={acceptedTerms}
-                                        onChange={(e) => setAcceptedTerms(e.target.checked)}
-                                        disabled={loading}
-                                    />
-                                    <label className="form-check-label" htmlFor="termsCheck">
-                                        I agree to the{" "}
-                                        <a href="/privacy" target="_blank" rel="noopener noreferrer">
-                                            Privacy Policy
-                                        </a>{" "}
-                                        and{" "}
-                                        <a href="/terms" target="_blank" rel="noopener noreferrer">
-                                            Terms of Service
-                                        </a>{" "}
-                                        <span className="text-danger">*</span>
-                                    </label>
-                                </div>
-
-                                {/* Submit Button */}
-                                <button
-                                    className="btn btn-primary btn-lg w-100"
-                                    type="submit"
+                    <form onSubmit={handleRegister}>
+                        <div className="form-row">
+                            <div className="form-group-half">
+                                <label className="form-label">First Name <span className="form-required">*</span></label>
+                                <input
+                                    type="text"
+                                    className="form-input"
+                                    placeholder="Enter your first name"
+                                    value={firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
                                     disabled={loading}
-                                >
-                                    {loading ? (
-                                        <>
-                                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                            Creating Account...
-                                        </>
-                                    ) : (
-                                        "Create Account"
-                                    )}
-                                </button>
-                            </form>
-
-                            {/* Login Link */}
-                            <div className="text-center mt-4">
-                                <p className="text-muted mb-0">
-                                    Already have an account?{" "}
-                                    <Link to="/login" className="text-decoration-none">
-                                        Login here
-                                    </Link>
-                                </p>
+                                />
                             </div>
-
-                            {/* Back to Home */}
-                            <div className="text-center mt-3">
-                                <Link to="/" className="text-decoration-none small">
-                                    ← Back to Home
-                                </Link>
+                            <div className="form-group-half">
+                                <label className="form-label">Last Name <span className="form-required">*</span></label>
+                                <input
+                                    type="text"
+                                    className="form-input"
+                                    placeholder="Enter your last name"
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
+                                    disabled={loading}
+                                />
                             </div>
                         </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Email Address <span className="form-required">*</span></label>
+                            <input
+                                type="email"
+                                className="form-input"
+                                placeholder="Enter your email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                disabled={loading}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Password <span className="form-required">*</span></label>
+                            <div className="password-input-wrapper">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    className="form-input"
+                                    placeholder="Create a password (min 6 characters)"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    disabled={loading}
+                                />
+                                <button
+                                    className="password-toggle"
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    disabled={loading}
+                                >
+                                    {showPassword ? "👁️" : "👁️‍🗨️"}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Confirm Password <span className="form-required">*</span></label>
+                            <div className="password-input-wrapper">
+                                <input
+                                    type={showConfirmPassword ? "text" : "password"}
+                                    className="form-input"
+                                    placeholder="Confirm your password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    disabled={loading}
+                                />
+                                <button
+                                    className="password-toggle"
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    disabled={loading}
+                                >
+                                    {showConfirmPassword ? "👁️" : "👁️‍🗨️"}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label d-block">Register As <span className="form-required">*</span></label>
+                            <div className="radio-group">
+                                <label className="radio-label">
+                                    <input
+                                        type="radio"
+                                        checked={role === "Employee"}
+                                        onChange={() => setRole("Employee")}
+                                        disabled={loading}
+                                    />
+                                    👤 Job Seeker
+                                </label>
+                                <label className="radio-label">
+                                    <input
+                                        type="radio"
+                                        checked={role === "Employer"}
+                                        onChange={() => setRole("Employer")}
+                                        disabled={loading}
+                                    />
+                                    🏢 Employer
+                                </label>
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <label className="checkbox-label">
+                                <input
+                                    type="checkbox"
+                                    checked={acceptedTerms}
+                                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                                    disabled={loading}
+                                />
+                                I agree to the{" "}
+                                <a href="/privacy" target="_blank" rel="noopener noreferrer" className="auth-link">
+                                    Privacy Policy
+                                </a>{" "}
+                                and{" "}
+                                <a href="/terms" target="_blank" rel="noopener noreferrer" className="auth-link">
+                                    Terms of Service
+                                </a>{" "}
+                                <span className="form-required">*</span>
+                            </label>
+                        </div>
+
+                        <button
+                            className="btn-primary btn-full"
+                            type="submit"
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <>
+                                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    Creating Account...
+                                </>
+                            ) : (
+                                "Create Account"
+                            )}
+                        </button>
+                    </form>
+
+                    <div className="auth-footer">
+                        <p className="auth-text">
+                            Already have an account?{" "}
+                            <Link to="/login" className="auth-link">
+                                Login here
+                            </Link>
+                        </p>
+                    </div>
+
+                    <div className="auth-footer mt-1">
+                        <Link to="/" className="auth-link">
+                            ← Back to Home
+                        </Link>
                     </div>
                 </div>
             </div>
