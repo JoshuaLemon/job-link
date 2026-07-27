@@ -2757,6 +2757,288 @@ body {
     background: rgba(220, 53, 69, 0.25);
 }
 
+/* ===== JOB DETAILS MODERN STYLES ===== */
+/* Loading spinner */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 0;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top: 3px solid #4a6cf7;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Job Details Container */
+.job-details-modern {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* Header */
+.job-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 2rem 2.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.job-details-title-section {
+    flex: 1;
+}
+
+.job-details-title {
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+}
+
+.job-details-company {
+    color: #7a9cff;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.job-details-company:hover {
+    color: #4a6cf7;
+}
+
+/* Employment Badge */
+.employment-badge {
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge-fulltime {
+    background: rgba(74, 108, 247, 0.15);
+    color: #7a9cff;
+    border: 1px solid rgba(74, 108, 247, 0.1);
+}
+
+.badge-parttime {
+    background: rgba(13, 202, 240, 0.15);
+    color: #4dd0e1;
+    border: 1px solid rgba(13, 202, 240, 0.1);
+}
+
+.badge-contract {
+    background: rgba(255, 193, 7, 0.15);
+    color: #fdd835;
+    border: 1px solid rgba(255, 193, 7, 0.1);
+}
+
+.badge-internship {
+    background: rgba(40, 167, 69, 0.15);
+    color: #6fcf97;
+    border: 1px solid rgba(40, 167, 69, 0.1);
+}
+
+.badge-other {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Tags */
+.job-details-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0 2.5rem 1rem 2.5rem;
+}
+
+.job-details-tags .job-tag {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 4px;
+    padding: 0.2rem 0.8rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Info Grid */
+.job-details-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 1.5rem 2.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.info-icon {
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.info-label {
+    display: block;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    display: block;
+    color: #e2e8f0;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Description */
+.job-details-description {
+    padding: 2rem 2.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.job-details-description h3 {
+    color: #ffffff;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.job-details-description p {
+    color: #94a3b8;
+    line-height: 1.8;
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+}
+
+/* Apply Section */
+.job-details-apply {
+    padding: 2rem 2.5rem;
+}
+
+.apply-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.apply-text h4 {
+    color: #ffffff;
+    margin: 0 0 0.25rem 0;
+    font-size: 1.1rem;
+}
+
+.apply-text p {
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.apply-buttons {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.apply-buttons .btn-lg {
+    padding: 0.7rem 2rem;
+    font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .job-details-header {
+        padding: 1.5rem;
+    }
+
+    .job-details-title {
+        font-size: 1.5rem;
+    }
+
+    .job-details-info-grid {
+        grid-template-columns: 1fr 1fr;
+        padding: 1rem 1.5rem;
+    }
+
+    .job-details-description {
+        padding: 1.5rem;
+    }
+
+    .job-details-apply {
+        padding: 1.5rem;
+    }
+
+    .apply-content {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .apply-buttons {
+        justify-content: center;
+    }
+
+    .job-details-tags {
+        padding: 0 1.5rem 0.75rem 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .job-details-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .job-details-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .apply-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .apply-buttons button,
+    .apply-buttons a {
+        width: 100%;
+        text-align: center;
+    }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .profile-container .company-details-grid {
