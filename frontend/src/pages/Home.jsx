@@ -115,22 +115,22 @@ function Home() {
 
     return (
         <>
-            {/* HERO SECTION */}
-            <section className="hero-section bg-light py-5">
+            {/* HERO SECTION - Dark Theme */}
+            <section className="hero-section-dark py-5">
                 <div className="container">
                     <div className="row align-items-center">
                         <div className="col-lg-7">
                             <div className="mb-3">
-                                <span className="badge bg-primary-soft text-primary px-3 py-2 rounded-pill">
+                                <span className="badge bg-white-soft text-white px-3 py-2 rounded-pill">
                                     🌟 Over {(totalJobs || 12000).toLocaleString()}+ jobs from top-tier companies
                                 </span>
                             </div>
-                            <h1 className="display-2 fw-bold mb-3">
+                            <h1 className="display-2 fw-bold mb-3 text-white">
                                 Find your next
                                 <br />
-                                <span className="text-primary">great role</span>
+                                <span className="text-primary-light">great role</span>
                             </h1>
-                            <p className="lead text-muted mb-4">
+                            <p className="lead text-white-50 mb-4">
                                 Connect with forward-thinking companies that value what you bring. 
                                 {totalProfessionals.toLocaleString()}+ professionals found their place here.
                             </p>
@@ -168,13 +168,12 @@ function Home() {
                                 </div>
                             </div>
 
-                            {/* Category Pills */}
+                            {/* Category Pills - Dark Theme */}
                             <div className="d-flex flex-wrap gap-2">
                                 {['Engineering', 'Design', 'Product', 'Marketing', 'Data Science'].map((category) => (
                                     <button 
                                         key={category}
-                                        className="btn btn-outline-secondary rounded-pill px-4 py-2"
-                                        style={{ borderColor: '#e9ecef' }}
+                                        className="btn btn-outline-white rounded-pill px-4 py-2"
                                     >
                                         {category}
                                     </button>
@@ -182,19 +181,19 @@ function Home() {
                             </div>
                         </div>
                         <div className="col-lg-5 d-none d-lg-block">
-                            <div className="hero-stats bg-white p-4 rounded-4 shadow-sm">
+                            <div className="hero-stats-dark bg-white bg-opacity-10 p-4 rounded-4">
                                 <div className="d-flex justify-content-between text-center">
                                     <div>
-                                        <h2 className="fw-bold text-primary mb-0">{(totalJobs || 12400).toLocaleString()}+</h2>
-                                        <p className="text-muted small mb-0">Active listings</p>
+                                        <h2 className="fw-bold text-white mb-0">{(totalJobs || 12400).toLocaleString()}+</h2>
+                                        <p className="text-white-50 small mb-0">Active listings</p>
                                     </div>
                                     <div>
-                                        <h2 className="fw-bold text-success mb-0">{(uniqueCompanies || 3200).toLocaleString()}+</h2>
-                                        <p className="text-muted small mb-0">Companies hiring</p>
+                                        <h2 className="fw-bold text-white mb-0">{(uniqueCompanies || 3200).toLocaleString()}+</h2>
+                                        <p className="text-white-50 small mb-0">Companies hiring</p>
                                     </div>
                                     <div>
-                                        <h2 className="fw-bold text-warning mb-0">{(totalProfessionals || 50000).toLocaleString()}+</h2>
-                                        <p className="text-muted small mb-0">Professionals placed</p>
+                                        <h2 className="fw-bold text-white mb-0">{(totalProfessionals || 50000).toLocaleString()}+</h2>
+                                        <p className="text-white-50 small mb-0">Professionals placed</p>
                                     </div>
                                 </div>
                             </div>
@@ -205,7 +204,7 @@ function Home() {
 
             {/* RECOMMENDED JOBS SECTION */}
             {isEmployee && recommendedJobs.length > 0 && (
-                <section className="py-4">
+                <section className="py-4 bg-white">
                     <div className="container">
                         <div className="d-flex justify-content-between align-items-center mb-4">
                             <h3 className="fw-bold mb-0">🎯 Recommended For You</h3>
@@ -231,7 +230,7 @@ function Home() {
             )}
 
             {/* FEATURED OPPORTUNITIES SECTION */}
-            <section className="py-5">
+            <section className="py-5 bg-white">
                 <div className="container">
                     <div className="d-flex justify-content-between align-items-center mb-4">
                         <h2 className="fw-bold mb-0">Featured opportunities</h2>
@@ -301,7 +300,7 @@ function Home() {
             </section>
 
             {/* FOOTER */}
-            <footer className="py-4 border-top">
+            <footer className="py-4 border-top bg-white">
                 <div className="container">
                     <div className="d-flex flex-wrap justify-content-between align-items-center">
                         <div className="d-flex align-items-center gap-3">
