@@ -2501,8 +2501,8 @@ body {
 }
 
 .navbar-container {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 0;
   padding: 0 2rem;
   display: flex;
   align-items: center;
@@ -2517,7 +2517,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: 'Pacifico', cursive;
+  font-family: 'Inter', sans-serif;
   letter-spacing: 1px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
