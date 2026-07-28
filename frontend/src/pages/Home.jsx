@@ -168,7 +168,7 @@ function Home() {
                             </div>
                         </div>
 
-                        <div className="col-lg-5 d-none d-lg-block">
+                        <div className="col-lg-5">
                             <div className="stats-container">
                                 <div className="stats-grid">
                                     <div className="stat-item">
