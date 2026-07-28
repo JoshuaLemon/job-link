@@ -2517,8 +2517,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: 'Georgia', 'Times New Roman', serif;
-  font-style: italic;
+  font-family: 'Pacifico', cursive;
   letter-spacing: 1px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
@@ -4176,7 +4175,6 @@ body.light-theme .auth-card-body a:not(.btn-primary):hover {
     font-size: 0.95rem;
   }
 
-
   .category-pills {
     gap: 8px;
   }
@@ -4186,19 +4184,30 @@ body.light-theme .auth-card-body a:not(.btn-primary):hover {
     font-size: 0.85rem;
   }
 
-.stats-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 16px;
-}
+  /* Stats grid - responsive and compact */
+  .stats-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
 
-.stats-grid .stat-item {
-  flex: 0 0 calc(50% - 16px);
-  text-align: center;
-}
+  .stats-grid .stat-item {
+    flex: 0 0 calc(33.33% - 8px);
+    text-align: center;
+  }
+
+  .stats-container {
+    padding: 12px 8px;
+    margin-top: 16px;
+  }
+
   .stat-number {
-    font-size: 1.8rem;
+    font-size: 1.2rem;
+  }
+
+  .stat-label {
+    font-size: 0.6rem;
   }
 
   .section-header {
@@ -4409,7 +4418,6 @@ body.light-theme .auth-card-body a:not(.btn-primary):hover {
   }
 }
 /* #endregion */
-
 /* #region SECTION: EXTRA SMALL RESPONSIVE */
 @media (max-width: 480px) {
   .profile-container {
