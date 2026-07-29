@@ -10,6 +10,7 @@ function Home() {
     const [loadingRecommended, setLoadingRecommended] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredJobs, setFilteredJobs] = useState([]);
+    const [activeCategory, setActiveCategory] = useState("");
 
     const [feedback, setFeedback] = useState({
         section: "",
@@ -102,10 +103,17 @@ function Home() {
 
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
+        setActiveCategory(""); // Clear active category when typing
     };
 
     const clearSearch = () => {
         setSearchTerm("");
+        setActiveCategory("");
+    };
+
+    const handleCategoryClick = (category) => {
+        setActiveCategory(category);
+        setSearchTerm(category);
     };
 
     const totalJobs = jobs.length;
@@ -160,8 +168,21 @@ function Home() {
                             </div>
 
                             <div className="category-pills">
+                                <button 
+                                    className={`pill ${activeCategory === '' ? 'active' : ''}`}
+                                    onClick={() => {
+                                        setActiveCategory('');
+                                        setSearchTerm('');
+                                    }}
+                                >
+                                    All
+                                </button>
                                 {['Engineering', 'Design', 'Product', 'Marketing', 'Data Science'].map((category) => (
-                                    <button key={category} className="pill">
+                                    <button 
+                                        key={category} 
+                                        className={`pill ${activeCategory === category ? 'active' : ''}`}
+                                        onClick={() => handleCategoryClick(category)}
+                                    >
                                         {category}
                                     </button>
                                 ))}
