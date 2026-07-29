@@ -65,7 +65,8 @@ function Home() {
         if (searchTerm.trim() === "") {
             setFilteredJobs(jobs);
         } else {
-            const terms = searchTerm.toLowerCase().trim().split(/\s+/);
+            const searchLower = searchTerm.toLowerCase().trim();
+            const terms = searchLower.split(/\s+/);
             
             const filtered = jobs.filter(job => {
                 const jobText = [
@@ -76,18 +77,11 @@ function Home() {
                     job.tags || ""
                 ].join(" ").toLowerCase();
                 
-                const jobWords = jobText.split(/\s+/);
-                
-                // Check if search term appears as a substring in ANY job word
-                // OR if ANY job word appears as a substring in the search term
-                return terms.some(term => {
-                    return jobWords.some(word => 
-                        word.includes(term) || term.includes(word)
-                    );
-                });
+                // Check if ALL search terms appear in the job text
+                return terms.every(term => jobText.includes(term));
             });
             
-            // Sort by relevance
+            // Sort by relevance (more matches = higher priority)
             filtered.sort((a, b) => {
                 const aText = [
                     a.title, 
@@ -108,21 +102,12 @@ function Home() {
                 const aMatches = terms.filter(term => aText.includes(term)).length;
                 const bMatches = terms.filter(term => bText.includes(term)).length;
                 
-                if (aMatches === bMatches) {
-                    const aTitleMatch = a.title.toLowerCase().includes(searchTerm.toLowerCase());
-                    const bTitleMatch = b.title.toLowerCase().includes(searchTerm.toLowerCase());
-                    if (aTitleMatch && !bTitleMatch) return -1;
-                    if (!aTitleMatch && bTitleMatch) return 1;
-                    return 0;
-                }
-                
                 return bMatches - aMatches;
             });
             
             setFilteredJobs(filtered);
         }
     }, [searchTerm, jobs]);
-
     const loadJobs = async () => {
         setLoading(true);
         try {
