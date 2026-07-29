@@ -55,13 +55,14 @@ function Home() {
     const isEmployee = user?.role === "Employee";
 
     useEffect(() => {
-            loadJobs();
-            if (isEmployee) {
-                loadRecommendedJobs();
-            }
-        }, []);
+        loadJobs();
+        if (isEmployee) {
+            loadRecommendedJobs();
+        }
+    }, []);
 
-        useEffect(() => {
+    // Flexible search with partial word matching
+    useEffect(() => {
         if (searchTerm.trim() === "") {
             setFilteredJobs(jobs);
         } else {
@@ -76,9 +77,14 @@ function Home() {
                     job.tags || ""
                 ].join(" ").toLowerCase();
                 
-                return terms.every(term => jobText.includes(term));
+                // Check if ANY term matches ANY part of the job text (partial match)
+                return terms.some(term => 
+                    jobText.includes(term) || // Exact substring match
+                    jobText.split(/\s+/).some(word => word.includes(term)) // Partial word match
+                );
             });
             
+            // Sort by relevance: jobs that match MORE terms come first
             filtered.sort((a, b) => {
                 const aText = [
                     a.title, 
