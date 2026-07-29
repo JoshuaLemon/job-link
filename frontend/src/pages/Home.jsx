@@ -68,6 +68,19 @@ function Home() {
             const searchLower = searchTerm.toLowerCase().trim();
             const terms = searchLower.split(/\s+/);
             
+            // Helper function to check if two words are related (stem/root matching)
+            const isWordMatch = (word, term) => {
+                // Check if one contains the other (e.g., "engineer" in "engineering")
+                if (word.includes(term) || term.includes(word)) return true;
+                
+                // Check common word endings
+                const wordRoot = word.replace(/(ing|ed|er|s)$/, '');
+                const termRoot = term.replace(/(ing|ed|er|s)$/, '');
+                if (wordRoot === termRoot && wordRoot.length > 3) return true;
+                
+                return false;
+            };
+            
             const filtered = jobs.filter(job => {
                 const jobText = [
                     job.title,
@@ -77,11 +90,15 @@ function Home() {
                     job.tags || ""
                 ].join(" ").toLowerCase();
                 
-                // Check if ALL search terms appear in the job text
-                return terms.every(term => jobText.includes(term));
+                const jobWords = jobText.split(/\s+/);
+                
+                // Check if ALL terms match ANY job word
+                return terms.every(term => {
+                    return jobWords.some(word => isWordMatch(word, term));
+                });
             });
             
-            // Sort by relevance (more matches = higher priority)
+            // Sort by relevance
             filtered.sort((a, b) => {
                 const aText = [
                     a.title, 
@@ -99,8 +116,16 @@ function Home() {
                     b.tags || ""
                 ].join(" ").toLowerCase();
                 
-                const aMatches = terms.filter(term => aText.includes(term)).length;
-                const bMatches = terms.filter(term => bText.includes(term)).length;
+                const aWords = aText.split(/\s+/);
+                const bWords = bText.split(/\s+/);
+                
+                const aMatches = terms.filter(term => 
+                    aWords.some(word => isWordMatch(word, term))
+                ).length;
+                
+                const bMatches = terms.filter(term => 
+                    bWords.some(word => isWordMatch(word, term))
+                ).length;
                 
                 return bMatches - aMatches;
             });
@@ -108,6 +133,7 @@ function Home() {
             setFilteredJobs(filtered);
         }
     }, [searchTerm, jobs]);
+
     const loadJobs = async () => {
         setLoading(true);
         try {
