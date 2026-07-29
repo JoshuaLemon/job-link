@@ -61,7 +61,6 @@ function Home() {
         }
     }, []);
 
-    // Flexible search with partial word matching
     useEffect(() => {
         if (searchTerm.trim() === "") {
             setFilteredJobs(jobs);
@@ -77,14 +76,18 @@ function Home() {
                     job.tags || ""
                 ].join(" ").toLowerCase();
                 
-                // Check if ANY term matches ANY part of the job text (partial match)
-                return terms.some(term => 
-                    jobText.includes(term) || // Exact substring match
-                    jobText.split(/\s+/).some(word => word.includes(term)) // Partial word match
-                );
+                const jobWords = jobText.split(/\s+/);
+                
+                // Check if search term appears as a substring in ANY job word
+                // OR if ANY job word appears as a substring in the search term
+                return terms.some(term => {
+                    return jobWords.some(word => 
+                        word.includes(term) || term.includes(word)
+                    );
+                });
             });
             
-            // Sort by relevance: jobs that match MORE terms come first
+            // Sort by relevance
             filtered.sort((a, b) => {
                 const aText = [
                     a.title, 
