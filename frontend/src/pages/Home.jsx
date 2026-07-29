@@ -68,67 +68,69 @@ function Home() {
             const searchLower = searchTerm.toLowerCase().trim();
             const terms = searchLower.split(/\s+/);
             
-            // Helper function to check if two words are related (stem/root matching)
-            const isWordMatch = (word, term) => {
-                // Check if one contains the other (e.g., "engineer" in "engineering")
-                if (word.includes(term) || term.includes(word)) return true;
+            // Score each job based on how well it matches
+            const scoredJobs = jobs.map(job => {
+                const fields = {
+                    title: job.title || "",
+                    company: job.companyName || "",
+                    location: job.location || "",
+                    employmentType: job.employmentType || "",
+                    tags: job.tags || ""
+                };
                 
-                // Check common word endings
-                const wordRoot = word.replace(/(ing|ed|er|s)$/, '');
-                const termRoot = term.replace(/(ing|ed|er|s)$/, '');
-                if (wordRoot === termRoot && wordRoot.length > 3) return true;
+                let score = 0;
+                let matchCount = 0;
                 
-                return false;
-            };
-            
-            const filtered = jobs.filter(job => {
-                const jobText = [
-                    job.title,
-                    job.location,
-                    job.employmentType,
-                    job.companyName || "",
-                    job.tags || ""
-                ].join(" ").toLowerCase();
-                
-                const jobWords = jobText.split(/\s+/);
-                
-                // Check if ALL terms match ANY job word
-                return terms.every(term => {
-                    return jobWords.some(word => isWordMatch(word, term));
+                // Check each search term
+                terms.forEach(term => {
+                    // Check each field with weighted importance
+                    Object.entries(fields).forEach(([field, value]) => {
+                        const fieldLower = value.toLowerCase();
+                        
+                        // Check if term exists in this field
+                        if (fieldLower.includes(term)) {
+                            matchCount++;
+                            
+                            // Weight different fields
+                            switch(field) {
+                                case 'title':
+                                    score += 10; // Title matches are most important
+                                    // Bonus for exact title match
+                                    if (fieldLower === term) score += 5;
+                                    // Bonus for title starting with term
+                                    if (fieldLower.startsWith(term)) score += 3;
+                                    break;
+                                case 'company':
+                                    score += 8; // Company matches are important
+                                    break;
+                                case 'tags':
+                                    score += 6; // Tag matches are good
+                                    break;
+                                case 'location':
+                                    score += 5; // Location matches are helpful
+                                    break;
+                                case 'employmentType':
+                                    score += 4; // Employment type matches
+                                    break;
+                                default:
+                                    score += 3;
+                            }
+                        }
+                    });
                 });
+                
+                // Bonus for matching ALL terms
+                if (matchCount >= terms.length) {
+                    score += 15;
+                }
+                
+                return { ...job, score, matchCount };
             });
             
-            // Sort by relevance
-            filtered.sort((a, b) => {
-                const aText = [
-                    a.title, 
-                    a.location, 
-                    a.employmentType, 
-                    a.companyName || "",
-                    a.tags || ""
-                ].join(" ").toLowerCase();
-                
-                const bText = [
-                    b.title, 
-                    b.location, 
-                    b.employmentType, 
-                    b.companyName || "",
-                    b.tags || ""
-                ].join(" ").toLowerCase();
-                
-                const aWords = aText.split(/\s+/);
-                const bWords = bText.split(/\s+/);
-                
-                const aMatches = terms.filter(term => 
-                    aWords.some(word => isWordMatch(word, term))
-                ).length;
-                
-                const bMatches = terms.filter(term => 
-                    bWords.some(word => isWordMatch(word, term))
-                ).length;
-                
-                return bMatches - aMatches;
-            });
+            // Filter: Only show jobs that have at least one match
+            const filtered = scoredJobs
+                .filter(job => job.matchCount > 0)
+                .sort((a, b) => b.score - a.score);
             
             setFilteredJobs(filtered);
         }
