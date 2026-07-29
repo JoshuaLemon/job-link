@@ -55,22 +55,61 @@ function Home() {
     const isEmployee = user?.role === "Employee";
 
     useEffect(() => {
-        loadJobs();
-        if (isEmployee) {
-            loadRecommendedJobs();
-        }
-    }, []);
+            loadJobs();
+            if (isEmployee) {
+                loadRecommendedJobs();
+            }
+        }, []);
 
-    useEffect(() => {
+        useEffect(() => {
         if (searchTerm.trim() === "") {
             setFilteredJobs(jobs);
         } else {
-            const filtered = jobs.filter(job =>
-                job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                job.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                job.employmentType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                (job.tags && job.tags.toLowerCase().includes(searchTerm.toLowerCase()))
-            );
+            const terms = searchTerm.toLowerCase().trim().split(/\s+/);
+            
+            const filtered = jobs.filter(job => {
+                const jobText = [
+                    job.title,
+                    job.location,
+                    job.employmentType,
+                    job.companyName || "",
+                    job.tags || ""
+                ].join(" ").toLowerCase();
+                
+                return terms.every(term => jobText.includes(term));
+            });
+            
+            filtered.sort((a, b) => {
+                const aText = [
+                    a.title, 
+                    a.location, 
+                    a.employmentType, 
+                    a.companyName || "",
+                    a.tags || ""
+                ].join(" ").toLowerCase();
+                
+                const bText = [
+                    b.title, 
+                    b.location, 
+                    b.employmentType, 
+                    b.companyName || "",
+                    b.tags || ""
+                ].join(" ").toLowerCase();
+                
+                const aMatches = terms.filter(term => aText.includes(term)).length;
+                const bMatches = terms.filter(term => bText.includes(term)).length;
+                
+                if (aMatches === bMatches) {
+                    const aTitleMatch = a.title.toLowerCase().includes(searchTerm.toLowerCase());
+                    const bTitleMatch = b.title.toLowerCase().includes(searchTerm.toLowerCase());
+                    if (aTitleMatch && !bTitleMatch) return -1;
+                    if (!aTitleMatch && bTitleMatch) return 1;
+                    return 0;
+                }
+                
+                return bMatches - aMatches;
+            });
+            
             setFilteredJobs(filtered);
         }
     }, [searchTerm, jobs]);
@@ -103,7 +142,7 @@ function Home() {
 
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
-        setActiveCategory(""); // Clear active category when typing
+        setActiveCategory("");
     };
 
     const clearSearch = () => {
