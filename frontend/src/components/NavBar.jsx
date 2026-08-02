@@ -42,7 +42,7 @@ function Navbar() {
         <nav className="navbar-modern">
             <div className="navbar-container">
                 <Link className="navbar-brand-modern" to="/">
-                    <span className="brand-icon">💼</span>
+                    <span className="brand-icon">📝</span>
                     JobLink
                 </Link>
 
@@ -80,13 +80,6 @@ function Navbar() {
 
                     {user && (
                         <div className="nav-actions">
-                            <button 
-                                className="btn-theme-toggle" 
-                                onClick={toggleTheme}
-                                aria-label="Toggle theme"
-                            >
-                                {theme === 'dark' ? '☀️' : '🌙'}
-                            </button>
                             <button className="btn-logout" onClick={handleLogout}>
                                 Logout
                             </button>
