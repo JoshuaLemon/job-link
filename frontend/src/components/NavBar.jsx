@@ -95,16 +95,7 @@ function Navbar() {
                             </button>
                         </div>
                     )}
-
-                    {!user && (
-                        <button 
-                            className="btn-theme-toggle" 
-                            onClick={toggleTheme}
-                            aria-label="Toggle theme"
-                        >
-                            {theme === 'dark' ? '☀️' : '🌙'}
-                        </button>
-                    )}
+                
                 </div>
             </div>
         </nav>
